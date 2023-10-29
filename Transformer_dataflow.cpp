@@ -2,6 +2,7 @@
 //
 
 #include "Test.h"
+
 const size_t token_length = 128;
 const size_t sequence_length = 384;
 
