@@ -1,5 +1,17 @@
 #pragma once
 
 #include "TestVecAdd.h"
+#include "TestScale.h"
+#include "TestMatAdd.h"
 #include "TestMatMul.h"
+#include "TestTranspose.h"
 #include "TestLinear.h"
+#include "TestSoftMax.h"
+#include "TestMask.h"
+#include "TestAcvtivations.h"
+#include "TestLayerNorm.h"
+#include "TestFF.h"
+#include "TestScaledDotAtt.h"
+#include "TestMultiHeadAtt.h"
+#include "TestEncoder.h"
+#include "TestDecoder.h"
