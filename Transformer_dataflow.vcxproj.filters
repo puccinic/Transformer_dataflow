@@ -21,59 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ScaledDotAtt.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="FF.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiHeadAtt.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Encoder.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Decoder.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Concat.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="VecAdd.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Linear.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="MatMul.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Activations.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="LayerNorm.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Mask.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="MatAdd.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Scale.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="SoftMax.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="Transformer_dataflow.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Transpose.h">
-      <Filter>Archivos de encabezado\Layers</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="bias.txt">
       <Filter>Archivos de recursos</Filter>
     </Text>
@@ -95,42 +42,134 @@
     <Text Include="matA.txt">
       <Filter>Archivos de recursos</Filter>
     </Text>
+    <Text Include="vecA.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="vecB.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="vecRes.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="log_file.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="linear_bias.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="linear_input.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="linear_output_gold.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+    <Text Include="linear_weight.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TestLinear.h">
+    <ClCompile Include="Transformer_dataflow.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Layers\Activations.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Concat.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Decoder.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Encoder.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\FF.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\LayerNorm.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Linear.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Mask.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\MatAdd.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\MatMul.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\MultiHeadAtt.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Scale.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\ScaledDotAtt.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\SoftMax.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Transpose.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\VecAdd.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\Test.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestUtils.h">
+    <ClInclude Include="Tests\TestAcvtivations.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestMatMul.h">
+    <ClInclude Include="Tests\TestLayerNorm.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestVecAdd.h">
+    <ClInclude Include="Tests\TestLinear.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="Tests\TestMask.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestLayerNorm.h">
+    <ClInclude Include="Tests\TestMatAdd.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestMask.h">
+    <ClInclude Include="Tests\TestMatMul.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestMatAdd.h">
+    <ClInclude Include="Tests\TestScale.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestScale.h">
+    <ClInclude Include="Tests\TestSoftMax.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestSoftMax.h">
+    <ClInclude Include="Tests\TestTranspose.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestAcvtivations.h">
+    <ClInclude Include="Tests\TestUtils.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
-    <ClInclude Include="TestTranspose.h">
+    <ClInclude Include="Tests\TestVecAdd.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestDecoder.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestEncoder.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestFF.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestScaledDotAtt.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestMultiHeadAtt.h">
       <Filter>Archivos de encabezado\Test</Filter>
     </ClInclude>
   </ItemGroup>

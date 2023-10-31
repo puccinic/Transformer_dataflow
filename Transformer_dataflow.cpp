@@ -7,11 +7,20 @@ const size_t token_length = 128;
 const size_t sequence_length = 384;
 
 int main() {
-    std::string matA = "matA.txt";
-    std::string matB = "matB.txt";
-    std::string matres = "matRes.txt";
-    std::string log = "log_file.txt";
-    test_matmul<int, sequence_length, token_length, token_length>(&matA, &matB, &matres, &log);
+	std::string log = "log_file.txt";
+	std::string matA = "matA.txt";
+	std::string matB = "matB.txt";
+	std::string matres = "matRes.txt";
+	//test_matmul<int, sequence_length, token_length, token_length>(&matA, &matB, &matres, &log);
+	std::string vecA = "vecA.txt";
+	std::string vecB = "vecB.txt";
+	std::string vecres = "vecRes.txt";
+	//test_vecadd<int, token_length>(&vecA,&vecB,&vecres,&log);
+	std::string input = "linear_input.txt";
+	std::string weigths = "linear_weight.txt";
+	std::string bias = "linear_bias.txt";
+	std::string output_gold = "linear_output_gold.txt";
+	test_linear<int, sequence_length, token_length, token_length>(&input, &weigths, &bias, &output_gold, &log);
 }
 
 // Ejecutar programa: Ctrl + F5 o menú Depurar > Iniciar sin depurar

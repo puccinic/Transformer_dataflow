@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
+    <IncludePath>$(ProjectDir)\Layers;$(ProjectDir)\Tests;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -139,46 +141,59 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Activations.h" />
-    <ClCompile Include="VecAdd.h" />
-    <ClCompile Include="Concat.cpp" />
-    <ClCompile Include="Decoder.cpp" />
-    <ClCompile Include="Encoder.cpp" />
-    <ClCompile Include="FF.cpp" />
-    <ClCompile Include="LayerNorm.h" />
-    <ClCompile Include="Linear.h" />
-    <ClCompile Include="Mask.h" />
-    <ClCompile Include="MatAdd.h" />
-    <ClCompile Include="MatMul.h" />
-    <ClCompile Include="MultiHeadAtt.cpp" />
-    <ClCompile Include="Scale.h" />
-    <ClCompile Include="ScaledDotAtt.cpp" />
-    <ClCompile Include="SoftMax.h" />
-    <ClCompile Include="Transformer_dataflow.cpp" />
-    <ClCompile Include="Transpose.h" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="bias.txt" />
     <Text Include="inputs.txt" />
+    <Text Include="linear_bias.txt" />
+    <Text Include="linear_input.txt" />
+    <Text Include="linear_output_gold.txt" />
+    <Text Include="linear_weight.txt" />
+    <Text Include="log_file.txt" />
     <Text Include="matA.txt" />
     <Text Include="matB.txt" />
     <Text Include="matRes.txt" />
     <Text Include="output.txt" />
+    <Text Include="vecA.txt" />
+    <Text Include="vecB.txt" />
+    <Text Include="vecRes.txt" />
     <Text Include="weights.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TestAcvtivations.h" />
-    <ClInclude Include="TestMask.h" />
-    <ClInclude Include="TestLayerNorm.h" />
-    <ClInclude Include="Test.h" />
-    <ClInclude Include="TestLinear.h" />
-    <ClInclude Include="TestScale.h" />
-    <ClInclude Include="TestSoftMax.h" />
-    <ClInclude Include="TestTranspose.h" />
-    <ClInclude Include="TestVecAdd.h" />
-    <ClInclude Include="TestMatAdd.h" />
-    <ClInclude Include="TestMatMul.h" />
-    <ClInclude Include="TestUtils.h" />
+    <ClCompile Include="Transformer_dataflow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Layers\Activations.h" />
+    <ClInclude Include="Layers\Concat.h" />
+    <ClInclude Include="Layers\Decoder.h" />
+    <ClInclude Include="Layers\Encoder.h" />
+    <ClInclude Include="Layers\FF.h" />
+    <ClInclude Include="Layers\LayerNorm.h" />
+    <ClInclude Include="Layers\Linear.h" />
+    <ClInclude Include="Layers\Mask.h" />
+    <ClInclude Include="Layers\MatAdd.h" />
+    <ClInclude Include="Layers\MatMul.h" />
+    <ClInclude Include="Layers\MultiHeadAtt.h" />
+    <ClInclude Include="Layers\Scale.h" />
+    <ClInclude Include="Layers\ScaledDotAtt.h" />
+    <ClInclude Include="Layers\SoftMax.h" />
+    <ClInclude Include="Layers\Transpose.h" />
+    <ClInclude Include="Layers\VecAdd.h" />
+    <ClInclude Include="Tests\Test.h" />
+    <ClInclude Include="Tests\TestAcvtivations.h" />
+    <ClInclude Include="Tests\TestDecoder.h" />
+    <ClInclude Include="Tests\TestEncoder.h" />
+    <ClInclude Include="Tests\TestFF.h" />
+    <ClInclude Include="Tests\TestLayerNorm.h" />
+    <ClInclude Include="Tests\TestLinear.h" />
+    <ClInclude Include="Tests\TestMask.h" />
+    <ClInclude Include="Tests\TestMatAdd.h" />
+    <ClInclude Include="Tests\TestMatMul.h" />
+    <ClInclude Include="Tests\TestMultiHeadAtt.h" />
+    <ClInclude Include="Tests\TestScale.h" />
+    <ClInclude Include="Tests\TestScaledDotAtt.h" />
+    <ClInclude Include="Tests\TestSoftMax.h" />
+    <ClInclude Include="Tests\TestTranspose.h" />
+    <ClInclude Include="Tests\TestUtils.h" />
+    <ClInclude Include="Tests\TestVecAdd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
