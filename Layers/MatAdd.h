@@ -1,3 +1,4 @@
+
 #pragma once 
 template<typename T, size_t rows, size_t cols>
 void matadd(T A[rows][cols], T B[rows][cols], T result[rows][cols]) {

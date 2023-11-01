@@ -2,7 +2,7 @@
 #include <cmath>
 
 template<typename T, size_t size>
-void softmax(T input[size], T result[size], T scale_factor) {
+void softmax(T input[size], T result[size]) {
 	T sum = 0;
 	T tmp[size] = {};
 	for (size_t i = 0; i < size; i++) {
