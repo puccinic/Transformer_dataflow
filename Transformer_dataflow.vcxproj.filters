@@ -103,7 +103,7 @@
     <ClInclude Include="Layers\MatMul.h">
       <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="Layers\MultiHeadAtt.h">
+    <ClInclude Include="Layers\AttHead.h">
       <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
     <ClInclude Include="Layers\Scale.h">
@@ -171,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="Tests\TestMultiHeadAtt.h">
       <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\MultiHeadAtt.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

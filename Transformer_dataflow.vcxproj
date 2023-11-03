@@ -171,6 +171,7 @@
     <ClInclude Include="Layers\Mask.h" />
     <ClInclude Include="Layers\MatAdd.h" />
     <ClInclude Include="Layers\MatMul.h" />
+    <ClInclude Include="Layers\AttHead.h" />
     <ClInclude Include="Layers\MultiHeadAtt.h" />
     <ClInclude Include="Layers\Scale.h" />
     <ClInclude Include="Layers\ScaledDotAtt.h" />

@@ -2,28 +2,35 @@
 #include "Linear.h"
 #include "ScaledDotAtt.h"
 
-template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length>
-void atthead(T query[sequence_length][token_length],
-	T key[sequence_length][token_length],
-	T value[sequence_length][token_length],
-	T q_weights[token_length][head_token_length],
-	T q_biases[head_token_length],
-	T k_weights[token_length][head_token_length],
-	T k_biases[head_token_length],
-	T v_weights[token_length][head_token_length],
-	T v_biases[head_token_length],
-	T input_mask[sequence_length][sequence_length],
-	T scale_factor,
-	T result[sequence_length][head_token_length]) {
+
+
+template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
+struct AttHead {
+	constexpr size_t num_linear_layers = 3;
+	Linear<T, sequence_length, token_length, token_length> linear_q, linear_k, linear_v;
 	
-	T Q[sequence_length][head_token_length];
-	linear<T, sequence_length, token_length, head_token_length>(query, q_weights, q_biases, Q);
+	void init(T weights[num_linear_layers][token_length][head_token_length],
+		T biases[num_linear_layers][head_token_length]) {
+		linear_q.init(weights[0], biases[0]);
+		linear_k.init(weights[1], biases[1]);
+		linear_v.init(weights[2], biases[2]);
+	}
 
-	T K[sequence_length][head_token_length];
-	linear<T, sequence_length, token_length, head_token_length>(key, k_weights, k_biases, K);
+	void operator()(T query[sequence_length][token_length],
+		T key[sequence_length][token_length],
+		T value[sequence_length][token_length],
+		T input_mask[sequence_length][sequence_length],
+		T result[sequence_length][head_token_length]) {
 
-	T V[sequence_length][head_token_length];
-	linear<T, sequence_length, token_length, head_token_length>(value, v_weights, v_biases, V);
+		T Q[sequence_length][head_token_length]{};
+		linear_q(query, Q);
 
-	scaledotatt<T, sequence_length, head_token_length>(Q, K, V, input_mask, scale_factor, result);
-}
+		T K[sequence_length][head_token_length]{};
+		linear_k(key, K);
+
+		T V[sequence_length][head_token_length]{};
+		linear_v(value, V);
+
+		scaledotatt<T, sequence_length, head_token_length, scale_factor>(Q, K, V, input_mask, result);
+	}
+};

@@ -20,7 +20,8 @@ void test_linear(std::string* input_filename,
 
 	T output[rows][cols]{};
 
-	linear<T, rows, hidden, cols>(input, weights, biases, output);
-
+	Linear<T, rows, hidden, cols> linear;
+	linear.init(weights, biases);
+	linear(input, output);
 	compare_mat<T, rows, cols>(output, result_gold_filename, log_filename);
 }

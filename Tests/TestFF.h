@@ -26,9 +26,10 @@ void test_linear(std::string* input_filename,
 	T biases2[cols]{};
 	load_arr<T, cols>(biases2, biases2_filename);
 
-	T output[rows][cols];
-
-	FF<T, rows, hidden, cols>(input, weights1, biases1, weights2, biases2, output);
+	T output[rows][cols]{};
+	FF<T, rows, hidden, cols> feed_forward;
+	feed_forward.init(weights1, biases1, weights2, biases2);
+	feed_forward(input, output);
 	
 	compare_mat<T, rows, cols>(output, result_gold_filename, log_filename);
 }
