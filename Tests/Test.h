@@ -5,6 +5,7 @@
 #include "TestMatAdd.h"
 #include "TestMatMul.h"
 #include "TestTranspose.h"
+#include "TestConcat.h"
 #include "TestLinear.h"
 #include "TestSoftMax.h"
 #include "TestMask.h"
