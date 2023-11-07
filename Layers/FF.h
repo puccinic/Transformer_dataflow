@@ -6,7 +6,7 @@ template<typename T, size_t rows, size_t hidden, size_t cols>
 struct FF {
 	Linear<T, rows, cols, hidden> linear1;
 	Linear<T,rows,hidden,cols> linear2;
-	
+
 	void init(T weights1[cols][hidden], 
 		T biases1[hidden], 
 		T weights2[hidden][cols], 

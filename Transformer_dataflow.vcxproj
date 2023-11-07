@@ -180,6 +180,8 @@
     <ClInclude Include="Layers\VecAdd.h" />
     <ClInclude Include="Tests\Test.h" />
     <ClInclude Include="Tests\TestAcvtivations.h" />
+    <ClInclude Include="Tests\TestAttHead.h" />
+    <ClInclude Include="Tests\TestConcat.h" />
     <ClInclude Include="Tests\TestDecoder.h" />
     <ClInclude Include="Tests\TestEncoder.h" />
     <ClInclude Include="Tests\TestFF.h" />
@@ -195,6 +197,9 @@
     <ClInclude Include="Tests\TestTranspose.h" />
     <ClInclude Include="Tests\TestUtils.h" />
     <ClInclude Include="Tests\TestVecAdd.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestGenerator.py" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -175,5 +175,16 @@
     <ClInclude Include="Layers\MultiHeadAtt.h">
       <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="Tests\TestConcat.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\TestAttHead.h">
+      <Filter>Archivos de encabezado\Test</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestGenerator.py">
+      <Filter>Archivos de origen</Filter>
+    </None>
   </ItemGroup>
 </Project>

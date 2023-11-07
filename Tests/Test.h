@@ -14,5 +14,6 @@
 #include "TestFF.h"
 #include "TestScaledDotAtt.h"
 #include "TestMultiHeadAtt.h"
+#include "TestAttHead.h"
 #include "TestEncoder.h"
 #include "TestDecoder.h"

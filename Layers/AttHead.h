@@ -2,15 +2,17 @@
 #include "Linear.h"
 #include "ScaledDotAtt.h"
 
-
+constexpr size_t num_linear_layers = 3;
 
 template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
 struct AttHead {
-	constexpr size_t num_linear_layers = 3;
-	Linear<T, sequence_length, token_length, token_length> linear_q, linear_k, linear_v;
 	
-	void init(T weights[num_linear_layers][token_length][head_token_length],
-		T biases[num_linear_layers][head_token_length]) {
+	Linear<T, sequence_length, token_length, token_length> linear_q, linear_k, linear_v;
+	typedef T weights_t[num_linear_layers][token_length][head_token_length];
+	typedef T biases_t[num_linear_layers][head_token_length];
+
+	void init(weights_t weights,
+		biases_t biases) {
 		linear_q.init(weights[0], biases[0]);
 		linear_k.init(weights[1], biases[1]);
 		linear_v.init(weights[2], biases[2]);
