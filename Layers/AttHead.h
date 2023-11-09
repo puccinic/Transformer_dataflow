@@ -7,7 +7,7 @@ constexpr size_t num_linear_layers = 3;
 template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
 struct AttHead {
 	
-	Linear<T, sequence_length, token_length, token_length> linear_q, linear_k, linear_v;
+	Linear<T, sequence_length, token_length, head_token_length> linear_q, linear_k, linear_v;
 	typedef T weights_t[num_linear_layers][token_length][head_token_length];
 	typedef T biases_t[num_linear_layers][head_token_length];
 
