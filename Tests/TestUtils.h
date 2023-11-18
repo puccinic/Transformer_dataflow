@@ -16,19 +16,6 @@ void load_arr(T arr[size], std::string* filename) {
 	}
 }
 
-template<typename T, size_t rows, size_t cols>
-void load_mat(T mat[rows][cols], std::string* filename) {
-	std::ifstream file(*filename);
-	for (size_t i = 0; i < rows; i++) {
-		for (size_t j = 0; j < cols; j++) {
-			std::string line;
-			std::getline(file, line);
-			std::stringstream stream;
-			stream << line;
-			stream >> mat[i][j];
-		}
-	}
-}
 
 template<typename T, size_t size>
 void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filename) {

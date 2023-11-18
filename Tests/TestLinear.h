@@ -10,10 +10,10 @@ void test_linear(std::string* input_filename,
 	std::string* log_filename) {
 
 	T input[rows][hidden]{};
-	load_mat<T, rows, hidden>(input, input_filename);
+	load_arr<T, rows*hidden>((T*)input, input_filename);
 
 	T weights[hidden][cols]{};
-	load_mat<T, hidden, cols>(weights, weights_filename);
+	load_arr<T, hidden*cols>((T*)weights, weights_filename);
 
 	T biases[cols]{};
 	load_arr<T, cols>(biases, biases_filename);

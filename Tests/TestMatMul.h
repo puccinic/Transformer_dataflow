@@ -9,10 +9,10 @@ void test_matmul(std::string* matA_filename,
 	std::string* log_filename) {
 
 	T A[rows][hidden]{};
-	load_mat<T, rows, hidden>(A, matA_filename);
+	load_arr<T, rows*hidden>((T*)A, matA_filename);
 
 	T B[hidden][cols]{};
-	load_mat<T, hidden, cols>(B, matB_filename);
+	load_arr<T, hidden*cols>((T*)B, matB_filename);
 
 	T result[rows][cols]{};
 

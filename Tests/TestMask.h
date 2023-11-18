@@ -9,10 +9,10 @@ void test_mask(std::string* input_filename,
 	std::string* log_filename) {
 
 	T input[rows][cols]{};
-	load_mat<T, rows, cols>(input, input_filename);
+	load_arr<T, rows*cols>((T*)input, input_filename);
 
 	T mask_mat[rows][cols]{};
-	load_mat<T, rows, cols>(mask_mat, mask_filename);
+	load_arr<T, rows*cols>((T*)mask_mat, mask_filename);
 	
 	T output[rows][cols]{};
 	

@@ -13,7 +13,7 @@
 #include "TestLayerNorm.h"
 #include "TestFF.h"
 #include "TestScaledDotAtt.h"
-#include "TestMultiHeadAtt.h"
 #include "TestAttHead.h"
+#include "TestMultiHeadAtt.h"
 #include "TestEncoder.h"
 #include "TestDecoder.h"

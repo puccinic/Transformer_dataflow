@@ -19,7 +19,7 @@ struct FF {
 		T tmp1[rows][hidden]{};
 		linear1(input, tmp1);
 		T tmp2[rows][hidden]{};
-		activation<T, rows, hidden>(tmp1, tmp2, relu);
+		activation<T, rows, hidden>(tmp1, tmp2);
 		linear2(tmp2, result);
 	}
 };

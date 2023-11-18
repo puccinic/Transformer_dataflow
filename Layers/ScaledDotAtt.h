@@ -17,7 +17,7 @@ void scaledotatt(T query[sequence_length][token_length],
 	transpose_matrix<T, sequence_length, token_length>(key, key_t);
 
 	T queryxkey[sequence_length][sequence_length]{};
-	matmul<T, sequence_length, token_length, sequence_length>(query, key, queryxkey);
+	matmul<T, sequence_length, token_length, sequence_length>(query, key_t, queryxkey);
 
     T scaled_queryxkey[sequence_length][sequence_length]{};
 	scale<T, sequence_length, sequence_length>(queryxkey, scaled_queryxkey, scale_factor);

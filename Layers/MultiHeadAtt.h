@@ -17,7 +17,7 @@ struct MultiHeadAtt {
 		T linear_weights[token_length][token_length],
 		T linear_bias[token_length]) {
 		for (size_t i = 0; i < num_heads; i++) {
-			heads[i].init(*head_weights[i], *head_biases[i]);
+			heads[i].init(head_weights[i], head_biases[i]);
 		}
 		linear.init(linear_weights, linear_bias);
 	}
@@ -27,11 +27,11 @@ struct MultiHeadAtt {
 		T input_mask[sequence_length][sequence_length],
 		T result[sequence_length][token_length]) {
 
-		T tmp1[num_heads][sequence_length][head_token_length];
+		T tmp1[num_heads][sequence_length][head_token_length]{};
 		for (size_t i = 0; i < num_heads; i++) {
 			heads[i](query, key, values, input_mask, tmp1[i]);
 		}
-		T tmp2[sequence_length][token_length];
+		T tmp2[sequence_length][token_length]{};
 		concat_cols<T, sequence_length, head_token_length, num_heads>(tmp1, tmp2);
 
 		linear(tmp2, result);

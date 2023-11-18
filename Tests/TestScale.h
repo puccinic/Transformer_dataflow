@@ -9,7 +9,7 @@ void test_scale(std::string* input_filename,
 	std::string* log_filename) {
 
 	T input[rows][cols]{};
-	load_mat<T, rows, cols>(input, input_filename);
+	load_arr<T, rows*cols>((T*)input, input_filename);
 
 	T output[rows][cols]{};
 

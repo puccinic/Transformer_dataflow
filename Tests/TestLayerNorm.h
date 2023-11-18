@@ -11,7 +11,7 @@ void test_layernorm(std::string* input_filename,
 	std::string* log_filename) {
 
 	T input[channels][size]{};
-	load_mat<T, channels, size>(input, input_filename);
+	load_arr<T, channels*size>((T*)input, input_filename);
 
 	double epsilon[channels]{};
 	load_arr<double, channels>(epsilon, epsilon_filename);

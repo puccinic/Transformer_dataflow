@@ -39,18 +39,11 @@ T erf(T x) {
 	return (T)_erf((double)x);
 }
 
-
-#define _ACT_TYPE <T>
-#ifndef ACTIVATION_FUNCTION
-    #define ACTIVATION_FUNCTION relu
-#endif // !ACTIVATION_FUNCTION
-
-#define APPLY_ACTIVATION(func,x) func##_ACT_TYPE(x)
 template<typename T, size_t rows, size_t cols>
 void activation(T input[rows][cols], T result[rows][cols]) {
 	for (size_t i = 0; i < rows; i++) {
 		for (size_t j = 0; j < cols; j++) {
-			result[i][j] = APPLY_ACTIVATION(ACTIVATION_FUNCTION,input[i][j]);
+			result[i][j] = relu<T>(input[i][j]);
 		}
 	}
 }
