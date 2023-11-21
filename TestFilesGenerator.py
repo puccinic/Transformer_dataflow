@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import torch
 from torch import nn
@@ -107,7 +108,7 @@ def scaleDotAtt(matIn: FileName, matMask: FileName, matOut: FileName) -> None:
 
 def softmax(matIn: FileName, matOut: FileName) -> None:
   input1 = torch.rand(COLS)
-  output = nn.functional.softmax(input1)
+  output = nn.functional.softmax(input1, dim=-1)
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
 
@@ -132,7 +133,7 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 	Test_Concat, 
 	Test_Encoder, #TODO 
 	Test_FeedForward, #TODO
-	Test_LayerNorm, #TODO
+	Test_LayerNorm, #NEED TO CHECK
 	Test_Linear,
 	Test_Mask,
 	Test_MatAdd,
@@ -140,7 +141,7 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 	Test_MultiHeadAtt, #TODO
 	Test_Scale,
 	Test_ScaleDotAtt, #TODO
-	Test_SoftMax, #TODO
+	Test_SoftMax, #NEED TO CHECK
 	Test_Transpose,
 	Test_VecAdd
 '''
@@ -156,7 +157,7 @@ input_filename: list[FileName] = [
 
 result_filename: FileName = "golden_result.txt"
 
-test = "Test_LayerNorm"
+test = sys.argv[1]
 match test:
   case "Test_Activation":
     activation(input_filename[0], result_filename)
