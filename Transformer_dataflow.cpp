@@ -39,14 +39,14 @@ int main() {
 	std::string result_filename = "golden_result.txt";
 	std::string log_filename = "log.txt";
 
-	Test_types test = Test_Activation;
+	Test_types test = Test_LayerNorm;
 
 	switch (test) {
 	case Test_Activation:
 		test_activations<TYPE,ROWS,COLS>(&input_filename[0], &result_filename, &log_filename);
 		break;
 	case Test_AttHead:
-		test_attHead<TYPE, ROWS, COLS, COLS / NUM_HEADS, SCALE_FACTOR>(&input_filename[0],
+		test_attHead<TYPE, ROWS, COLS, COLS / NUM_HEADS>(&input_filename[0],
 			&input_filename[1], &input_filename[2], 
 			&input_filename[3], &result_filename, &log_filename
 		);
@@ -63,9 +63,8 @@ int main() {
 		);
 		break;
 	case Test_LayerNorm:
-		test_layernorm<TYPE, ROWS, COLS>(&input_filename[0], &input_filename[1], 
-			&input_filename[2], &input_filename[3],
-			&result_filename, &log_filename
+		test_layernorm<TYPE, ROWS, COLS>(EPSILON, &input_filename[0], &input_filename[1],
+			&input_filename[2], &result_filename, &log_filename
 		);
 		break;
 	case Test_Linear:
@@ -85,7 +84,7 @@ int main() {
 		);
 		break;
 	case Test_MultiHeadAtt:
-		test_multiheadatt<TYPE, NUM_HEADS, ROWS, COLS, COLS / NUM_HEADS, SCALE_FACTOR>(&input_filename[0], 
+		test_multiheadatt<TYPE, NUM_HEADS, ROWS, COLS, COLS / NUM_HEADS>(&input_filename[0], 
 			&input_filename[1], &input_filename[2], &input_filename[3], &input_filename[4], 
 			&input_filename[5], &result_filename, &log_filename
 		);
@@ -94,7 +93,7 @@ int main() {
 		test_scale<TYPE,ROWS,COLS>(&input_filename[0], SCALE_FACTOR, &result_filename, &log_filename);
 		break;
 	case Test_ScaleDotAtt:
-		test_scaledotatt<TYPE, ROWS, COLS, SCALE_FACTOR>(&input_filename[0], &input_filename[1], 
+		test_scaledotatt<TYPE, ROWS, COLS>(&input_filename[0], &input_filename[1], 
 			&result_filename, &log_filename
 		);
 		break;
