@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "MultiheadAtt.h"
 
-template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
+template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length>
 void test_multiheadatt(std::string* input_filename,
 	std::string* mask_filename,
 	std::string* weights_filename,
@@ -33,7 +33,7 @@ void test_multiheadatt(std::string* input_filename,
 
 	T output[sequence_length][token_length]{};
 
-	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length, scale_factor> mulitheadatt;
+	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length> mulitheadatt;
 	mulitheadatt.init(weights, biases, linear_weight, linear_bias);
 	mulitheadatt(input, input, input, input_mask, output);
 

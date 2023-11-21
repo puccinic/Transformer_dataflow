@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "AttHead.h"
 
-template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
+template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length>
 void test_attHead(std::string* matIn_filename,
 	std::string* weights_filename,
 	std::string* biases_filename,
@@ -23,7 +23,7 @@ void test_attHead(std::string* matIn_filename,
 	load_arr<T, num_linear_layers*head_token_length>((T*)biases, biases_filename);
 
 	T output[sequence_length][head_token_length]{};
-	AttHead<T, sequence_length, token_length, head_token_length, scale_factor> atthead;
+	AttHead<T, sequence_length, token_length, head_token_length> atthead;
 	atthead.init(weights, biases);
 	atthead(matIn, matIn, matIn, matMask, output);
 

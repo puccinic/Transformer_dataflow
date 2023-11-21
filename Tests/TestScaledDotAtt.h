@@ -3,7 +3,7 @@
 #include "ScaledDotAtt.h"
 
 
-template<typename T, size_t sequence_length, size_t token_length, T scale_factor>
+template<typename T, size_t sequence_length, size_t token_length>
 void test_scaledotatt(std::string* matIn_filename,
 	std::string* matMask_filename,
 	std::string* result_gold_filename,
@@ -15,7 +15,7 @@ void test_scaledotatt(std::string* matIn_filename,
 	load_arr<T, sequence_length*sequence_length>((T*)matMask, matMask_filename);
 
 	T matResult[sequence_length][token_length]{};
-	scaledotatt<T, sequence_length, token_length, scale_factor>(matIn, matIn, matIn, matMask, matResult);
+	scaledotatt<T, sequence_length, token_length>(matIn, matIn, matIn, matMask, matResult);
 
 	compare_mat<T, sequence_length, token_length>(matResult, result_gold_filename, log_filename);
 }

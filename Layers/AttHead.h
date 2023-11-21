@@ -4,7 +4,7 @@
 
 constexpr size_t num_linear_layers = 3;
 
-template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
+template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length>
 struct AttHead {
 	
 	Linear<T, sequence_length, token_length, head_token_length> linear_q, linear_k, linear_v;
@@ -33,6 +33,6 @@ struct AttHead {
 		T V[sequence_length][head_token_length]{};
 		linear_v(value, V);
 
-		scaledotatt<T, sequence_length, head_token_length, scale_factor>(Q, K, V, input_mask, result);
+		scaledotatt<T, sequence_length, head_token_length>(Q, K, V, input_mask, result);
 	}
 };

@@ -3,9 +3,9 @@
 #include "Concat.h"
 #include "Linear.h"
 
-template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length, T scale_factor>
+template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length>
 struct MultiHeadAtt {
-	AttHead<T, sequence_length, token_length, head_token_length, scale_factor> heads[num_heads];
+	AttHead<T, sequence_length, token_length, head_token_length> heads[num_heads];
 	Linear<T, sequence_length, token_length, token_length> linear;
 
 	

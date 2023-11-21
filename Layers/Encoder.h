@@ -7,11 +7,10 @@ template<typename T, size_t num_heads,
 	size_t sequence_length, 
 	size_t token_length, 
 	size_t head_token_length,
-	size_t hidden,
-	T scale_factor>
+	size_t hidden>
 struct Encoder {
 	
-	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length, scale_factor>
+	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length>
 		multi_head_att;
 	LayerNorm<T, sequence_length, token_length> 
 		layer_norm1, layer_norm2;
