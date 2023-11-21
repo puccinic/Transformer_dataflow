@@ -39,7 +39,7 @@ int main() {
 	std::string result_filename = "golden_result.txt";
 	std::string log_filename = "log.txt";
 
-	Test_types test = Test_LayerNorm;
+	Test_types test = Test_SoftMax;
 
 	switch (test) {
 	case Test_Activation:
