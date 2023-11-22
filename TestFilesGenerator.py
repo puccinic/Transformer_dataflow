@@ -100,8 +100,8 @@ def scale(matIn: FileName, matOut: FileName) ->None:
 
 def scaleDotAtt(matIn: FileName, matMask: FileName, matOut: FileName) -> None:
   input1 = torch.rand((ROWS, COLS))
-  attn_mask = torch.randint(0, 2, size=(ROWS, ROWS)).bool()
-  output = nn.functional.scaled_dot_product_attention(input1, input1, input1, attn_mask)
+  attn_mask = torch.randint(0, 2, size=(ROWS, ROWS))
+  output = nn.functional.scaled_dot_product_attention(input1, input1, input1, attn_mask.bool())
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
   printMatrix(attn_mask,matMask)
@@ -128,20 +128,22 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
   printMatrix(output, vecOut)
 
 
+#List of valid Arguments
+#Ask why there is a difference regarding floating point operations in python and C
 '''Test_Activation,
 	Test_AttHead, #TODO
 	Test_Concat, 
 	Test_Encoder, #TODO 
 	Test_FeedForward, #TODO
-	Test_LayerNorm, #NEED TO CHECK
+	Test_LayerNorm,
 	Test_Linear,
 	Test_Mask,
 	Test_MatAdd,
 	Test_MatMul,
 	Test_MultiHeadAtt, #TODO
 	Test_Scale,
-	Test_ScaleDotAtt, #TODO
-	Test_SoftMax, #NEED TO CHECK
+	Test_ScaleDotAtt,
+	Test_SoftMax,
 	Test_Transpose,
 	Test_VecAdd
 '''
