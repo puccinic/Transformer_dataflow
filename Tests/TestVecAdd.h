@@ -2,11 +2,12 @@
 #include "TestUtils.h"
 #include "VecAdd.h"
 template<typename T, size_t size>
-void test_vecadd(std::string* vec1_filename,
+void test_vecadd(
+	std::string* vec1_filename,
 	std::string* vec2_filename,
 	std::string* vecResGold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T vec1[size]{};
 	load_arr<T, size>(vec1, vec1_filename);
 

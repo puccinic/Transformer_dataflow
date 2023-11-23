@@ -3,23 +3,24 @@
 #include "MatAdd.h"
 #include "LayerNorm.h"
 #include "FF.h"
-template<typename T, size_t num_heads, 
-	size_t sequence_length, 
-	size_t token_length, 
+template<typename T, size_t num_heads,
+	size_t sequence_length,
+	size_t token_length,
 	size_t head_token_length,
 	size_t hidden>
-struct Encoder {
-	
+	struct Encoder {
+
 	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length>
 		multi_head_att;
-	LayerNorm<T, sequence_length, token_length> 
+	LayerNorm<T, sequence_length, token_length>
 		layer_norm1, layer_norm2;
-	FF<T, sequence_length, hidden, token_length> 
+	FF<T, sequence_length, hidden, token_length>
 		ff;
-	
+
 	typedef T head_weights_t[num_heads][num_linear_layers][token_length][head_token_length];
 	typedef T head_biases_t[num_heads][num_linear_layers][head_token_length];
-	void init(head_biases_t head_weights, 
+	void init(
+		head_biases_t head_weights,
 		head_biases_t head_biases,
 		T linear_weights[token_length][token_length],
 		T linear_bias[token_length],
@@ -27,9 +28,10 @@ struct Encoder {
 		T ff_biases1[hidden],
 		T ff_weights2[hidden][token_length],
 		T ff_biases2[token_length],
-		T epsilon[2][sequence_length],
-		T gamma[2][sequence_length],
-		T beta[2][sequence_length]) {
+		double epsilon[2][sequence_length],
+		double gamma[2][token_length],
+		double beta[2][token_length]
+	) {
 		multi_head_att.init(head_weights, head_biases, linear_weights, linear_bias);
 		ff.init(ff_weights1, ff_biases1, ff_weights2, ff_biases2);
 		layer_norm1.init(epsilon[0], gamma[0], beta[0]);
@@ -45,10 +47,10 @@ struct Encoder {
 
 		T tmp2[sequence_length][token_length];
 		matadd<T, sequence_length, token_length>(input, tmp1, tmp2);
-		
+
 		T tmp3[sequence_length][token_length];
 		layer_norm1(tmp2, tmp3);
-		
+
 		T tmp4[sequence_length][token_length];
 		ff(tmp3, tmp4);
 

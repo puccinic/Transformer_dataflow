@@ -3,7 +3,8 @@
 #include "MultiheadAtt.h"
 
 template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length>
-void test_multiheadatt(std::string* input_filename,
+void test_multiheadatt(
+	std::string* input_filename,
 	std::string* mask_filename,
 	std::string* weights_filename,
 	std::string* biases_filename,

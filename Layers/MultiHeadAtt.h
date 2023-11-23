@@ -12,21 +12,25 @@ struct MultiHeadAtt {
 	typedef T head_weights_t[num_heads][num_linear_layers][token_length][head_token_length];
 	typedef T head_biases_t[num_heads][num_linear_layers][head_token_length];
 	
-	void init(head_weights_t head_weights,
+	void init(
+		head_weights_t head_weights,
 		head_biases_t head_biases,
 		T linear_weights[token_length][token_length],
-		T linear_bias[token_length]) {
+		T linear_bias[token_length]
+	) {
 		for (size_t i = 0; i < num_heads; i++) {
 			heads[i].init(head_weights[i], head_biases[i]);
 		}
 		linear.init(linear_weights, linear_bias);
 	}
-	void operator()(T query[sequence_length][token_length],
+
+	void operator()(
+		T query[sequence_length][token_length],
 		T key[sequence_length][token_length],
 		T values[sequence_length][token_length],
 		T input_mask[sequence_length][sequence_length],
-		T result[sequence_length][token_length]) {
-
+		T result[sequence_length][token_length]
+		) {
 		T tmp1[num_heads][sequence_length][head_token_length]{};
 		for (size_t i = 0; i < num_heads; i++) {
 			heads[i](query, key, values, input_mask, tmp1[i]);

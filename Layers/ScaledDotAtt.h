@@ -6,12 +6,13 @@
 #include "Scale.h"
 
 template<typename T, size_t sequence_length, size_t token_length>
-void scaledotatt(T query[sequence_length][token_length],
+void scaledotatt(
+	T query[sequence_length][token_length],
 	T key[sequence_length][token_length],
 	T value[sequence_length][token_length],
 	T input_mask[sequence_length][sequence_length],
-	T result[sequence_length][token_length]) {
-	
+	T result[sequence_length][token_length]
+) {
 	const T scale_factor = std::sqrt(token_length);
 
 	T key_t[token_length][sequence_length]{};

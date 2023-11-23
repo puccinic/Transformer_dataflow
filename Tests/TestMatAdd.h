@@ -3,11 +3,12 @@
 #include "MatAdd.h"
 
 template<typename T, size_t rows, size_t cols>
-void test_matadd(std::string* matA_filename,
+void test_matadd(
+	std::string* matA_filename,
 	std::string* matB_filename,
 	std::string* result_gold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T matA[rows][cols]{};
 	load_arr<T, rows*cols>((T*)matA, matA_filename);
 

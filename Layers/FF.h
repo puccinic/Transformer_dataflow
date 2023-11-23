@@ -7,10 +7,12 @@ struct FF {
 	Linear<T, rows, cols, hidden> linear1;
 	Linear<T,rows,hidden,cols> linear2;
 
-	void init(T weights1[cols][hidden], 
+	void init(
+		T weights1[cols][hidden], 
 		T biases1[hidden], 
 		T weights2[hidden][cols], 
-		T biases2[cols]) {
+		T biases2[cols]
+	) {
 		linear1.init(weights1,biases1);
 		linear2.init(weights2, biases2);
 	}

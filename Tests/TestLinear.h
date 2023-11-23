@@ -3,12 +3,13 @@
 #include "Linear.h"
 
 template<typename T, size_t rows, size_t hidden, size_t cols>
-void test_linear(std::string* input_filename,
+void test_linear(
+	std::string* input_filename,
 	std::string* weights_filename,
 	std::string* biases_filename,
 	std::string* result_gold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T input[rows][hidden]{};
 	load_arr<T, rows*hidden>((T*)input, input_filename);
 

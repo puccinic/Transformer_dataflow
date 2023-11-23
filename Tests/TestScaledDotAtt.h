@@ -7,8 +7,8 @@ template<typename T, size_t sequence_length, size_t token_length>
 void test_scaledotatt(std::string* matIn_filename,
 	std::string* matMask_filename,
 	std::string* result_gold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T matIn[sequence_length][token_length]{};
 	load_arr<T, sequence_length*token_length>((T*)matIn, matIn_filename);
 	T matMask[sequence_length][sequence_length]{};

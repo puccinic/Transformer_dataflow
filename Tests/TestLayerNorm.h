@@ -3,13 +3,14 @@
 #include "LayerNorm.h"
 
 template<typename T, size_t channels, size_t size>
-void test_layernorm(double epsilon,
+void test_layernorm(
+	double epsilon,
 	std::string* input_filename,
 	std::string* gamma_filename,
 	std::string* beta_filename,
 	std::string* vecResGold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T input[channels][size]{};
 	load_arr<T, channels*size>((T*)input, input_filename);
 	

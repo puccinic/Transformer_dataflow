@@ -3,11 +3,12 @@
 #include "Scale.h"
 
 template<typename T, size_t rows, size_t cols>
-void test_scale(std::string* input_filename,
+void test_scale(
+	std::string* input_filename,
 	T scale_factor,
 	std::string* result_gold_filename,
-	std::string* log_filename) {
-
+	std::string* log_filename
+) {
 	T input[rows][cols]{};
 	load_arr<T, rows*cols>((T*)input, input_filename);
 
