@@ -20,7 +20,7 @@ template<typename T, size_t num_heads,
 	typedef T head_weights_t[num_heads][num_linear_layers][token_length][head_token_length];
 	typedef T head_biases_t[num_heads][num_linear_layers][head_token_length];
 	void init(
-		head_biases_t head_weights,
+		head_weights_t head_weights,
 		head_biases_t head_biases,
 		T linear_weights[token_length][token_length],
 		T linear_bias[token_length],
@@ -28,7 +28,7 @@ template<typename T, size_t num_heads,
 		T ff_biases1[hidden],
 		T ff_weights2[hidden][token_length],
 		T ff_biases2[token_length],
-		double epsilon[2][sequence_length],
+		double epsilon[2],
 		double gamma[2][token_length],
 		double beta[2][token_length]
 	) {
@@ -42,19 +42,19 @@ template<typename T, size_t num_heads,
 		T input_mask[sequence_length][sequence_length],
 		T result[sequence_length][sequence_length]) {
 
-		T tmp1[sequence_length][token_length];
+		T tmp1[sequence_length][token_length]{};
 		multi_head_att(input, input, input, input_mask, tmp1);
 
-		T tmp2[sequence_length][token_length];
+		T tmp2[sequence_length][token_length]{};
 		matadd<T, sequence_length, token_length>(input, tmp1, tmp2);
 
-		T tmp3[sequence_length][token_length];
+		T tmp3[sequence_length][token_length]{};
 		layer_norm1(tmp2, tmp3);
 
-		T tmp4[sequence_length][token_length];
+		T tmp4[sequence_length][token_length]{};
 		ff(tmp3, tmp4);
 
-		T tmp5[sequence_length][token_length];
+		T tmp5[sequence_length][token_length]{};
 		matadd<T, sequence_length, token_length>(tmp3, tmp4, tmp5);
 
 		layer_norm1(tmp5, result);
