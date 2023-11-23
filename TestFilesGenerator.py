@@ -8,7 +8,7 @@ ROWS =  10
 COLS =  10
 HIDDEN = 10
 SCALE_FACTOR =  10
-NUM_HEADS =  10
+NUM_HEADS =  1
 INT_HIGH = 128
 INT_LOW = -128
 
@@ -27,7 +27,25 @@ def activation(matIn: FileName, matOut: FileName) -> None:
   printMatrix(output, matOut)
   
 
-def atthead():
+def atthead(
+    matIn: FileName, matWeight: FileName, 
+    matBias: FileName, matMask: FileName,
+    matOut: FileName
+            ) -> None:
+  num_layers = 3
+  input1 = torch.rand((ROWS, COLS))
+  weights = torch.rand((num_layers, COLS//NUM_HEADS, COLS))
+  biases = torch.rand((num_layers, COLS//NUM_HEADS))
+  attn_mask = torch.randint(0, 2, size=(ROWS, ROWS))
+  q = nn.functional.linear(input1, weights[0], biases[0])
+  k = nn.functional.linear(input1, weights[1], biases[1])
+  v = nn.functional.linear(input1, weights[2], biases[2])
+  output = nn.functional.scaled_dot_product_attention(q, k, v, attn_mask.bool())
+  printMatrix(input1, matIn)
+  printMatrix(torch.transpose(weights,-2,-1), matWeight)
+  printMatrix(biases, matBias)
+  printMatrix(attn_mask,matMask)
+  printMatrix(output, matOut)
   pass
 
 def concat(matIn1: FileName, matIn2: FileName, matOut: FileName) -> None:
@@ -41,7 +59,25 @@ def concat(matIn1: FileName, matIn2: FileName, matOut: FileName) -> None:
 def encoder():
   pass
 
-def feedForward():
+def feedForward(
+    matIn: FileName, matWeights1: FileName, 
+    matBias1: FileName, matWeights2: FileName, 
+    matBias2: FileName, matOut: FileName
+    ) -> None:
+  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  weight1 = torch.randint(INT_LOW, INT_HIGH, (HIDDEN, COLS))
+  bias1 = torch.randint(INT_LOW, INT_HIGH, (HIDDEN,))
+  weight2 = torch.randint(INT_LOW, INT_HIGH, (COLS, HIDDEN))
+  bias2 = torch.randint(INT_LOW, INT_HIGH, (COLS,))
+  linear = nn.functional.linear(input1, weight1, bias1)
+  activation = nn.functional.relu(linear)
+  output = nn.functional.linear(activation,weight2,bias2)
+  printMatrix(input1, matIn)
+  printMatrix(torch.transpose(weight1,0,1), matWeights1)
+  printMatrix(bias1, matBias1)
+  printMatrix(torch.transpose(weight2,0,1), matWeights2)
+  printMatrix(bias2, matBias2)
+  printMatrix(output, matOut)
   pass
 
 def layerNorm(matIn: FileName, matWeight: FileName, matBias: FileName, matOut: FileName) -> None:
@@ -88,8 +124,38 @@ def matMul(matA: FileName, matB: FileName, matOut: FileName) -> None:
   printMatrix(input2, matB)
   printMatrix(output, matOut)
 
-def multiHeadAtt():
-  pass
+def multiHeadAtt(
+    matIn: FileName, matMask: FileName,
+    matHeadWeight: FileName, matHeadBias: FileName,
+    matAttWeight: FileName, matAttBias: FileName,
+    matOut: FileName
+    ) -> None:
+  num_layers = 3
+  input1 = torch.rand((ROWS, COLS))
+  weights_head = torch.rand((NUM_HEADS, num_layers, COLS//NUM_HEADS, COLS))
+  biases_head = torch.rand((NUM_HEADS, num_layers, COLS//NUM_HEADS))
+  attn_mask = torch.randint(0, 2, size=(ROWS, ROWS))
+  weights_att = torch.rand((COLS, COLS))
+  biases_att = torch.rand(COLS)
+  att: list[torch.Tensor] = []
+  for i in range(NUM_HEADS):
+    q = nn.functional.linear(input1, weights_head[i][0], biases_head[i][0])
+    k = nn.functional.linear(input1, weights_head[i][1], biases_head[i][1])
+    v = nn.functional.linear(input1, weights_head[i][2], biases_head[i][2])
+    atthead = nn.functional.scaled_dot_product_attention(q, k, v, attn_mask.bool())
+    att.append(atthead)
+  att = torch.concat(att,dim=-1)
+  output = nn.functional.linear(att,weights_att,biases_att)
+  printMatrix(input1, matIn)
+  printMatrix(torch.transpose(weights_head,-2,-1), matHeadWeight)
+  printMatrix(biases_head, matHeadBias)
+  printMatrix(attn_mask,matMask)
+  printMatrix(torch.transpose(weights_att,-2,-1), matAttWeight)
+  printMatrix(biases_att, matAttBias)
+  printMatrix(output, matOut)
+
+  
+
 
 def scale(matIn: FileName, matOut: FileName) ->None:
   input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
@@ -131,10 +197,10 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 #List of valid Arguments
 #Ask why there is a difference regarding floating point operations in python and C
 '''Test_Activation,
-	Test_AttHead, #TODO
+	Test_AttHead,
 	Test_Concat, 
 	Test_Encoder, #TODO 
-	Test_FeedForward, #TODO
+	Test_FeedForward,
 	Test_LayerNorm,
 	Test_Linear,
 	Test_Mask,
@@ -175,14 +241,25 @@ match test:
   case "Test_MatAdd":
     matAdd(input_filename[0], input_filename[1], result_filename)
   case "Test_MatMul":
-    matMul(input_filename[0],input_filename[1],result_filename)
+    matMul(input_filename[0], input_filename[1], result_filename)
   case "Test_ScaleDotAtt":
     scaleDotAtt(input_filename[0], input_filename[1], result_filename)
   case "Test_SoftMax":
-    softmax(input_filename[0],result_filename)
+    softmax(input_filename[0], result_filename)
   case "Test_Transpose":
-    transpose(input_filename[0],result_filename)
+    transpose(input_filename[0], result_filename)
   case "Test_VecAdd":
-    vecAdd(input_filename[0],input_filename[1],result_filename)
+    vecAdd(input_filename[0], input_filename[1], result_filename)
   case "Test_Scale":
     scale(input_filename[0], result_filename)
+  case "Test_FeedForward":
+    feedForward(input_filename[0], input_filename[1], input_filename[2], 
+			input_filename[3], input_filename[4], result_filename)
+  case "Test_AttHead":
+    atthead(input_filename[0], input_filename[1], input_filename[2], 
+            input_filename[3], result_filename)
+  case "Test_MultiHeadAtt":
+    multiHeadAtt(input_filename[0], input_filename[1], 
+                 input_filename[2], input_filename[3], 
+                 input_filename[4], input_filename[5], 
+                 result_filename)
