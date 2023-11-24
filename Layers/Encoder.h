@@ -57,6 +57,6 @@ template<typename T, size_t num_heads,
 		T tmp5[sequence_length][token_length]{};
 		matadd<T, sequence_length, token_length>(tmp3, tmp4, tmp5);
 
-		layer_norm1(tmp5, result);
+		layer_norm2(tmp5, result);
 	}
 };
