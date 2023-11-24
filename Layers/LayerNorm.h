@@ -25,7 +25,7 @@ struct LayerNorm {
 		}
 		variance = variance / size;
 		for (size_t i = 0; i < size; i++) {
-			result[i] = ((input[i] - mean) / std::sqrt(variance + epsilon)) * gamma[i] + beta[i];
+			result[i] = (((input[i] - mean) * gamma[i]) / std::sqrt(variance + epsilon)) + beta[i];
 		}
 	}
 
