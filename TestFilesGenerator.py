@@ -46,7 +46,7 @@ def atthead(
   printMatrix(biases, matBias)
   printMatrix(attn_mask,matMask)
   printMatrix(output, matOut)
-  pass
+
 
 def concat(matIn1: FileName, matIn2: FileName, matOut: FileName) -> None:
   input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
@@ -56,8 +56,58 @@ def concat(matIn1: FileName, matIn2: FileName, matOut: FileName) -> None:
   printMatrix(input2, matIn2)
   printMatrix(output, matOut)
 
-def encoder():
-  pass
+def encoder(
+    matIn: FileName, matMask: FileName,
+    matHeadWeight: FileName, matHeadBias: FileName,
+    matAttWeight: FileName, matAttBias: FileName,
+    matFFWeights1: FileName, matFFBias1: FileName, 
+    matFFWeights2: FileName, matFFBias2: FileName,
+    matGamma: FileName, matBeta: FileName, 
+    matOut: FileName
+) -> None:
+  num_layers = 3
+  input1 = torch.rand((ROWS, COLS))
+  weights_head = torch.rand((NUM_HEADS, num_layers, COLS//NUM_HEADS, COLS))
+  biases_head = torch.rand((NUM_HEADS, num_layers, COLS//NUM_HEADS))
+  attn_mask = torch.randint(0, 2, size=(ROWS, ROWS))
+  weights_att = torch.rand((COLS, COLS))
+  biases_att = torch.rand(COLS)
+  weight1 = torch.rand((HIDDEN, COLS))
+  bias1 = torch.rand(HIDDEN)
+  weight2 = torch.rand((COLS, HIDDEN))
+  bias2 = torch.rand(COLS)
+  gamma = torch.rand((2,COLS))
+  beta = torch.rand((2,COLS))
+  att: list[torch.Tensor] = []
+  for i in range(NUM_HEADS):
+    q = nn.functional.linear(input1, weights_head[i][0], biases_head[i][0])
+    k = nn.functional.linear(input1, weights_head[i][1], biases_head[i][1])
+    v = nn.functional.linear(input1, weights_head[i][2], biases_head[i][2])
+    atthead = nn.functional.scaled_dot_product_attention(q, k, v, attn_mask.bool())
+    att.append(atthead)
+  att = torch.concat(att,dim=-1)
+  multiheadResult = nn.functional.linear(att,weights_att,biases_att)
+  res = multiheadResult + input1
+  layernorm1 = nn.functional.layer_norm(res, (COLS,), gamma[0], beta[0])
+  linear1 = nn.functional.linear(layernorm1, weight1, bias1)
+  activation = nn.functional.relu(linear1)
+  linear2 = nn.functional.linear(activation,weight2,bias2)
+  res = linear2 + layernorm1
+  output = nn.functional.layer_norm(res, (COLS,), gamma[1], beta[1])
+  printMatrix(input1, matIn)
+  printMatrix(torch.transpose(weights_head,-2,-1), matHeadWeight)
+  printMatrix(biases_head, matHeadBias)
+  printMatrix(attn_mask,matMask)
+  printMatrix(torch.transpose(weights_att,-2,-1), matAttWeight)
+  printMatrix(biases_att, matAttBias)
+  printMatrix(torch.transpose(weight1,-2,-1), matFFWeights1)
+  printMatrix(bias1, matFFBias1)
+  printMatrix(torch.transpose(weight2,-2,-1), matFFWeights2)
+  printMatrix(bias2, matFFBias2)
+  printMatrix(gamma, matGamma)
+  printMatrix(beta, matBeta)
+  printMatrix(output, matOut)
+
 
 def feedForward(
     matIn: FileName, matWeights1: FileName, 
@@ -78,12 +128,12 @@ def feedForward(
   printMatrix(torch.transpose(weight2,0,1), matWeights2)
   printMatrix(bias2, matBias2)
   printMatrix(output, matOut)
-  pass
+  
 
 def layerNorm(matIn: FileName, matWeight: FileName, matBias: FileName, matOut: FileName) -> None:
   input1 = torch.rand((ROWS, COLS))
-  weight = torch.rand(ROWS)
-  bias = torch.rand(ROWS)
+  weight = torch.rand(COLS)
+  bias = torch.rand(COLS)
   output = nn.functional.layer_norm(input1, (COLS,), weight, bias)
   printMatrix(input1, matIn)
   printMatrix(weight, matWeight)
@@ -206,7 +256,7 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 	Test_Mask,
 	Test_MatAdd,
 	Test_MatMul,
-	Test_MultiHeadAtt, #TODO
+	Test_MultiHeadAtt,
 	Test_Scale,
 	Test_ScaleDotAtt,
 	Test_SoftMax,
@@ -220,7 +270,13 @@ input_filename: list[FileName] = [
   "input3.txt",
   "input4.txt",
   "input5.txt",
-  "input6.txt"
+  "input6.txt",
+  "input7.txt",
+	"input8.txt",
+	"input9.txt",
+	"input10.txt",
+	"input11.txt",
+  "input12.txt"
 ]
 
 result_filename: FileName = "golden_result.txt"
@@ -263,3 +319,10 @@ match test:
                  input_filename[2], input_filename[3], 
                  input_filename[4], input_filename[5], 
                  result_filename)
+  case "Test_Encoder":
+    encoder(
+			input_filename[0], input_filename[1], input_filename[2],
+			input_filename[3], input_filename[4], input_filename[5],
+			input_filename[6], input_filename[7], input_filename[8],
+			input_filename[9], input_filename[10],
+			input_filename[11], result_filename)

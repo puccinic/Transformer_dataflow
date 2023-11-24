@@ -27,20 +27,26 @@ enum Test_types
 };
 
 int main() {
-	std::string input_filename[6] = {
+	std::string input_filename[] = {
 		"input1.txt",
 		"input2.txt",
 		"input3.txt",
 		"input4.txt",
 		"input5.txt",
-		"input6.txt"
+		"input6.txt",
+		"input7.txt",
+		"input8.txt",
+		"input9.txt",
+		"input10.txt",
+		"input11.txt",
+		"input12.txt"
 	};
 	
 	std::string result_filename = "golden_result.txt";
 	std::string log_filename = "log.txt";
 
-	Test_types test = Test_AttHead;
-
+	Test_types test = Test_MatAdd;
+	double epsilon[2] = { EPSILON, EPSILON };
 	switch (test) {
 	case Test_Activation:
 		test_activations<TYPE,ROWS,COLS>(&input_filename[0], &result_filename, &log_filename);
@@ -55,15 +61,22 @@ int main() {
 		test_concat<TYPE, ROWS, COLS>(&input_filename[0], &input_filename[1], &result_filename, &log_filename);
 		break;
 	case Test_Encoder:
-		//TODO
+		test_encoder<TYPE,NUM_HEADS,ROWS,COLS,COLS/NUM_HEADS,HIDDEN>
+		(
+			&input_filename[0],&input_filename[1],&input_filename[2],
+			&input_filename[3],&input_filename[4],&input_filename[5],
+			&input_filename[6],&input_filename[7],&input_filename[8],
+			&input_filename[9],epsilon,&input_filename[10],
+			&input_filename[11],&result_filename,&log_filename);
 		break;
 	case Test_FeedForward:
-		test_FF<TYPE, ROWS, HIDDEN, COLS>(&input_filename[0], &input_filename[1], &input_filename[2], 
+		test_FF<TYPE, ROWS, HIDDEN, COLS>(
+			&input_filename[0], &input_filename[1], &input_filename[2], 
 			&input_filename[3], &input_filename[4], &result_filename, &log_filename
 		);
 		break;
 	case Test_LayerNorm:
-		test_layernorm<TYPE, ROWS, COLS>(EPSILON, &input_filename[0], &input_filename[1],
+		test_layernorm<TYPE, ROWS, COLS>(epsilon[0], &input_filename[0], &input_filename[1],
 			&input_filename[2], &result_filename, &log_filename
 		);
 		break;
