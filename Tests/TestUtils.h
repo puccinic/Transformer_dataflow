@@ -41,7 +41,7 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 		}
 		log << std::endl;
 	}
-	avg_error = avg_error/size;
+	avg_error = mismatch_count > 0 ? avg_error / mismatch_count : 0;
 	if (good_result) {
 		std::cout << "Test Passsed!" << std::endl;
 		log << "Test Succeded with 0 mismatches!" << std::endl;
