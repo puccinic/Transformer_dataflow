@@ -155,7 +155,7 @@ def linear(matIn: FileName, matWeights: FileName, matBias: FileName, matOut: Fil
   printMatrix(output, matOut)
 
 def mask(matIn: FileName, matMask: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   random_tensor = torch.randint(0, 2, size=(ROWS, COLS))
   output = input1 * random_tensor
   printMatrix(input1, matIn)
@@ -253,7 +253,7 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 '''Test_Activation,
 	Test_AttHead,
 	Test_Concat, 
-	Test_Encoder, #TODO 
+	Test_Encoder,
 	Test_FeedForward,
 	Test_LayerNorm,
 	Test_Linear,
