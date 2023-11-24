@@ -13,6 +13,10 @@ INT_HIGH = 128
 INT_LOW = -128
 
 FileName: TypeAlias = str
+int_or_float: bool = True # if true means int if false means float
+
+def create_tensor(low: int, high: int, size: int|tuple[int,...] ) -> torch.Tensor: 
+  return  torch.randint(low,high,size) if int_or_float else torch.rand(size)
 
 def printMatrix(mat: torch.Tensor, file: FileName) -> None:
   with open(file, "w") as f:
@@ -21,7 +25,7 @@ def printMatrix(mat: torch.Tensor, file: FileName) -> None:
 
 
 def activation(matIn: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   output = nn.functional.relu(input1)
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
@@ -49,8 +53,8 @@ def atthead(
 
 
 def concat(matIn1: FileName, matIn2: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
-  input2 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input2 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   output = torch.cat((input1, input2), dim=1)
   printMatrix(input1, matIn1)
   printMatrix(input2, matIn2)
@@ -114,11 +118,11 @@ def feedForward(
     matBias1: FileName, matWeights2: FileName, 
     matBias2: FileName, matOut: FileName
     ) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
-  weight1 = torch.randint(INT_LOW, INT_HIGH, (HIDDEN, COLS))
-  bias1 = torch.randint(INT_LOW, INT_HIGH, (HIDDEN,))
-  weight2 = torch.randint(INT_LOW, INT_HIGH, (COLS, HIDDEN))
-  bias2 = torch.randint(INT_LOW, INT_HIGH, (COLS,))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
+  weight1 = create_tensor(INT_LOW, INT_HIGH, (HIDDEN, COLS))
+  bias1 = create_tensor(INT_LOW, INT_HIGH, (HIDDEN,))
+  weight2 = create_tensor(INT_LOW, INT_HIGH, (COLS, HIDDEN))
+  bias2 = create_tensor(INT_LOW, INT_HIGH, (COLS,))
   linear = nn.functional.linear(input1, weight1, bias1)
   activation = nn.functional.relu(linear)
   output = nn.functional.linear(activation,weight2,bias2)
@@ -141,9 +145,9 @@ def layerNorm(matIn: FileName, matWeight: FileName, matBias: FileName, matOut: F
   printMatrix(output, matOut)
 
 def linear(matIn: FileName, matWeights: FileName, matBias: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, HIDDEN))
-  weight = torch.randint(INT_LOW, INT_HIGH, (COLS,HIDDEN))
-  bias = torch.randint(INT_LOW, INT_HIGH, (COLS,))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, HIDDEN))
+  weight = create_tensor(INT_LOW, INT_HIGH, (COLS,HIDDEN))
+  bias = create_tensor(INT_LOW, INT_HIGH, (COLS,))
   output = nn.functional.linear(input1,weight,bias)
   printMatrix(input1, matIn)
   printMatrix(torch.transpose(weight,0,1), matWeights)
@@ -159,16 +163,16 @@ def mask(matIn: FileName, matMask: FileName, matOut: FileName) -> None:
   printMatrix(output, matOut)
 
 def matAdd(matA: FileName, matB: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
-  input2 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input2 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   output = input1 + input2
   printMatrix(input1, matA)
   printMatrix(input2, matB)
   printMatrix(output, matOut)
 
 def matMul(matA: FileName, matB: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, HIDDEN))
-  input2 = torch.randint(INT_LOW, INT_HIGH, (HIDDEN, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, HIDDEN))
+  input2 = create_tensor(INT_LOW, INT_HIGH, (HIDDEN, COLS))
   output = torch.matmul(input1, input2)
   printMatrix(input1, matA)
   printMatrix(input2, matB)
@@ -208,7 +212,7 @@ def multiHeadAtt(
 
 
 def scale(matIn: FileName, matOut: FileName) ->None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   output = torch.div(input1, SCALE_FACTOR, rounding_mode='trunc')
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
@@ -230,14 +234,14 @@ def softmax(matIn: FileName, matOut: FileName) -> None:
 
 
 def transpose(matIn: FileName, matOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (ROWS, COLS))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   output = torch.transpose(input1,0,1)
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
 
 def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
-  input1 = torch.randint(INT_LOW, INT_HIGH, (COLS,))
-  input2 = torch.randint(INT_LOW, INT_HIGH, (COLS,))
+  input1 = create_tensor(INT_LOW, INT_HIGH, (COLS,))
+  input2 =  create_tensor(INT_LOW, INT_HIGH, (COLS,))
   output = input1 + input2
   printMatrix(input1, vecA)
   printMatrix(input2, vecB)
@@ -281,6 +285,7 @@ input_filename: list[FileName] = [
 
 result_filename: FileName = "golden_result.txt"
 
+int_or_float = False if len(sys.argv) > 2 and sys.argv[2] == "float" else True
 test = sys.argv[1]
 match test:
   case "Test_Activation":
