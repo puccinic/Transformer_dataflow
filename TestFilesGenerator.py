@@ -213,7 +213,8 @@ def multiHeadAtt(
 
 def scale(matIn: FileName, matOut: FileName) ->None:
   input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
-  output = torch.div(input1, SCALE_FACTOR, rounding_mode='trunc')
+  round_mode = 'trunc' if int_or_float else None
+  output = torch.div(input1, SCALE_FACTOR, rounding_mode=round_mode)
   printMatrix(input1, matIn)
   printMatrix(output, matOut)
   
