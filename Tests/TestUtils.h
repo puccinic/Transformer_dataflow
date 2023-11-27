@@ -35,7 +35,7 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 		if (vec[i] != num) {
 			double error = (((double) (num - vec[i])) / num) * 100;
 			log << " -miss relative error: " << error << "%";
-			avg_error +=  error;
+			avg_error +=  std::abs(error);
 			mismatch_count++;
 			good_result = false;
 		}
