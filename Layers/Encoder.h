@@ -38,9 +38,11 @@ template<typename T, size_t num_heads,
 		layer_norm2.init(epsilon[1], gamma[1], beta[1]);
 	}
 
-	void operator()(T input[sequence_length][token_length],
+	void operator()(
+		T input[sequence_length][token_length],
 		T input_mask[sequence_length][sequence_length],
-		T result[sequence_length][sequence_length]) {
+		T result[sequence_length][sequence_length]
+		) {
 
 		T tmp1[sequence_length][token_length]{};
 		multi_head_att(input, input, input, input_mask, tmp1);

@@ -45,7 +45,7 @@ int main() {
 	std::string result_filename = "golden_result.txt";
 	std::string log_filename = "log.txt";
 
-	Test_types test = Test_MatAdd;
+	Test_types test = Test_Encoder;
 	double epsilon[2] = { EPSILON, EPSILON };
 	switch (test) {
 	case Test_Activation:
