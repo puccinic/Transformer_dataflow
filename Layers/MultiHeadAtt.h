@@ -16,6 +16,7 @@ void multi_head_att(
 	T result[sequence_length][token_length]
 	) {
 	T tmp1[num_heads][sequence_length][head_token_length]{};
+multi_head_att_loop:
 	for (size_t i = 0; i < num_heads; i++) {
 		att_head<T, sequence_length, token_length, head_token_length>(
 			query, 

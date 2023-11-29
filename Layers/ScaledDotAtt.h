@@ -25,6 +25,7 @@ void scaledotatt(
 	scale<T, sequence_length, sequence_length>(queryxkey, scaled_queryxkey, scale_factor);
 
 	T softmax_att[sequence_length][sequence_length]{};
+scaledotatt_loop:
 	for (size_t i = 0; i < sequence_length; i++) {
 		masked_sofmax<T, sequence_length>(scaled_queryxkey[i], input_mask[i], softmax_att[i]);
 	}
