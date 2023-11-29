@@ -20,9 +20,6 @@ void test_linear(
 	load_arr<T, cols>(biases, biases_filename);
 
 	T output[rows][cols]{};
-
-	Linear<T, rows, hidden, cols> linear;
-	linear.init(weights, biases);
-	linear(input, output);
+	linear<T, rows, hidden, cols>(input, weights, biases, output);
 	compare_mat<T, rows, cols>(output, result_gold_filename, log_filename);
 }

@@ -33,10 +33,7 @@ void test_multiheadatt(
 	load_arr<T, token_length>((T*)linear_bias, linear_bias_filename);
 
 	T output[sequence_length][token_length]{};
-
-	MultiHeadAtt<T, num_heads, sequence_length, token_length, head_token_length> mulitheadatt;
-	mulitheadatt.init(weights, biases, linear_weight, linear_bias);
-	mulitheadatt(input, input, input, input_mask, output);
-
+	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>
+		(input, input, input, input_mask, weights, biases, linear_weight, linear_bias, output);
 	compare_mat<T, sequence_length, token_length>(output, result_gold_filename, log_filename);
 }

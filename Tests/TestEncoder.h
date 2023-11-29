@@ -24,7 +24,6 @@ template<typename T, size_t num_heads,
 		std::string* result_gold_filename,
 		std::string* log_filename
 	) {
-	
 	T input[sequence_length][token_length]{};
 	load_arr<T, sequence_length*token_length>((T*)input, matIn_filename);
 		
@@ -62,22 +61,21 @@ template<typename T, size_t num_heads,
 	load_arr<double, 2*token_length>((double*)beta, beta_filename);
 
 	T output[sequence_length][sequence_length]{};
-	
-	Encoder<T,num_heads,sequence_length,token_length,head_token_length,hidden> encoder;
-	encoder.init(
-		head_weights,
-		head_biases,
-		linear_weights,
-		linear_bias,
-		ff_weights1,
-		ff_biases1,
-		ff_weights2,
-		ff_biases2,
-		epsilon,
-		gamma,
-		beta
-	);
-	encoder(input, input_mask, output);
-
+	encoder<T, num_heads, sequence_length, token_length, head_token_length, hidden>
+		(
+			input, input_mask,
+			head_weights,
+			head_biases,
+			linear_weights,
+			linear_bias,
+			ff_weights1,
+			ff_biases1,
+			ff_weights2,
+			ff_biases2,
+			epsilon,
+			gamma,
+			beta,
+			output
+		);
 	compare_mat<T, sequence_length, token_length>(output, result_gold_filename, log_filename);
 }

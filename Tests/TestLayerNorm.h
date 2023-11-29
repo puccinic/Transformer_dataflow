@@ -21,11 +21,7 @@ void test_layernorm(
 	load_arr<double, channels>(beta, beta_filename);
 
 	T output[channels][size]{};
-	
-	LayerNorm<T, channels, size> layer_norm;
-	layer_norm.init(epsilon, gamma, beta);
-	layer_norm(input, output);
-
+	layer_norm<T, channels, size>(input, epsilon, gamma, beta, output);
 	compare_mat<T, channels, size>(output, vecResGold_filename, log_filename);
 }
 

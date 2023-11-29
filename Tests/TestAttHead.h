@@ -24,9 +24,6 @@ void test_attHead(
 	load_arr<T, num_linear_layers*head_token_length>((T*)biases, biases_filename);
 
 	T output[sequence_length][head_token_length]{};
-	AttHead<T, sequence_length, token_length, head_token_length> atthead;
-	atthead.init(weights, biases);
-	atthead(matIn, matIn, matIn, matMask, output);
-
+	att_head<T, sequence_length, token_length, head_token_length>(matIn, matIn, matIn, matMask, weights, biases, output);
 	compare_mat<T, sequence_length, head_token_length>(output, result_gold_filename, log_filename);
 }
