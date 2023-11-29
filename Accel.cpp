@@ -1,3 +1,5 @@
+
+#define size_t unsingned long
 #include "Encoder.h"
 
 #define EPSILON 1e-5
@@ -10,7 +12,7 @@ constexpr size_t hidden = 10;
 
 typedef short int head_weights_t[num_heads][num_linear_layers][token_length][head_token_length];
 typedef short int head_biases_t[num_heads][num_linear_layers][head_token_length];
-/*
+
 void accel(
 	head_weights_t head_weights,
 	head_biases_t head_biases,
@@ -43,5 +45,3 @@ void accel(
 		result
 	);
 }
-
-*/
