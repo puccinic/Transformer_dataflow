@@ -1,6 +1,5 @@
 
-#define size_t unsingned long
-#include "Encoder.h"
+typedef unsigned long size_t;
 
 #define EPSILON 1e-5
 double epsilon[2] = { EPSILON, EPSILON };
@@ -9,6 +8,8 @@ constexpr size_t sequence_length = 10;
 constexpr size_t token_length = 10;
 constexpr size_t head_token_length = 10;
 constexpr size_t hidden = 10;
+
+#include "Encoder.h"
 
 typedef short int head_weights_t[num_heads][num_linear_layers][token_length][head_token_length];
 typedef short int head_biases_t[num_heads][num_linear_layers][head_token_length];
