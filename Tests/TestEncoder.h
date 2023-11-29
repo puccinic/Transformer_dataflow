@@ -18,7 +18,7 @@ template<typename T, size_t num_heads,
 		std::string* ffBiases1_filename,
 		std::string* ffWeights2_filename,
 		std::string* ffBiases2_filename,
-		double epsilon[2],
+		T epsilon[2],
 		std::string* gamma_filename,
 		std::string* beta_filename,
 		std::string* result_gold_filename,
@@ -54,11 +54,11 @@ template<typename T, size_t num_heads,
 	T ff_biases2[token_length]{};
 	load_arr<T, token_length>(ff_biases2, ffBiases2_filename);
 
-	double gamma[2][token_length]{};
-	load_arr<double, 2*token_length>((double*)gamma, gamma_filename);
+	T gamma[2][token_length]{};
+	load_arr<T, 2*token_length>((T*)gamma, gamma_filename);
 		
-	double beta[2][token_length]{};
-	load_arr<double, 2*token_length>((double*)beta, beta_filename);
+	T beta[2][token_length]{};
+	load_arr<T, 2*token_length>((T*)beta, beta_filename);
 
 	T output[sequence_length][sequence_length]{};
 	encoder<T, num_heads, sequence_length, token_length, head_token_length, hidden>

@@ -15,9 +15,9 @@ void encoder(
 	T ff_biases1[hidden],
 	T ff_weights2[hidden][token_length],
 	T ff_biases2[token_length],
-	double epsilon[2],
-	double gamma[2][token_length],
-	double beta[2][token_length],
+	T epsilon[2],
+	T gamma[2][token_length],
+	T beta[2][token_length],
 	T result[sequence_length][sequence_length]
 	) {
 

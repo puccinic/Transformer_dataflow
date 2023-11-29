@@ -61,7 +61,7 @@ int main() {
 		test_concat<TYPE, ROWS, COLS>(&input_filename[0], &input_filename[1], &result_filename, &log_filename);
 		break;
 	case Test_Encoder:
-		test_encoder<TYPE,NUM_HEADS,ROWS,COLS,COLS/NUM_HEADS,HIDDEN>
+		test_encoder<double,NUM_HEADS,ROWS,COLS,COLS/NUM_HEADS,HIDDEN>
 		(
 			&input_filename[0],&input_filename[1],&input_filename[2],
 			&input_filename[3],&input_filename[4],&input_filename[5],
@@ -76,7 +76,7 @@ int main() {
 		);
 		break;
 	case Test_LayerNorm:
-		test_layernorm<TYPE, ROWS, COLS>(epsilon[0], &input_filename[0], &input_filename[1],
+		test_layernorm<double, ROWS, COLS>(epsilon[0], &input_filename[0], &input_filename[1],
 			&input_filename[2], &result_filename, &log_filename
 		);
 		break;
