@@ -365,4 +365,4 @@ FodyWeavers.xsd
 #Vitis files
 vitis_hls.log
 
-./Transformer_accel/
+./Transformer_accel/*
