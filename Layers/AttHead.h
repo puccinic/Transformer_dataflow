@@ -15,13 +15,13 @@ void att_head(
 	T result[sequence_length][head_token_length]
 	) {
 
-	T Q[sequence_length][head_token_length]{};
+	T Q[sequence_length][head_token_length];
 	linear<T, sequence_length, token_length, head_token_length>(query, weights[0], biases[0], Q);
 
-	T K[sequence_length][head_token_length]{};
+	T K[sequence_length][head_token_length];
 	linear<T, sequence_length, token_length, head_token_length>(key, weights[1], biases[1], K);
 
-	T V[sequence_length][head_token_length]{};
+	T V[sequence_length][head_token_length];
 	linear<T, sequence_length, token_length, head_token_length>(value, weights[2], biases[2], V);
 
 	scaledotatt<T, sequence_length, head_token_length>(Q, K, V, input_mask, result);

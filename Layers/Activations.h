@@ -8,6 +8,7 @@ T relu(T x) {
 	return x > 0 ? x : 0;
 }
 
+#ifdef GELU
 double _gelu(double x) {
 	return 0.5 * x * (1.0 + std::tanh(std::sqrt(2.0 / M_PI) * (x + 0.044715 * std::pow(x, 3))));
 }
@@ -16,7 +17,9 @@ template<typename T>
 T gelu(T x) {
 	return (T)_gelu((double)x);
 }
+#endif
 
+#ifdef ERF
 double _erf(double x) {
 	const double a1 = 0.254829592;
 	const double a2 = -0.284496736;
@@ -38,6 +41,7 @@ template<typename T>
 T erf(T x) {
 	return (T)_erf((double)x);
 }
+#endif
 
 template<typename T, size_t rows, size_t cols>
 void activation(T input[rows][cols], T result[rows][cols]) {

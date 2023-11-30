@@ -15,7 +15,7 @@ void multi_head_att(
 	T linear_bias[token_length],
 	T result[sequence_length][token_length]
 	) {
-	T tmp1[num_heads][sequence_length][head_token_length]{};
+	T tmp1[num_heads][sequence_length][head_token_length];
 multi_head_att_loop:
 	for (size_t i = 0; i < num_heads; i++) {
 		att_head<T, sequence_length, token_length, head_token_length>(
@@ -26,7 +26,7 @@ multi_head_att_loop:
 			tmp1[i]
 		);
 	}
-	T tmp2[sequence_length][token_length]{};
+	T tmp2[sequence_length][token_length];
 	concat_cols<T, sequence_length, head_token_length, num_heads>(tmp1, tmp2);
 	linear<T, sequence_length, token_length, token_length>(tmp2, linear_weights, linear_bias, result);
 }

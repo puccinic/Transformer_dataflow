@@ -11,9 +11,9 @@ void ff(
 	T biases2[cols],
 	T result[rows][cols]
 	) {
-	T tmp1[rows][hidden]{};
+	T tmp1[rows][hidden];
 	linear<T, rows, cols, hidden>(input, weights1, biases1, tmp1);
-	T tmp2[rows][hidden]{};
+	T tmp2[rows][hidden];
 	activation<T, rows, hidden>(tmp1, tmp2);
 	linear<T, rows, hidden, cols>(tmp2, weights2, biases2, result);
 }

@@ -9,7 +9,7 @@ void linear(
 	T biases[cols],
 	T result[rows][cols]
 	) {
-	T tmp[rows][cols]{};
+	T tmp[rows][cols];
 	matmul<T, rows, hidden, cols>(input, weights, tmp);
 	for (int i = 0; i < rows; i++) {
 		vecadd<T, cols>(tmp[i], biases, result[i]);

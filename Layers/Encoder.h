@@ -21,7 +21,7 @@ void encoder(
 	T result[sequence_length][sequence_length]
 	) {
 
-	T tmp1[sequence_length][token_length]{};
+	T tmp1[sequence_length][token_length];
 	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>(
 		input, input, input, 
 		input_mask, 
@@ -32,16 +32,16 @@ void encoder(
 		tmp1
 	);
 
-	T tmp2[sequence_length][token_length]{};
+	T tmp2[sequence_length][token_length];
 	matadd<T, sequence_length, token_length>(input, tmp1, tmp2);
 
-	T tmp3[sequence_length][token_length]{};
+	T tmp3[sequence_length][token_length];
 	layer_norm<T, sequence_length, token_length>(tmp2, epsilon[0], gamma[0], beta[0], tmp3);
 
-	T tmp4[sequence_length][token_length]{};
+	T tmp4[sequence_length][token_length];
 	ff<T, sequence_length, hidden, token_length>(tmp3, ff_weights1, ff_biases1, ff_weights2, ff_biases2, tmp4);
 
-	T tmp5[sequence_length][token_length]{};
+	T tmp5[sequence_length][token_length];
 	matadd<T, sequence_length, token_length>(tmp3, tmp4, tmp5);
 
 	layer_norm<T, sequence_length, token_length>(tmp5, epsilon[1], gamma[1], beta[1], result);
