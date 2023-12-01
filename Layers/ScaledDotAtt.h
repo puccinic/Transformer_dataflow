@@ -5,7 +5,7 @@
 #include "SoftMax.h"
 #include "Scale.h"
 
-template<typename T, size_t sequence_length, size_t token_length>
+template<typename T, int sequence_length, int token_length>
 void scaledotatt(
 	T query[sequence_length][token_length],
 	T key[sequence_length][token_length],
@@ -26,7 +26,7 @@ void scaledotatt(
 
 	T softmax_att[sequence_length][sequence_length];
 scaledotatt_loop:
-	for (size_t i = 0; i < sequence_length; i++) {
+	for (int i = 0; i < sequence_length; i++) {
 		masked_sofmax<T, sequence_length>(scaled_queryxkey[i], input_mask[i], softmax_att[i]);
 	}
 

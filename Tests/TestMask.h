@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "Mask.h"
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void test_mask(
 	std::string* input_filename,
 	std::string* mask_filename,

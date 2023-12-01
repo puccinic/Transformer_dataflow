@@ -1,7 +1,7 @@
 #include "TestUtils.h"
 #include "Concat.h"
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void test_concat(
 	std::string* matA_filename,
 	std::string* matB_filename,

@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "MultiheadAtt.h"
 
-template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length>
+template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length>
 void test_multiheadatt(
 	std::string* input_filename,
 	std::string* mask_filename,

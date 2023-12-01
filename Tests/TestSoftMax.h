@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "SoftMax.h"
 
-template<typename T, size_t size>
+template<typename T, int size>
 void test_softmax(
 	std::string* input_filename,
 	std::string* vecResGold_filename,

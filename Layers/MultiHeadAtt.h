@@ -3,7 +3,7 @@
 #include "Concat.h"
 #include "Linear.h"
 
-template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length>
+template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length>
 void multi_head_att(
 	T query[sequence_length][token_length],
 	T key[sequence_length][token_length],
@@ -17,7 +17,7 @@ void multi_head_att(
 	) {
 	T tmp1[num_heads][sequence_length][head_token_length];
 multi_head_att_loop:
-	for (size_t i = 0; i < num_heads; i++) {
+	for (int i = 0; i < num_heads; i++) {
 		att_head<T, sequence_length, token_length, head_token_length>(
 			query, 
 			key, 

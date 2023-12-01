@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "MatAdd.h"
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void test_matadd(
 	std::string* matA_filename,
 	std::string* matB_filename,

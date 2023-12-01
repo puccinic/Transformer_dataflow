@@ -2,7 +2,7 @@
 #include "VecAdd.h"
 #include "MatMul.h"
 
-template<typename T, size_t rows, size_t hidden, size_t cols>
+template<typename T, int rows, int hidden, int cols>
 void linear(
 	T input[rows][hidden],
 	T weights[hidden][cols], 

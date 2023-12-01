@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "Linear.h"
 
-template<typename T, size_t rows, size_t hidden, size_t cols>
+template<typename T, int rows, int hidden, int cols>
 void test_linear(
 	std::string* input_filename,
 	std::string* weights_filename,

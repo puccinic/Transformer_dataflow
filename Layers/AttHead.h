@@ -2,9 +2,9 @@
 #include "Linear.h"
 #include "ScaledDotAtt.h"
 
-constexpr size_t num_linear_layers = 3;
+constexpr int num_linear_layers = 3;
 
-template<typename T, size_t sequence_length, size_t token_length, size_t head_token_length>
+template<typename T, int sequence_length, int token_length, int head_token_length>
 void att_head(
 	T query[sequence_length][token_length],
 	T key[sequence_length][token_length],

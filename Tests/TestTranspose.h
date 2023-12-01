@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "Transpose.h"
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void test_transpose(
 	std::string* input_filename,
 	std::string* result_gold_filename,

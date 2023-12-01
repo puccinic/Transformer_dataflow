@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "Scale.h"
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void test_scale(
 	std::string* input_filename,
 	T scale_factor,

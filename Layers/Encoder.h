@@ -3,7 +3,7 @@
 #include "MatAdd.h"
 #include "LayerNorm.h"
 #include "FF.h"
-template<typename T, size_t num_heads, size_t sequence_length, size_t token_length, size_t head_token_length, size_t hidden>
+template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length, int hidden>
 void encoder(
 	T input[sequence_length][token_length],
 	T input_mask[sequence_length][sequence_length],

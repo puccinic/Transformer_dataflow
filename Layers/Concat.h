@@ -1,6 +1,6 @@
 #pragma once 
 
-template<typename T, size_t rows, size_t cols,  size_t mat_num>
+template<typename T, int rows, int cols,  int mat_num>
 void concat_cols(T matrices[mat_num][rows][cols], T result[rows][cols*mat_num]) {
 concat_cols_row_loop:
     for (int i = 0; i < rows; i++) {

@@ -1,5 +1,5 @@
 #pragma once
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 
 #ifndef OP
 #define OP /
@@ -7,9 +7,10 @@ template<typename T, size_t rows, size_t cols>
 
 void scale(T A[rows][cols], T result[rows][cols], T scale_factor) {
 scale_outer_loop:
-	for (size_t i = 0; i < rows; i++) {
+	for (int i = 0; i < rows; i++) {
 	scale_inner_loop:
-		for (size_t j = 0; j < cols; j++) {
+		for (int j = 0; j < cols; j++) {
+#pragma HLS UNROLL
 			result[i][j] = A[i][j] OP scale_factor;
 		}
 	}

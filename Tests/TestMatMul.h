@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "MatMul.h"
 
-template<typename T, size_t rows, size_t hidden, size_t cols>
+template<typename T, int rows, int hidden, int cols>
 void test_matmul(
 	std::string* matA_filename,
 	std::string* matB_filename,

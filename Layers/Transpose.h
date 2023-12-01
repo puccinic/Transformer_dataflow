@@ -1,10 +1,12 @@
 #pragma once
-template <typename T, size_t rows, size_t cols>
+template <typename T, int rows, int cols>
 void transpose_matrix(T input[rows][cols], T result[cols][rows]) {
 transpose_outer_loop:
-    for (size_t i = 0; i < rows; i++) {
+    for (int i = 0; i < rows; i++) {
+#pragma HLS UNROLL
     transpose_inner_loop:
-        for (size_t j = 0; j < cols; j++) {
+        for (int j = 0; j < cols; j++) {
+#pragma HLS UNROLL
             result[j][i] = input[i][j];
         }
     }

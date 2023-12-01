@@ -1,7 +1,7 @@
 #pragma once
 #include "TestUtils.h"
 #include "VecAdd.h"
-template<typename T, size_t size>
+template<typename T, int size>
 void test_vecadd(
 	std::string* vec1_filename,
 	std::string* vec2_filename,

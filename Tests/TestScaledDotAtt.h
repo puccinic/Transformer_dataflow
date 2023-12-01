@@ -3,7 +3,7 @@
 #include "ScaledDotAtt.h"
 
 
-template<typename T, size_t sequence_length, size_t token_length>
+template<typename T, int sequence_length, int token_length>
 void test_scaledotatt(std::string* matIn_filename,
 	std::string* matMask_filename,
 	std::string* result_gold_filename,

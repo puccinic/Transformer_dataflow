@@ -2,7 +2,7 @@
 #include "TestUtils.h"
 #include "LayerNorm.h"
 
-template<typename T, size_t channels, size_t size>
+template<typename T, int channels, int size>
 void test_layernorm(
 	T epsilon,
 	std::string* input_filename,
