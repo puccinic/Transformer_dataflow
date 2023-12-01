@@ -43,10 +43,10 @@ T erf(T x) {
 }
 #endif
 
-template<typename T, size_t rows, size_t cols>
+template<typename T, int rows, int cols>
 void activation(T input[rows][cols], T result[rows][cols]) {
-	for (size_t i = 0; i < rows; i++) {
-		for (size_t j = 0; j < cols; j++) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
 			result[i][j] = relu<T>(input[i][j]);
 		}
 	}
