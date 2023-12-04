@@ -5,7 +5,7 @@
 
 template<typename T>
 T relu(T x) {
-	return x > 0 ? x : 0;
+	return x > (T)0 ? x : (T) 0;
 }
 
 #ifdef GELU
