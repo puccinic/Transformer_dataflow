@@ -36,12 +36,9 @@ void scaledotatt(
 	T result[sequence_length][token_length]
 ) {
 	constexpr T scale_factor = ct_sqrt<T>(token_length);
-
-	T queryxkey[sequence_length][sequence_length];
-	matmul_transpose<T, sequence_length, token_length, sequence_length>(query, key, queryxkey);
-
+	
     T scaled_queryxkey[sequence_length][sequence_length];
-	scale<T, sequence_length, sequence_length>(queryxkey, scaled_queryxkey, scale_factor);
+	matmul_transpose_scale<T, sequence_length, token_length, sequence_length>(query, key, scale_factor, scaled_queryxkey);
 
 	T softmax_att[sequence_length][sequence_length];
 scaledotatt_loop:
