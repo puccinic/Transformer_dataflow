@@ -4,22 +4,22 @@
 #define ENCODER
 #ifdef ENCODER
 void accel(
-	idata_t head_weights[num_heads][num_linear_layers][token_length][head_token_length],
-	idata_t head_biases[num_heads][num_linear_layers][head_token_length],
-	idata_t linear_weights[token_length][token_length],
-	idata_t linear_bias[token_length],
-	idata_t ff_weights1[token_length][hidden],
-	idata_t ff_biases1[hidden],
-	idata_t ff_weights2[hidden][token_length],
-	idata_t ff_biases2[token_length],
-	idata_t gamma[2][token_length],
-	idata_t beta[2][token_length],
-	idata_t input[sequence_length][token_length],
-	idata_t input_mask[sequence_length][sequence_length],
-	odata_t result[sequence_length][token_length]
+	idata_t head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN][HEAD_LEN],
+	idata_t head_biases[NUM_HEADS][NUM_LINEAR_LAYERS][HEAD_LEN],
+	idata_t linear_weights[TOKEN_LEN][TOKEN_LEN],
+	idata_t linear_bias[TOKEN_LEN],
+	idata_t ff_weights1[TOKEN_LEN][HIDDEN],
+	idata_t ff_biases1[HIDDEN],
+	idata_t ff_weights2[HIDDEN][TOKEN_LEN],
+	idata_t ff_biases2[TOKEN_LEN],
+	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN],
+	idata_t beta[NUM_LAYER_NORM][TOKEN_LEN],
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	idata_t input_mask[SEQ_LEN][SEQ_LEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	idata_t epsilon[2] = { 0, 0 };
-	encoder<idata_t, num_heads, sequence_length, token_length, head_token_length, hidden>(
+	idata_t epsilon[NUM_LAYER_NORM] = { 0, 0 };
+	encoder<idata_t, NUM_HEADS, SEQ_LEN, TOKEN_LEN, HEAD_LEN, HIDDEN>(
 		input, 
 		input_mask,
 		head_weights,
@@ -40,15 +40,15 @@ void accel(
 
 #ifdef MULTIHEAD
 void accel(
-	idata_t head_weights[num_heads][num_linear_layers][token_length][head_token_length],
-	idata_t head_biases[num_heads][num_linear_layers][head_token_length],
-	idata_t linear_weights[token_length][token_length],
-	idata_t linear_bias[token_length],
-	idata_t input[sequence_length][token_length],
-	idata_t input_mask[sequence_length][sequence_length],
-	odata_t result[sequence_length][sequence_length]
+	idata_t head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN][HEAD_LEN],
+	idata_t head_biases[NUM_HEADS][NUM_LINEAR_LAYERS][HEAD_LEN],
+	idata_t linear_weights[TOKEN_LEN][TOKEN_LEN],
+	idata_t linear_bias[TOKEN_LEN],
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	idata_t input_mask[SEQ_LEN][SEQ_LEN],
+	odata_t result[SEQ_LEN][SEQ_LEN]
 ) {
-	multi_head_att<idata_t, num_heads, sequence_length, token_length, head_token_length> (
+	multi_head_att<idata_t, NUM_HEADS, SEQ_LEN, TOKEN_LEN, HEAD_LEN> (
 		input,
 		input,
 		input,
@@ -64,13 +64,13 @@ void accel(
 
 #ifdef ATTHEAD
 void accel(
-	idata_t weights[num_linear_layers][token_length][head_token_length],
-	idata_t biases[num_linear_layers][head_token_length],
-	idata_t input[sequence_length][token_length],
-	idata_t input_mask[sequence_length][sequence_length],
-	odata_t result[sequence_length][token_length],
+	idata_t weights[NUM_LINEAR_LAYERS][TOKEN_LEN][HEAD_LEN],
+	idata_t biases[NUM_LINEAR_LAYERS][HEAD_LEN],
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	idata_t input_mask[SEQ_LEN][SEQ_LEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN],
 ) {
-	att_head<idata_t, sequence_length, token_length, head_token_length>(
+	att_head<idata_t, SEQ_LEN, TOKEN_LEN, HEAD_LEN>(
 		input,
 		input,
 		input,
@@ -84,14 +84,14 @@ void accel(
 
 #ifdef FDFRWRD
 void accel(
-	idata_t weights1[sequence_length][hidden],
-	idata_t biases1[hidden],
-	idata_t weights2[hidden][token_length],
-	idata_t biases2[token_length],
-	idata_t input[sequence_length][token_length],
-	odata_t result[sequence_length][token_length]
+	idata_t weights1[SEQ_LEN][HIDDEN],
+	idata_t biases1[HIDDEN],
+	idata_t weights2[HIDDEN][TOKEN_LEN],
+	idata_t biases2[TOKEN_LEN],
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	ff<idata_t, sequence_length, hidden, token_length>(
+	ff<idata_t, SEQ_LEN, HIDDEN, TOKEN_LEN>(
 		input,
 		weights1,
 		biases1,
@@ -104,12 +104,12 @@ void accel(
 
 #ifdef LAYERNORM
 void accel(
-	idata_t gamma[2][token_length],
-	idata_t beta[2][token_length],
-	idata_t input[sequence_length][token_length],
-	odata_t result[sequence_length][sequence_length]
+	idata_t gamma[TOKEN_LEN],
+	idata_t beta[TOKEN_LEN],
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	odata_t result[SEQ_LEN][SEQ_LEN]
 ) {
-	layer_norm<idata_t, sequence_length, token_length>(
+	layer_norm<idata_t, SEQ_LEN, TOKEN_LEN>(
 		input,
 		epsilon,
 		gamma,
@@ -121,11 +121,11 @@ void accel(
 
 #ifdef DOTPRODATT
 void accel(
-	idata_t input[sequence_length][token_length],
-	idata_t input_mask[sequence_length][sequence_length],
-	odata_t result[sequence_length][token_length]
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	idata_t input_mask[SEQ_LEN][SEQ_LEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	scaledotatt<idata_t, sequence_length, token_length> (
+	scaledotatt<idata_t, SEQ_LEN, TOKEN_LEN> (
 		input, input, input,
 		input_mask,
 		result
@@ -135,12 +135,12 @@ void accel(
 
 #ifdef LINEAR
 void accel(
-	idata_t weights[hidden][token_length],
-	idata_t biases[token_length],
-	idata_t input[sequence_length][hidden],
-	odata_t result[sequence_length][token_length]
+	idata_t weights[HIDDEN][TOKEN_LEN],
+	idata_t biases[TOKEN_LEN],
+	idata_t input[SEQ_LEN][HIDDEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	linear<idata_t, sequence_length, hidden, token_length> (
+	linear<idata_t, SEQ_LEN, HIDDEN, TOKEN_LEN> (
 		input,
 		weights,
 		biases,
@@ -151,11 +151,11 @@ void accel(
 
 #ifdef MATMUL
 void accel(
-	idata_t matA[sequence_length][hidden],
-	idata_t matB[hidden][token_length],
-	odata_t matRes[sequence_length][token_length]
+	idata_t matA[SEQ_LEN][HIDDEN],
+	idata_t matB[HIDDEN][TOKEN_LEN],
+	odata_t matRes[SEQ_LEN][TOKEN_LEN]
 ) {
-	matmul<idata_t, sequence_length, hidden, token_length> (
+	matmul<idata_t, SEQ_LEN, HIDDEN, TOKEN_LEN> (
 		matA,
 		matB,
 		matRes
@@ -164,17 +164,17 @@ void accel(
 #endif
 
 #ifdef SOFTMAX
-void accel(idata_t input[sequence_length], idata_t result[sequence_length]) {
-	softmax<idata_t, sequence_length>(input, result);
+void accel(idata_t input[SEQ_LEN], idata_t result[SEQ_LEN]) {
+	softmax<idata_t, SEQ_LEN>(input, result);
 }
 #endif
 
 #ifdef ACTIVATION
 void accel(
-	idata_t input[sequence_length][token_length],
-	odata_t result[sequence_length][token_length]
+	idata_t input[SEQ_LEN][TOKEN_LEN],
+	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	activation<idata_t, sequence_length, token_length>(
+	activation<idata_t, SEQ_LEN, TOKEN_LEN>(
 		input,
 		result
 	);
