@@ -18,7 +18,7 @@ void encoder(
 	T epsilon[2],
 	T gamma[2][token_length],
 	T beta[2][token_length],
-	T result[sequence_length][sequence_length]
+	T result[sequence_length][token_length]
 	) {
 
 	T tmp1[sequence_length][token_length];
