@@ -28,24 +28,6 @@ double constexpr sqrt(T x) {
         : std::numeric_limits<T>::quiet_NaN();
 }
 
-template <typename T>
-constexpr T sqrt_helper(T x, T lo, T hi) {
-  if (lo == hi)
-    return lo;
-
-  const T mid = (lo + hi + 1) / 2;
-
-  if (x / mid < mid)
-    return sqrt_helper<T>(x, lo, mid - 1);
-  else
-    return sqrt_helper(x, mid, hi);
-}
-
-template <typename T>
-constexpr T ct_sqrt(T x) {
-  return sqrt_helper<T>(x, 0, x / 2 + 1);
-}
-
 template<typename T, int sequence_length, int token_length>
 void scaledotatt(
 	T query[sequence_length][token_length],
