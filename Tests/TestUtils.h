@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
+#include <cmath>
 template<typename T, int size>
 void load_arr(T arr[size], std::string* filename) {
 	std::ifstream file(*filename);
@@ -33,7 +33,7 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 		stream >> num;
 		log << vec[i] << " " << num;
 		if (vec[i] != num) {
-			double error = (((double) (num - vec[i])) / num) * 100;
+			double error = ((double) (((num - vec[i])) / num)) * 100;
 			log << " -miss relative error: " << error << "%";
 			avg_error +=  std::abs(error);
 			mismatch_count++;
