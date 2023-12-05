@@ -6,10 +6,30 @@
 #include "Scale.h"
 
 
-/*sqrt_helprt Code taken from: https://stackoverflow.com/questions/8622256/in-c11-is-sqrt-defined-as-constexpr */
+/*sqrt Code taken from: https://stackoverflow.com/questions/8622256/in-c11-is-sqrt-defined-as-constexpr */
+
+template<typename T>
+T constexpr sqrtNewtonRaphson(T x, T curr, T prev) {
+	return curr == prev
+		? curr
+		: sqrtNewtonRaphson(x, (curr + x / curr) / 2, curr);
+}
+
+/*
+* Constexpr version of the square root
+* Return value:
+*   - For a finite and non-negative value of "x", returns an approximation for the square root of "x"
+*   - Otherwise, returns NaN
+*/
+template<typename T>
+double constexpr sqrt(T x) {
+    return x >= 0 && x < std::numeric_limits<T>::infinity()
+        ? sqrtNewtonRaphson<T>(x, x, 0)
+        : std::numeric_limits<T>::quiet_NaN();
+}
+
 template <typename T>
-constexpr T sqrt_helper(T x, T lo, T hi)
-{
+constexpr T sqrt_helper(T x, T lo, T hi) {
   if (lo == hi)
     return lo;
 
@@ -22,8 +42,7 @@ constexpr T sqrt_helper(T x, T lo, T hi)
 }
 
 template <typename T>
-constexpr T ct_sqrt(T x)
-{
+constexpr T ct_sqrt(T x) {
   return sqrt_helper<T>(x, 0, x / 2 + 1);
 }
 
@@ -35,7 +54,7 @@ void scaledotatt(
 	T input_mask[sequence_length][sequence_length],
 	T result[sequence_length][token_length]
 ) {
-	const T scale_factor = std::sqrt(token_length);
+	constexpr T scale_factor = sqrt<T>(token_length);
 	
 	T softmax_att[sequence_length][sequence_length];
 	matmul_scale_masked_softmax<T,sequence_length,token_length,sequence_length>(query, key, scale_factor, input_mask, softmax_att);
