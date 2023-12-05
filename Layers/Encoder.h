@@ -7,17 +7,17 @@ template<typename T, int num_heads, int sequence_length, int token_length, int h
 void encoder(
 	T input[sequence_length][token_length],
 	T input_mask[sequence_length][sequence_length],
-	T head_weights[num_heads][num_linear_layers][token_length][head_token_length],
-	T head_biases[num_heads][num_linear_layers][head_token_length],
+	T head_weights[num_heads][NUM_LINEAR_LAYERS][token_length][head_token_length],
+	T head_biases[num_heads][NUM_LINEAR_LAYERS][head_token_length],
 	T linear_weights[token_length][token_length],
 	T linear_bias[token_length],
 	T ff_weights1[token_length][hidden],
 	T ff_biases1[hidden],
 	T ff_weights2[hidden][token_length],
 	T ff_biases2[token_length],
-	T epsilon[2],
-	T gamma[2][token_length],
-	T beta[2][token_length],
+	T epsilon[NUM_LAYER_NORM],
+	T gamma[NUM_LAYER_NORM][token_length],
+	T beta[NUM_LAYER_NORM][token_length],
 	T result[sequence_length][token_length]
 	) {
 

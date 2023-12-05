@@ -8,8 +8,8 @@ void att_head(
 	T key[sequence_length][token_length],
 	T value[sequence_length][token_length],
 	T input_mask[sequence_length][sequence_length],
-	T weights[num_linear_layers][token_length][head_token_length],
-	T biases[num_linear_layers][head_token_length],
+	T weights[NUM_LINEAR_LAYERS][token_length][head_token_length],
+	T biases[NUM_LINEAR_LAYERS][head_token_length],
 	T result[sequence_length][head_token_length]
 	) {
 
