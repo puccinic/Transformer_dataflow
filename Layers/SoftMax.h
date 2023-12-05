@@ -1,13 +1,17 @@
 #pragma once 
 #include <cmath>
+template<typename T>
+T exp(T x) {
+	return (T) std::exp((double) x);
+}
 
 template<typename T, int size>
 void softmax(T input[size], T result[size]) {
 	T sum = 0;
 	T tmp[size];
 	for (int i = 0; i < size; i++) {
-		tmp[i] = std::exp(input[i]);
-		sum += std::exp(input[i]);
+		tmp[i] = exp<T>(input[i]);
+		sum += exp<T>(input[i]);
 	}
 
 	for (int i = 0; i < size; i++) {
@@ -21,7 +25,7 @@ void masked_sofmax(T input[size], T mask[size], T result[size]) {
 	T tmp[size];
 softmax_sum_loop:
 	for (int i = 0; i < size; i++) {
-		tmp[i] = mask[i] ? std::exp(input[i]) : 0;
+		tmp[i] = mask[i] ? exp<T>(input[i]) : 0;
 		sum += tmp[i];
 	}
 softmax_result_loop:
