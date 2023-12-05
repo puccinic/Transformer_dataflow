@@ -4,8 +4,8 @@ void softmax(T input[size], T result[size]) {
 	T sum = 0;
 	T tmp[size];
 	for (int i = 0; i < size; i++) {
-		tmp[i] = hls::exp(input[i]);
-		sum += hls::exp(input[i]);
+		tmp[i] = (T) hls::exp((double) input[i]);
+		sum += (T) hls::exp((double) input[i]);
 	}
 
 	for (int i = 0; i < size; i++) {
@@ -19,7 +19,7 @@ void masked_sofmax(T input[size], T mask[size], T result[size]) {
 	T tmp[size];
 softmax_sum_loop:
 	for (int i = 0; i < size; i++) {
-		tmp[i] = mask[i] ? hls::exp(input[i]) : (T) 0;
+		tmp[i] = mask[i] ? (T) hls::exp((double) input[i]) : (T) 0;
 		sum += tmp[i];
 	}
 softmax_result_loop:

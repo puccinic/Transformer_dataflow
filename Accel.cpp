@@ -1,5 +1,4 @@
 #include "Definitions.h"
-#include <hls_math.h>
 #include "Encoder.h"
 #define ENCODER
 #ifdef ENCODER

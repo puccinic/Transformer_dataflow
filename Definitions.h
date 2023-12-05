@@ -1,5 +1,6 @@
 #pragma once
 #include <ap_fixed.h>
+#include <hls_math.h>
 #define EPSILON 1e-5
 #define NUM_HEADS 1
 #define SEQ_LEN 10
