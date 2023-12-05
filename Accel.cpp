@@ -1,16 +1,6 @@
+#include "Definitions.h"
 #include <hls_math.h>
-#include <ap_fixed.h>
 #include "Encoder.h"
-#define EPSILON 1e-5
-typedef ap_fixed<8,4,AP_RND> idata_t;
-typedef ap_fixed<8,4,AP_RND> odata_t;
-idata_t epsilon[2] = { 0, 0 };
-constexpr int num_heads = 1;
-constexpr int sequence_length = 10;
-constexpr int token_length = 10;
-constexpr int head_token_length = 10;
-constexpr int hidden = 10;
-
 #define ENCODER
 #ifdef ENCODER
 void accel(
@@ -28,6 +18,7 @@ void accel(
 	idata_t input_mask[sequence_length][sequence_length],
 	odata_t result[sequence_length][token_length]
 ) {
+	idata_t epsilon[2] = { 0, 0 };
 	encoder<idata_t, num_heads, sequence_length, token_length, head_token_length, hidden>(
 		input, 
 		input_mask,
