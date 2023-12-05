@@ -14,19 +14,19 @@ layer_norm_outer_loop:
 		T sum = 0.0;
 	layer_norm_avg_loop:
 		for (int j = 0; j < size; j++) {
-			sum += (double) input[i][j];
+			sum += (T) input[i][j];
 		}
 		T mean = sum / size;
 		T variance = 0.0;
 	layer_norm_variance_loop:
 		for (int j = 0; j < size; j++) {
-			T tmp = (((double) input[i][j]) - mean);
+			T tmp = (((T) input[i][j]) - mean);
 			variance += tmp * tmp;
 		}
 		variance = variance / size;
 	layer_norm_result_loop:
 		for (int j = 0; j < size; j++) {
-			result[i][j] = (((input[i][j] - mean) * gamma[j]) / std::sqrt(variance + epsilon)) + beta[j];
+			result[i][j] = (((input[i][j] - mean) * gamma[j]) / hls::sqrt(variance + epsilon)) + beta[j];
 		}
 	}
 }
