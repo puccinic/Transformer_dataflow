@@ -23,7 +23,7 @@ matmul_transpose_row_loop:
 			result[i][j] = 0;
 		matmul_transpose_result_loop:
 			for (int k = 0; k < hidden; k++) {
-				result[i][j] += A[i][k] * B[j][k];
+				result[i][j] += (T) (A[i][k] * B[j][k]);
 			}
 		}
 	}
@@ -38,7 +38,7 @@ matmul_transpose_scale_row_loop:
 			T sum = 0;
 		matmul_transpose_scale_result_loop:
 			for (int k = 0; k < hidden; k++) {
-				sum += A[i][k] * B[j][k];
+				sum += (T) (A[i][k] * B[j][k]);
 			}
 			result[i][j] = sum / scale_factor;
 		}
