@@ -1,6 +1,5 @@
 #include "Definitions.h"
 #include "Encoder.h"
-#define ENCODER
 #ifdef ENCODER
 void accel(
 	idata_t head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN][HEAD_LEN],
@@ -17,7 +16,7 @@ void accel(
 	idata_t input_mask[SEQ_LEN][SEQ_LEN],
 	odata_t result[SEQ_LEN][TOKEN_LEN]
 ) {
-	idata_t epsilon[NUM_LAYER_NORM] = { 0, 0 };
+	idata_t epsilon[NUM_LAYER_NORM] = {EPSILON, EPSILON};
 	encoder<idata_t, NUM_HEADS, SEQ_LEN, TOKEN_LEN, HEAD_LEN, HIDDEN>(
 		input, 
 		input_mask,
