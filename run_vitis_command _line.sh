@@ -1,2 +1,2 @@
 #!/bin/sh
-vitis-run --mode hls --tcl  run_hls.tcl
+vitis_hls  run_hls.tcl
