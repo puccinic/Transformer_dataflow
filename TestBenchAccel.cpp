@@ -2,30 +2,28 @@
 #include "Definitions.h"
 
 int main() {
-	std::cout << "running test" << std::endl;
     std::string input_filename[] = {
-		"input1.txt",
-		"input2.txt",
-		"input3.txt",
-		"input4.txt",
-		"input5.txt",
-		"input6.txt",
-		"input7.txt",
-		"input8.txt",
-		"input9.txt",
-		"input10.txt",
-		"input11.txt",
-		"input12.txt"
+		"/home/carlos/Transformer_dataflow/input1.txt",
+		"/home/carlos/Transformer_dataflow/input2.txt",
+		"/home/carlos/Transformer_dataflow/input3.txt",
+		"/home/carlos/Transformer_dataflow/input4.txt",
+		"/home/carlos/Transformer_dataflow/input5.txt",
+		"/home/carlos/Transformer_dataflow/input6.txt",
+		"/home/carlos/Transformer_dataflow/input7.txt",
+		"/home/carlos/Transformer_dataflow/input8.txt",
+		"/home/carlos/Transformer_dataflow/input9.txt",
+		"/home/carlos/Transformer_dataflow/input10.txt",
+		"/home/carlos/Transformer_dataflow/input11.txt",
+		"/home/carlos/Transformer_dataflow/input12.txt"
 	};
 	
-	std::string result_filename = "golden_result.txt";
-	std::string log_filename = "log.txt";
+	std::string result_filename = "/home/carlos/Transformer_dataflow/golden_result.txt";
+	std::string log_filename = "/home/carlos/Transformer_dataflow/log.txt";
 
 #ifdef ENCODER
     idata_t input[SEQ_LEN][TOKEN_LEN]{};
 	load_arr<idata_t, SEQ_LEN*TOKEN_LEN>((idata_t*)input, &input_filename[0]);
-	std::cout << "loaded  input" << std::endl;		
-
+	
 	idata_t input_mask[SEQ_LEN][SEQ_LEN]{};
 	load_arr<idata_t, SEQ_LEN*SEQ_LEN>((idata_t*)input_mask, &input_filename[1]);
 
@@ -58,10 +56,9 @@ int main() {
 		
 	idata_t beta[2][TOKEN_LEN]{};
 	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)beta, &input_filename[11]);
-	
-	std::cout << "begining output" << std::endl;
 
 	odata_t output[SEQ_LEN][TOKEN_LEN]{};
+	
 	accel(
 		head_weights,
 		head_biases,
@@ -77,11 +74,7 @@ int main() {
 		input_mask,
 		output
 	);
-	std::cout << "produced output" << std::endl;
-
 	compare_mat<odata_t, SEQ_LEN, TOKEN_LEN>(output, &result_filename, &log_filename);
-
-	std::cout << "test end" << std::endl;
 #endif
 
 }
