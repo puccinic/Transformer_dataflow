@@ -1,6 +1,6 @@
 #pragma once
-#include <ap_fixed.h>
 #include <hls_math.h>
+#include <ap_fixed.h>
 #define EPSILON 1e-5
 #define NUM_HEADS 1
 #define SEQ_LEN 10
@@ -10,8 +10,12 @@
 #define NUM_LINEAR_LAYERS 3
 #define NUM_LAYER_NORM 2
 #define SCALE_FACTOR 3.162277660168379
-typedef double idata_t;
-typedef double odata_t;
+#define IN_WIDTH 300
+#define IN_IWIDTH 1
+#define OUT_WIDTH 300
+#define OUT_IWIDTH 1
+typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
+typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
 
 #define ENCODER
 

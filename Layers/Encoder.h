@@ -31,7 +31,7 @@ void encoder(
 		linear_bias, 
 		tmp1
 	);
-
+	
 	T tmp2[sequence_length][token_length];
 	matadd<T, sequence_length, token_length>(input, tmp1, tmp2);
 
