@@ -19,7 +19,7 @@ void fxp_sqrt(ap_fixed<W2, IW2>& result, ap_fixed<W1, IW1>& in_val) {
         s = in_val.range(W1 - 1, 0) << (SCALE);
     else
         s = ((in_val.range(W1 - 1, 0) >> (0 - (SCALE + 1))) + 1) >> 1;
-fxp_sqrt_loop:
+
     // Non-restoring square-root algorithm
     for (int i = 0; i <= ROOT_PREC; i++) {
         if (s >= 0) {
@@ -39,7 +39,6 @@ fxp_sqrt_loop:
     // Truncate excess bit and assign to output format
     result.range(W2 - 1, 0) = ap_uint<W2>(q >> 1);
 }
-
 
 template<typename T, int channels, int size>
 void layer_norm(
@@ -71,7 +70,7 @@ layer_norm_outer_loop:
         std::cout << "standard dev: " << std_dev << std::endl;
 	layer_norm_result_loop:
 		for (int j = 0; j < size; j++) {
-			result[i][j] = (((input[i][j] - mean) * gamma[j]) / std_dev) + beta[j];
+			result[i][j] = (((input[i][j] - mean) * gamma[j]) / variance) + beta[j];
 		}
 	}
 }
