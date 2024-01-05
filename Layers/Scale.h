@@ -10,7 +10,8 @@ scale_outer_loop:
 	for (int i = 0; i < rows; i++) {
 	scale_inner_loop:
 		for (int j = 0; j < cols; j++) {
-#pragma HLS UNROLL
+			#pragma HLS UNROLL
+			#pragma HLS PIPELINE
 			result[i][j] = A[i][j] OP scale_factor;
 		}
 	}

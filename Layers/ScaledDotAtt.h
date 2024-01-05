@@ -13,6 +13,7 @@ void scaledotatt(
 	T input_mask[sequence_length][sequence_length],
 	T result[sequence_length][token_length]
 ) {
+	#pragma HLS DATAFLOW
 	T softmax_att[sequence_length][sequence_length];
 	matmul_scale_masked_softmax<T,sequence_length,token_length,sequence_length>(query, key, SCALE_FACTOR, input_mask, softmax_att);
 

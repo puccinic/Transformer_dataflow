@@ -1,6 +1,8 @@
 #pragma once
 template<typename T, int rows, int hidden, int cols>
 void matmul(T A[rows][hidden], T B[hidden][cols], T result[rows][cols]) {
+	#pragma HLS ARRAY_PARTITION variable = A dim = 2 complete
+	#pragma HLS ARRAY_PARTITION variable = B dim = 1 complete
 matmul_row_loop:
 	for (int i = 0; i < rows; i++) {
 	matmul_col_loop:
@@ -16,6 +18,8 @@ matmul_row_loop:
 
 template<typename T, int rows, int hidden, int cols>
 void transpose_matmul(T A[rows][hidden], T B[cols][hidden], T result[rows][cols]) {
+	#pragma HLS ARRAY_PARTITION variable = A dim = 2 complete
+	#pragma HLS ARRAY_PARTITION variable = B dim = 2 complete
 matmul_transpose_row_loop:
 	for (int i = 0; i < rows; i++) {
 	matmul_transpose_col_loop:
@@ -31,6 +35,8 @@ matmul_transpose_row_loop:
 
 template<typename T, int rows, int hidden, int cols>
 void matmul_transpose_scale(T A[rows][hidden], T B[cols][hidden], T scale_factor, T result[rows][cols]) {
+	#pragma HLS ARRAY_PARTITION variable = A dim = 2 complete
+	#pragma HLS ARRAY_PARTITION variable = B dim = 2 complete
 matmul_transpose_scale_row_loop:
 	for (int i = 0; i < rows; i++) {
 	matmul_transpose_scale_col_loop:

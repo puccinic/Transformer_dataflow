@@ -19,11 +19,13 @@ void masked_sofmax(T input[size], T mask[size], T result[size]) {
 	T tmp[size];
 softmax_sum_loop:
 	for (int i = 0; i < size; i++) {
+		#pragma HLS PIPELINE rewind
 		tmp[i] = mask[i] ? (T) hls::exp((double) input[i]) : (T) 0;
 		sum += tmp[i];
 	}
 softmax_result_loop:
 	for (int i = 0; i < size; i++) {
+		#pragma HLS PIPELINE rewind
 		result[i] = (T)((tmp[i] / sum));
 	}
 }
@@ -36,6 +38,9 @@ void matmul_scale_masked_softmax(
 	T scale_factor, 
 	T input_mask[rows][cols],
 	T result[rows][cols]) {
+	#pragma HLS ARRAY_PARTITION variable = A dim = 2 complete
+	#pragma HLS ARRAY_PARTITION variable = B dim = 2 complete
+	#pragma HLS ARRAY_PARTITION variable = input_mask dim = 2 complete
 matmul_transpose_scale_row_loop:
 	for (int i = 0; i < rows; i++) {
 		T tmp[cols];
@@ -44,6 +49,7 @@ matmul_transpose_scale_row_loop:
 			T sum = 0;
 		matmul_transpose_scale_result_loop:
 			for (int k = 0; k < hidden; k++) {
+				#pragma HLS PIPELINE rewind
 				sum += (A[i][k] * B[j][k]);
 			}
 			tmp[j] = sum / scale_factor;

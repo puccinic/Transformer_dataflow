@@ -18,6 +18,7 @@ void multi_head_att(
 	T tmp1[num_heads][sequence_length][head_token_length];
 multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++) {
+		#pragma HLS UNROLL
 		att_head<T, sequence_length, token_length, head_token_length>(
 			query, 
 			key, 

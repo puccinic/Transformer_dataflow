@@ -50,7 +50,9 @@ void layer_norm(
 	T result[channels][size]
 ) {
 layer_norm_outer_loop:
+    #pragma HLS ARRAY_PARTITION variable = input dim = 2 complete
 	for (int i = 0; i < channels; i++) {
+		#pragma HLS UNROLL
 		T sum = 0.0;
 	layer_norm_avg_loop:
 		for (int j = 0; j < size; j++) {
@@ -67,8 +69,6 @@ layer_norm_outer_loop:
         T std_dev;
 		//std_dev = hls::sqrt(variance);
         fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
-        std::cout << "variance: " << variance << std::endl;
-        std::cout << "standard dev: " << std_dev << std::endl;
 	layer_norm_result_loop:
 		for (int j = 0; j < size; j++) {
 			result[i][j] = (((input[i][j] - mean) * gamma[j]) / std_dev) + beta[j];

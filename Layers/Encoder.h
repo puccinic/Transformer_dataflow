@@ -21,6 +21,7 @@ void encoder(
 	T result[sequence_length][token_length]
 	) {
 
+	#pragma HLS DATAFLOW
 	T tmp1[sequence_length][token_length];
 	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>(
 		input, input, input, 

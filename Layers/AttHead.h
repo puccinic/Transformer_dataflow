@@ -11,8 +11,7 @@ void att_head(
 	T weights[NUM_LINEAR_LAYERS][token_length][head_token_length],
 	T biases[NUM_LINEAR_LAYERS][head_token_length],
 	T result[sequence_length][head_token_length]
-	) {
-
+) {
 	T Q[sequence_length][head_token_length];
 	linear<T, sequence_length, token_length, head_token_length>(query, weights[0], biases[0], Q);
 

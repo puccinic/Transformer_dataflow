@@ -11,6 +11,7 @@ void ff(
 	T biases2[cols],
 	T result[rows][cols]
 	) {
+	#pragma HLS DATAFLOW
 	T tmp1[rows][hidden];
 	linear<T, rows, cols, hidden>(input, weights1, biases1, tmp1);
 	T tmp2[rows][hidden];
