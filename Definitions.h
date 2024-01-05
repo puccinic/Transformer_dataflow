@@ -10,10 +10,10 @@
 #define NUM_LINEAR_LAYERS 3
 #define NUM_LAYER_NORM 2
 #define SCALE_FACTOR 3.162277660168379
-#define IN_WIDTH 64
-#define IN_IWIDTH 40
-#define OUT_WIDTH 64
-#define OUT_IWIDTH 40
+#define IN_WIDTH 32
+#define IN_IWIDTH 16
+#define OUT_WIDTH 32
+#define OUT_IWIDTH 16
 typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
 typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
 //typedef double idata_t;
