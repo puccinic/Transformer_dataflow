@@ -47,7 +47,9 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 		log << "Test Succeded with 0 mismatches!" << std::endl;
 	}
 	else {
-		std::cout << "Number of mismatchs: " << mismatch_count << std::endl;
+		std::cout << "Number of mismatchs: " << mismatch_count
+		<< " average relative error:  " << avg_error << std::endl;
+		
 		log << "Number of mismatchs: " << mismatch_count 
 		<< " average relative error:  " << avg_error << std::endl;
 	}

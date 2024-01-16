@@ -47,7 +47,9 @@ template<typename T, int rows, int cols>
 void activation(T input[rows][cols], T result[rows][cols]) {
 	#pragma HLS ARRAY_PARTITION variable = input dim = 2 complete
 	for (int i = 0; i < rows; i++) {
+		//#pragma HLS PIPELINE
 		for (int j = 0; j < cols; j++) {
+		//	#pragma HLS UNROLL
 			result[i][j] = relu<T>(input[i][j]);
 		}
 	}

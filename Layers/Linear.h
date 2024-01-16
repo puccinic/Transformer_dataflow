@@ -10,7 +10,7 @@ void linear(
 	T result[rows][cols]
 	) {
 	T tmp[rows][cols];
-	#pragma HLS ARRAY_PARTITION variable = tmp dim = 2 complete
+	//#pragma HLS ARRAY_PARTITION variable = tmp dim = 2 complete
 	matmul<T, rows, hidden, cols>(input, weights, tmp);
 	for (int i = 0; i < rows; i++) {
 		vecadd<T, cols>(tmp[i], biases, result[i]);

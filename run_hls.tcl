@@ -8,7 +8,7 @@ create_clock -period 5 -name default
 set_clock_uncertainty 2
 set_directive_top -name accel "accel"
 csim_design
-set hls_exec 1
+set hls_exec 2
 
 if {$hls_exec == 1} {
     csynth_design
@@ -16,8 +16,7 @@ if {$hls_exec == 1} {
 
 if {$hls_exec == 2} {
     csynth_design
-    cosim_design
-    export_design -format ip_catalog    
+    cosim_design    
 }
 
 exit

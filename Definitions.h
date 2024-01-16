@@ -1,7 +1,7 @@
 #pragma once
 #include <hls_math.h>
 #include <ap_fixed.h>
-#define EPSILON 1e-5
+#define EPSILON 0.00390625
 #define NUM_HEADS 1
 #define SEQ_LEN 10
 #define TOKEN_LEN 10
