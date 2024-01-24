@@ -1,23 +1,33 @@
 #pragma once
 #include <hls_math.h>
 #include <ap_fixed.h>
-#define EPSILON 0.00390625
-#define NUM_HEADS 1
-#define SEQ_LEN 10
-#define TOKEN_LEN 10
+
+/*Constants are set according to BERT-Tiny dimentions */
+
+#define EPSILON 0.0625
+#define NUM_HEADS 2
+#define SEQ_LEN 384
+#define TOKEN_LEN 128
 #define HEAD_LEN TOKEN_LEN / NUM_HEADS
-#define HIDDEN 10
+#define HIDDEN 512
 #define NUM_LINEAR_LAYERS 3
 #define NUM_LAYER_NORM 2
-#define SCALE_FACTOR 3.162277660168379
-#define IN_WIDTH 32
-#define IN_IWIDTH 16
-#define OUT_WIDTH 32
-#define OUT_IWIDTH 16
-typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
+#define SCALE_FACTOR 8
+#define IN_WIDTH 8
+#define IN_IWIDTH 4
+#define OUT_WIDTH 8
+#define OUT_IWIDTH 4
+#define USING_APFIXED
+#if defined(USING_APFIXED)
+
 typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
-//typedef double idata_t;
-//typedef double odata_t;
+typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
+
+#else
+	typedef float idata_t;
+	typedef float odata_t;
+#endif /*using ap_fixed */
+
 #define ENCODER
 
 #ifdef ENCODER

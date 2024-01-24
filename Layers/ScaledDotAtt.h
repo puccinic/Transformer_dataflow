@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include "MatMul.h"
 #include "Transpose.h"
 #include "Mask.h"

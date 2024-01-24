@@ -4,11 +4,11 @@ import torch
 from torch import nn
 from typing import TypeAlias
 
-ROWS =  10
-COLS =  10
-HIDDEN = 10
-SCALE_FACTOR =  10
-NUM_HEADS =  1
+ROWS =  128
+COLS =  128
+HIDDEN = 512
+SCALE_FACTOR =  8
+NUM_HEADS =  2
 INT_HIGH = 128
 INT_LOW = -128
 

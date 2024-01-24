@@ -25,21 +25,21 @@ void encoder(
 	T input_copy1[sequence_length][token_length];
 	T input_copy2[sequence_length][token_length];
 	T input_copy3[sequence_length][token_length];
-	replicate3<T, sequence_length * token_length>((T*) input, (T*) input_copy1, (T*) input_copy2, (T*) input_copy3);
+	T input_copy4[sequence_length][token_length];
+	replicate4<T, sequence_length * token_length>((T*) input, (T*) input_copy1, (T*) input_copy2, (T*) input_copy3, (T*) input_copy4);
 
 	T multi_head_result[sequence_length][token_length];
 	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>(
-		input_copy1, input_copy2, input_copy3, 
-		input_mask, 
-		head_weights, 
-		head_biases, 
-		linear_weights, 
-		linear_bias, 
+		input_copy1, input_copy2, input_copy3,
+		input_mask,
+		head_weights,
+		head_biases,
+		linear_weights,
+		linear_bias,
 		multi_head_result
 	);
-	
 	T matadd_result1[sequence_length][token_length];
-	matadd<T, sequence_length, token_length>(input, multi_head_result, matadd_result1);
+	matadd<T, sequence_length, token_length>(input_copy4, multi_head_result, matadd_result1);
 
 	T layer_norm_result[sequence_length][token_length];
 	layer_norm<T, sequence_length, token_length>(matadd_result1, epsilon[0], gamma[0], beta[0], layer_norm_result);

@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include "AttHead.h"
 #include "Concat.h"
 #include "Linear.h"
@@ -20,10 +20,10 @@ multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++) {
 		//#pragma HLS UNROLL
 		att_head<T, sequence_length, token_length, head_token_length>(
-			query, 
-			key, 
-			values, input_mask, head_weights[i], 
-			head_biases[i], 
+			query,
+			key,
+			values, input_mask, head_weights[i],
+			head_biases[i],
 			tmp1[i]
 		);
 	}

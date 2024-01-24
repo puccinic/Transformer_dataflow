@@ -65,13 +65,21 @@ layer_norm_outer_loop:
 			T tmp = (((T) input[i][j]) - mean);
 			variance += tmp * tmp;
 		}
-		variance = variance / size + epsilon;
+		variance = (variance / size);
         T std_dev;
-		//std_dev = hls::sqrt(variance);
-        fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
+        #if defined(USING_APFIXED)
+            fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
+        #else
+		    std_dev = hls::sqrt(variance);
+        #endif /*using ap_fixed */ 
+
 	layer_norm_result_loop:
 		for (int j = 0; j < size; j++) {
-			result[i][j] = (((input[i][j] - mean) * gamma[j]) / std_dev) + beta[j];
+            T tmp1 = (input[i][j] - mean);
+            T tmp2 = (tmp1 * gamma[j]);
+            T tmp3 = (std_dev + epsilon);
+            T tmp4 = (tmp2 / tmp3);
+			result[i][j] = tmp4 + beta[j];
 		}
 	}
 }

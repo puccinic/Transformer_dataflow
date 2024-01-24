@@ -19,6 +19,7 @@ void load_arr(T arr[size], std::string* filename) {
 
 template<typename T, int size>
 void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filename) {
+	std::cout << "ALIVE " << std::endl;
 	std::ifstream file(*vec_filename);
 	std::ofstream log(*log_filename);
 	int mismatch_count = 0;
@@ -33,7 +34,11 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 		stream >> num;
 		log << vec[i] << " " << num;
 		if (vec[i] != num) {
-			double error = ((double) (((num - vec[i])) / num)) * 100;
+			double error = 0;
+			if (num != 0)
+				error = ((double) (((num - vec[i])) / num)) * 100;
+			else if (vec[i] != 0)
+				error = ((double) (((vec[i]- num)) / vec[i])) * 100;
 			log << " -miss relative error: " << error << "%";
 			avg_error +=  std::abs(error);
 			mismatch_count++;
@@ -49,14 +54,8 @@ void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filena
 	else {
 		std::cout << "Number of mismatchs: " << mismatch_count
 		<< " average relative error:  " << avg_error << std::endl;
-		
-		log << "Number of mismatchs: " << mismatch_count 
+
+		log << "Number of mismatchs: " << mismatch_count
 		<< " average relative error:  " << avg_error << std::endl;
 	}
 }
-
-template<typename T, int rows, int cols>
-void compare_mat(T mat[rows][cols], std::string* mat_filename, std::string* log_filename) {
-	compare_vec<T, rows*cols>((T*) mat, mat_filename, log_filename);
-}
-

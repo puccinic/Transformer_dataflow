@@ -16,14 +16,14 @@ int main() {
 		"/home/carlos/Transformer_dataflow/input11.txt",
 		"/home/carlos/Transformer_dataflow/input12.txt"
 	};
-	
+
 	std::string result_filename = "/home/carlos/Transformer_dataflow/golden_result.txt";
 	std::string log_filename = "/home/carlos/Transformer_dataflow/log.txt";
 
 #ifdef ENCODER
     idata_t input[SEQ_LEN][TOKEN_LEN]{};
 	load_arr<idata_t, SEQ_LEN*TOKEN_LEN>((idata_t*)input, &input_filename[0]);
-	
+
 	idata_t input_mask[SEQ_LEN][SEQ_LEN]{};
 	load_arr<idata_t, SEQ_LEN*SEQ_LEN>((idata_t*)input_mask, &input_filename[1]);
 
@@ -53,12 +53,12 @@ int main() {
 
 	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN]{};
 	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)gamma, &input_filename[10]);
-		
+
 	idata_t beta[2][TOKEN_LEN]{};
 	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)beta, &input_filename[11]);
 
 	odata_t output[SEQ_LEN][TOKEN_LEN]{};
-	
+
 	accel(
 		head_weights,
 		head_biases,
@@ -74,7 +74,6 @@ int main() {
 		input_mask,
 		output
 	);
-	compare_mat<odata_t, SEQ_LEN, TOKEN_LEN>(output, &result_filename, &log_filename);
-#endif
-
+	compare_vec<odata_t, SEQ_LEN*TOKEN_LEN>((odata_t*) output, &result_filename, &log_filename);
 }
+#endif
