@@ -54,8 +54,16 @@ int main() {
 	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN]{};
 	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)gamma, &input_filename[10]);
 
-	idata_t beta[2][TOKEN_LEN]{};
+	idata_t beta[NUM_LAYER_NORM][TOKEN_LEN]{};
 	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)beta, &input_filename[11]);
+
+#if defined(USING_BATCH_NORM)
+	idata_t mean[NUM_LAYER_NORM][TOKEN_LEN]{};
+	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)mean, &input_filename[11]);
+
+	idata_t stddev[NUM_LAYER_NORM][TOKEN_LEN]{};
+	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)gamma, &input_filename[10]);
+#endif /* using batch norm */
 
 	odata_t output[SEQ_LEN][TOKEN_LEN]{};
 
@@ -70,6 +78,10 @@ int main() {
 		ff_biases2,
 		gamma,
 		beta,
+	#if defined(USING_BATCH_NORM)
+		mean,
+		stddev,
+	#endif
 		input,
 		input_mask,
 		output

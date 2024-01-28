@@ -19,6 +19,10 @@ void encoder(
 	T epsilon[NUM_LAYER_NORM],
 	T gamma[NUM_LAYER_NORM][token_length],
 	T beta[NUM_LAYER_NORM][token_length],
+#if defined(USING_BATCH_NORM)
+	T mean[NUM_LAYER_NORM][token_length],
+    T stddev[NUM_LAYER_NORM][token_length],
+#endif /* using batch norm */
 	T result[sequence_length][token_length]
 ) {
 	#pragma HLS DATAFLOW
@@ -41,18 +45,26 @@ void encoder(
 	T matadd_result1[sequence_length][token_length];
 	matadd<T, sequence_length, token_length>(input_copy4, multi_head_result, matadd_result1);
 
-	T layer_norm_result[sequence_length][token_length];
-	layer_norm<T, sequence_length, token_length>(matadd_result1, epsilon[0], gamma[0], beta[0], layer_norm_result);
+	T norm_result[sequence_length][token_length];
+#if defined(USING_BATCH_NORM)
+	batch_norm<T, sequence_length, token_length>(matadd_result1, epsilon[0], gamma[0], beta[0], mean[0], stddev[0], norm_result);
+#else
+	layer_norm<T, sequence_length, token_length>(matadd_result1, epsilon[0], gamma[0], beta[0], norm_result);
+#endif /* using batch norm */
 
-	T layer_norm_result_copy1[sequence_length][token_length];
-	T layer_norm_result_copy2[sequence_length][token_length];
-	replicate2<T, sequence_length * token_length>((T*) layer_norm_result, (T*) layer_norm_result_copy1, (T*) layer_norm_result_copy2);
+	T norm_result_copy1[sequence_length][token_length];
+	T norm_result_copy2[sequence_length][token_length];
+	replicate2<T, sequence_length * token_length>((T*) norm_result, (T*) norm_result_copy1, (T*) norm_result_copy2);
 
 	T ff_result[sequence_length][token_length];
-	ff<T, sequence_length, hidden, token_length>(layer_norm_result_copy1, ff_weights1, ff_biases1, ff_weights2, ff_biases2, ff_result);
+	ff<T, sequence_length, hidden, token_length>(norm_result_copy1, ff_weights1, ff_biases1, ff_weights2, ff_biases2, ff_result);
 
 	T matadd_result2[sequence_length][token_length];
-	matadd<T, sequence_length, token_length>(layer_norm_result_copy2, ff_result, matadd_result2);
+	matadd<T, sequence_length, token_length>(norm_result_copy2, ff_result, matadd_result2);
 
+#if defined(USING_BATCH_NORM)
+	batch_norm<T, sequence_length, token_length>(matadd_result2, epsilon[1], gamma[1], beta[1], mean[1], stddev[1], result);
+#else
 	layer_norm<T, sequence_length, token_length>(matadd_result2, epsilon[1], gamma[1], beta[1], result);
+#endif /* using batch norm */
 }

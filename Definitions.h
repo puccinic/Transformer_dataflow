@@ -18,6 +18,7 @@
 #define OUT_WIDTH 8
 #define OUT_IWIDTH 4
 #define USING_APFIXED
+#define USING_BATCH_NORM
 #if defined(USING_APFIXED)
 
 typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
@@ -42,6 +43,10 @@ void accel(
 	idata_t ff_biases2[TOKEN_LEN],
 	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN],
 	idata_t beta[NUM_LAYER_NORM][TOKEN_LEN],
+#if defined(USING_BATCH_NORM)
+	idata_t mean[NUM_LAYER_NORM][TOKEN_LEN],
+	idata_t stddev[NUM_LAYER_NORM][TOKEN_LEN],
+#endif /* using batch norm */
 	idata_t input[SEQ_LEN][TOKEN_LEN],
 	idata_t input_mask[SEQ_LEN][SEQ_LEN],
 	odata_t result[SEQ_LEN][TOKEN_LEN]

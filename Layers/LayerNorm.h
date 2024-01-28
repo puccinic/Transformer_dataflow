@@ -43,10 +43,10 @@ fxp_sqrt_loop:
 
 template<typename T, int channels, int size>
 void layer_norm(
-	T input[channels][size], 
-	T epsilon, 
-	T gamma[size], 
-	T beta[size], 
+	T input[channels][size],
+	T epsilon,
+	T gamma[size],
+	T beta[size],
 	T result[channels][size]
 ) {
 layer_norm_outer_loop:
@@ -71,7 +71,7 @@ layer_norm_outer_loop:
             fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
         #else
 		    std_dev = hls::sqrt(variance);
-        #endif /*using ap_fixed */ 
+        #endif /*using ap_fixed */
 
 	layer_norm_result_loop:
 		for (int j = 0; j < size; j++) {
@@ -82,4 +82,25 @@ layer_norm_outer_loop:
 			result[i][j] = tmp4 + beta[j];
 		}
 	}
+}
+
+template<typename T, int channels, int size>
+void batch_norm(
+	T input[channels][size],
+	T epsilon,
+	T gamma[size],
+	T beta[size],
+    T mean[size],
+    T stddev[size],
+	T result[channels][size]
+) {
+     for (int i = 0; i < channels; ++i) {
+        for (int j = 0; j < size; ++j) {
+            T tmp1 = (input[i][j] - mean[j]);
+            T tmp2 = (tmp1 * gamma[j]);
+            T tmp3 = stddev[j] + epsilon;
+            T tmp4 = (tmp2 / tmp3);
+	    	result[i][j] = tmp4 + beta[j];
+        }
+    }
 }

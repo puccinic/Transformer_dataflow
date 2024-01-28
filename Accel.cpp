@@ -12,13 +12,17 @@ void accel(
 	idata_t ff_biases2[TOKEN_LEN],
 	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN],
 	idata_t beta[NUM_LAYER_NORM][TOKEN_LEN],
+#if defined(USING_BATCH_NORM)
+	idata_t mean[NUM_LAYER_NORM][TOKEN_LEN],
+    idata_t stddev[NUM_LAYER_NORM][TOKEN_LEN],
+#endif /* using batch norm */
 	idata_t input[SEQ_LEN][TOKEN_LEN],
 	idata_t input_mask[SEQ_LEN][SEQ_LEN],
 	odata_t result[SEQ_LEN][TOKEN_LEN]
-) {	
+) {
 	idata_t epsilon[NUM_LAYER_NORM] = {EPSILON, EPSILON};
 	encoder<idata_t, NUM_HEADS, SEQ_LEN, TOKEN_LEN, HEAD_LEN, HIDDEN>(
-		input, 
+		input,
 		input_mask,
 		head_weights,
 		head_biases,
@@ -31,6 +35,10 @@ void accel(
 		epsilon,
 		gamma,
 		beta,
+	#if defined(USING_BATCH_NORM)
+	    mean,
+    	stddev,
+	#endif /* using batch norm */
 		result
 	);
 }

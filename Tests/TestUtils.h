@@ -19,7 +19,6 @@ void load_arr(T arr[size], std::string* filename) {
 
 template<typename T, int size>
 void compare_vec(T vec[size], std::string* vec_filename, std::string* log_filename) {
-	std::cout << "ALIVE " << std::endl;
 	std::ifstream file(*vec_filename);
 	std::ofstream log(*log_filename);
 	int mismatch_count = 0;
