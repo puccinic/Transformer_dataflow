@@ -21,7 +21,7 @@ void multi_head_att
 )
 {
 	hls::stream<hls::vector<T, head_token_length>> tmp1[num_heads];
-	hls::stream<hls::vector<T, head_token_length>> tmp2;
+	hls::stream<hls::vector<T, token_length>> tmp2;
 
 multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++)

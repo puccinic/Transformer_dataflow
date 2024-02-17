@@ -20,7 +20,7 @@ get_max_loop:
       	tmp = input[i];
     	}
   	}
-	*result = tmp;
+	result = tmp;
 }
 
 template<typename T, int size>

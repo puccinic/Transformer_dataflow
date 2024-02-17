@@ -108,9 +108,9 @@ layer_norm_outer_loop:
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
-        tmp1 = in - avg;
+        tmp1 = in - mean;
         tmp2 = tmp1 * g;
-        tmp3 = std + epsilon;
+        tmp3 = std_dev + epsilon;
         tmp4 = tmp2 / tmp3;
 	    rst = tmp4 + b;
 
@@ -133,7 +133,7 @@ void batch_norm(
     hls::vector<T, size> g;
     hls::vector<T, size> b;
     hls::vector<T, size> avg;
-    hls::vector<T, size> std;
+    hls::vector<T, size> std_dev;
     hls::vector<T, size> tmp1;
     hls::vector<T, size> tmp2;
     hls::vector<T, size> tmp3;
@@ -143,7 +143,7 @@ void batch_norm(
     gamma.read(g);
     beta.read(b);
     mean.read(avg);
-    stddev.read(std);
+    stddev.read(std_dev);
 
     for (int i = 0; i < channels; i++)
     {
@@ -151,7 +151,7 @@ void batch_norm(
 
         tmp1 = in - avg;
         tmp2 = tmp1 * g;
-        tmp3 = std + epsilon;
+        tmp3 = std_dev + epsilon;
         tmp4 = tmp2 / tmp3;
 	    rst = tmp4 + b;
 

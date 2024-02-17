@@ -5,12 +5,12 @@
 
 template<typename T, int size>
 void dot_product(
-	hls::vector<T, cols> &A,
-	hls::vector<T, cols> &B,
+	hls::vector<T, size> &A,
+	hls::vector<T, size> &B,
 	T &result
 )
 {
-	hls::vector<T, cols> tmp = A * B;
+	hls::vector<T, size> tmp = A * B;
 	result = tmp.reduce_add();
 }
 
@@ -36,7 +36,7 @@ matmul_row_loop:
 		{
 			B.read(b);
 			dot_product<T,hidden>(a, b, dot_prod_rst);
-			rst[j] = rst;
+			rst[j] = dot_prod_rst;
 		}
 		result.write(rst);
 	}

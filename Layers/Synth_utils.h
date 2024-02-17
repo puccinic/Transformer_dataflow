@@ -39,7 +39,7 @@ void replicate3
 	}
 }
 
-template<typename T, int cols>
+template<typename T, int rows, int cols>
 void replicate4
 (
 	hls::stream<hls::vector<T, cols>> &input,
@@ -60,7 +60,7 @@ void replicate4
 	}
 }
 
-template<typename T, int rows,int cols>
+template<typename T, int rows, int cols>
 void split3
 (
 	hls::stream<hls::vector<T, cols>> input[3],

@@ -22,7 +22,7 @@ loop_bias_add:
 	for (int i = 0; i < rows; i++)
 	{
 		input.read(in);
-		res = A + b;
+		res = in + b;
 		result.write(res);
 	}
 }
@@ -38,6 +38,6 @@ void linear
 {
 	#pragma HLS DATAFLOW
 	hls::stream<hls::vector<T, cols>> tmp;
-	matmul<T, rows, hidden, cols>(input, weights, tmp);
+	matmul_transpose<T, rows, hidden, cols>(input, weights, tmp);
 	bias_add<T, rows, cols>(tmp, biases, result);
 }
