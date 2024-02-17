@@ -1,37 +1,84 @@
 #pragma once
 
-template<typename T, int size>
-void replicate2(T input[size], T result1[size], T result2[size]) {
-	for (int i = 0; i < size; i++) {
-		result1[i] = input[i];
-		result2[i] = input[i];
+#include "hls_stream.h"
+#include "hls_vector.h"
+
+template<typename T, int rows, int cols>
+void replicate2
+(
+	hls::stream<hls::vector<T, cols>> &input,
+	hls::stream<hls::vector<T, cols>> &result1,
+	hls::stream<hls::vector<T, cols>> &result2
+)
+{
+	hls::vector<T, cols> in;
+	for (int i = 0; i < rows; i++)
+	{
+		input.read(in);
+		result1.write(in);
+		result2.write(in);
 	}
 }
 
-template<typename T, int size>
-void replicate3(T input[size], T result1[size], T result2[size], T result3[size]) {
-	for (int i = 0; i < size; i++) {
-		result1[i] = input[i];
-		result2[i] = input[i];
-		result3[i] = input[i];
+template<typename T, int rows, int cols>
+void replicate3
+(
+	hls::stream<hls::vector<T, cols>> &input,
+	hls::stream<hls::vector<T, cols>> &result1,
+	hls::stream<hls::vector<T, cols>> &result2,
+	hls::stream<hls::vector<T, cols>> &result3
+)
+{
+	hls::vector<T, cols> in;
+	for (int i = 0; i < rows; i++)
+	{
+		input.read(in);
+		result1.write(in);
+		result2.write(in);
+		result3.write(in);
 	}
 }
 
-template<typename T, int size>
-void replicate4(T input[size], T result1[size], T result2[size], T result3[size], T result4[size]) {
-	for (int i = 0; i < size; i++) {
-		result1[i] = input[i];
-		result2[i] = input[i];
-		result3[i] = input[i];
-		result4[i] = input[i];
+template<typename T, int cols>
+void replicate4
+(
+	hls::stream<hls::vector<T, cols>> &input,
+	hls::stream<hls::vector<T, cols>> &result1,
+	hls::stream<hls::vector<T, cols>> &result2,
+	hls::stream<hls::vector<T, cols>> &result3,
+	hls::stream<hls::vector<T, cols>> &result4
+)
+{
+	hls::vector<T, cols> in;
+	for (int i = 0; i < rows; i++)
+	{
+		input.read(in);
+		result1.write(in);
+		result2.write(in);
+		result3.write(in);
+		result4.write(in);
 	}
 }
 
-template<typename T, int size>
-void split3(T input[3][size], T result1[size], T result2[size], T result3[size]) {
-	for (int i = 0; i < size; i++) {
-		result1[i] = input[0][i];
-		result2[i] = input[1][i];
-		result3[i] = input[2][i];
+template<typename T, int rows,int cols>
+void split3
+(
+	hls::stream<hls::vector<T, cols>> input[3],
+	hls::stream<hls::vector<T, cols>> &result1,
+	hls::stream<hls::vector<T, cols>> &result2,
+	hls::stream<hls::vector<T, cols>> &result3
+)
+{
+	hls::vector<T, cols> in1;
+	hls::vector<T, cols> in2;
+	hls::vector<T, cols> in3;
+	for (int i = 0; i < rows; i++)
+	{
+		input[0].read(in1);
+		input[1].read(in2);
+		input[3].read(in3);
+		result1.write(in1);
+		result2.write(in2);
+		result3.write(in3);
 	}
 }

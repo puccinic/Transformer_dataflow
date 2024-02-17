@@ -1,30 +1,31 @@
-#pragma once 
+#pragma once
+
+#include "hls_stream.h"
+#include "hls_vector.h"
 
 template<typename T, int rows, int cols,  int mat_num>
-void concat_cols(T matrices[mat_num][rows][cols], T result[rows][cols*mat_num]) {
+void concat_cols
+(
+    hls::stream<hls::vector<T, cols>> matrices[mat_num],
+    hls::stream<hls::vector<T, cols*mat_num>> result
+)
+{
+
+    hls::vector<T, cols> tmp;
+    hls::vector<T, cols*mat_num> rst;
 concat_cols_row_loop:
-    for (int i = 0; i < rows; i++) {
+    for (int i = 0; i < rows; i++)
+    {
     concat_cols_mat_num_loop:
-        for (int k = 0; k < mat_num; k++) {
+        for (int k = 0; k < mat_num; i++)
+        {
+            matrices[k].read(tmp);
         concat_cols_col_loop:
-            for (int j = 0; j < cols; j++) {
-                result[i][j +k*cols] = matrices[k][i][j];
+            for (int j = 0; j < cols; j++)
+            {
+                rst[j +k*cols] = tmp[j];
             }
         }
+        result.write(rst);
     }
 }
-
-template<typename T, int rows,  int cols, int mat_num>
-void concat_rows(T matrices[mat_num][rows][cols], T result[rows*mat_num][cols]) {
-concat_rows_mat_num_loop:
-    for (int k = 0; k < mat_num; k++) {
-    concat_rows_row_loop:
-        for (int i = 0; i < rows; i++) {
-        concat_rows_col_loop:
-            for (int j = 0; j < cols; j++) {
-                result[i + k * rows][j] = matrices[k][i][j];
-            }
-        }
-    }
-}
-

@@ -1,6 +1,9 @@
 #pragma once
-#include <functional>
+
 #include <cmath>
+#include "hls_stream.h"
+#include "hls_vector.h"
+
 #define M_PI 3.14159265358979323846
 
 template<typename T>
@@ -44,13 +47,22 @@ T erf(T x) {
 #endif
 
 template<typename T, int rows, int cols>
-void activation(T input[rows][cols], T result[rows][cols]) {
-	#pragma HLS ARRAY_PARTITION variable = input dim = 2 complete
-	for (int i = 0; i < rows; i++) {
-		//#pragma HLS PIPELINE
-		for (int j = 0; j < cols; j++) {
-		//	#pragma HLS UNROLL
-			result[i][j] = relu<T>(input[i][j]);
+void activation
+(
+	hls::stream<hls::vector<T, cols>> &input,
+	hls::stream<hls::vector<T, cols>> &result
+)
+{
+	hls::vector<T, cols> in;
+	hls::vector<T, cols> rst;
+
+	for (int i = 0; i < rows; i++)
+	{
+		input.read(in);
+		for (int j = 0; j < cols; j++)
+		{
+			rst[j] = relu<T>(in[j]);
 		}
+		result.write(rst);
 	}
 }

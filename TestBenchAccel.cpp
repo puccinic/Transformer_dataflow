@@ -20,7 +20,6 @@ int main() {
 	std::string result_filename = "/home/carlos/Transformer_dataflow/golden_result.txt";
 	std::string log_filename = "/home/carlos/Transformer_dataflow/log.txt";
 
-#ifdef ENCODER
     idata_t input[SEQ_LEN][TOKEN_LEN]{};
 	load_arr<idata_t, SEQ_LEN*TOKEN_LEN>((idata_t*)input, &input_filename[0]);
 
@@ -88,4 +87,3 @@ int main() {
 	);
 	compare_vec<odata_t, SEQ_LEN*TOKEN_LEN>((odata_t*) output, &result_filename, &log_filename);
 }
-#endif
