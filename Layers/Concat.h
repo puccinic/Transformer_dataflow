@@ -7,7 +7,7 @@ template<typename T, int rows, int cols,  int mat_num>
 void concat_cols
 (
     hls::stream<hls::vector<T, cols>> matrices[mat_num],
-    hls::stream<hls::vector<T, cols*mat_num>> result
+    hls::stream<hls::vector<T, cols*mat_num>> &result
 )
 {
 

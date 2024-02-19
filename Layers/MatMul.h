@@ -70,3 +70,41 @@ matmul_transpose_scale_row_loop:
 		result.write(rst);
 	}
 }
+
+template<typename T, int rows, int cols>
+void transpose
+(
+	hls::stream<hls::vector<T, cols>> &A,
+	hls::stream<hls::vector<T, rows>> &At
+)
+{
+	hls::vector<T, cols> tmp[rows];
+	hls::vector<T, rows> at;
+	for (int i = 0; i < rows; i++)
+	{
+		A.read(tmp[i]);
+	}
+
+	for (int i = 0; i < cols; i++)
+	{
+		for (int j = 0; j < rows; j++)
+		{
+			at[j] = tmp[j][i];
+		}
+		At.write(at);
+	}
+}
+
+template<typename T, int rows, int hidden, int cols>
+void matmul
+(
+	hls::stream<hls::vector<T, hidden>> &A,
+	hls::stream<hls::vector<T, cols>> &B,
+	hls::stream<hls::vector<T, cols>> &result
+)
+{
+	#pragma HLS DATAFLOW
+	hls::stream<hls::vector<T, hidden>> Bt;
+	transpose<T, hidden, cols>(B, Bt);
+	matmul_transpose<T, rows, hidden, cols>(A, Bt, result);
+}

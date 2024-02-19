@@ -11,11 +11,11 @@ void accel
 	hls::stream<hls::vector<idata_t, HIDDEN>> &ff_biases1,
 	hls::stream<hls::vector<idata_t, HIDDEN>> &ff_weights2,
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> &ff_biases2,
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> &gamma,
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> &beta,
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> gamma[NUM_LAYER_NORM],
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> beta[NUM_LAYER_NORM],
 #if defined(USING_BATCH_NORM)
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> &mean,
-    hls::stream<hls::vector<idata_t, TOKEN_LEN>> &stddev,
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> mean[NUM_LAYER_NORM],
+    hls::stream<hls::vector<idata_t, TOKEN_LEN>> stddev[NUM_LAYER_NORM],
 #endif /* using batch norm */
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> &input,
 	hls::stream<hls::vector<idata_t, SEQ_LEN>> &input_mask,
