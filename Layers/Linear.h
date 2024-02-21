@@ -17,11 +17,11 @@ void bias_add
 	hls::vector<T, cols> res;
 
 	biases.read(b);
-	input.read(in);
 
 loop_bias_add:
 	for (int i = 0; i < rows; i++)
 	{
+		input.read(in);
 		res = in + b;
 		result.write(res);
 	}
@@ -36,8 +36,9 @@ void linear
 	hls::stream<hls::vector<T, cols>>   &result
 )
 {
+	hls::stream<hls::vector<T, cols>> tmp;
+
 	#pragma HLS DATAFLOW
-	hls::stream<hls::vector<T, cols>, rows> tmp_bias;
-	matmul_transpose<T, rows, hidden, cols>(input, weights, tmp_bias);
-	bias_add<T, rows, cols>(tmp_bias, biases, result);
+	matmul_transpose<T, rows, hidden, cols>(input, weights, tmp);
+	bias_add<T, rows, cols>(tmp, biases, result);
 }

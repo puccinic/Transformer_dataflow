@@ -4,7 +4,8 @@
 #include "hls_vector.h"
 
 template<typename T, int size>
-void dot_product(
+void dot_product
+(
 	hls::vector<T, size> &A,
 	hls::vector<T, size> &B,
 	T &result
@@ -15,35 +16,8 @@ void dot_product(
 }
 
 template<typename T, int rows, int hidden, int cols>
-void matmul_transpose(
-	hls::stream<hls::vector<T, hidden>> &A,
-	hls::stream<hls::vector<T, hidden>> &B,
-	hls::stream<hls::vector<T, cols>> &result
-)
-{
-	hls::vector<T, hidden> a;
-	hls::vector<T, hidden> b;
-	hls::vector<T, cols> rst;
-	T dot_prod_rst;
-
-matmul_row_loop:
-	for (int i = 0; i < rows; i++)
-	{
-		A.read(a);
-
-	matmul_result_loop:
-		for (int j = 0; j < cols; i++)
-		{
-			B.read(b);
-			dot_product<T,hidden>(a, b, dot_prod_rst);
-			rst[j] = dot_prod_rst;
-		}
-		result.write(rst);
-	}
-}
-
-template<typename T, int rows, int hidden, int cols>
-void matmul_transpose_scale(
+void matmul_transpose_scale
+(
 	hls::stream<hls::vector<T, hidden>> &A,
 	hls::stream<hls::vector<T, hidden>> &B,
 	T scale_factor,
@@ -69,6 +43,17 @@ matmul_transpose_scale_row_loop:
 		}
 		result.write(rst);
 	}
+}
+
+template<typename T, int rows, int hidden, int cols>
+void matmul_transpose
+(
+	hls::stream<hls::vector<T, hidden>> &A,
+	hls::stream<hls::vector<T, hidden>> &B,
+	hls::stream<hls::vector<T, cols>> &result
+)
+{
+	matmul_transpose_scale<T, rows, hidden, cols>(A, B, 1, result);
 }
 
 template<typename T, int rows, int cols>
@@ -103,8 +88,9 @@ void matmul
 	hls::stream<hls::vector<T, cols>> &result
 )
 {
-	#pragma HLS DATAFLOW
 	hls::stream<hls::vector<T, hidden>> Bt;
+
+	#pragma HLS DATAFLOW
 	transpose<T, hidden, cols>(B, Bt);
 	matmul_transpose<T, rows, hidden, cols>(A, Bt, result);
 }

@@ -18,7 +18,6 @@ void att_head
 	hls::stream<hls::vector<T, head_token_length>> &result
 )
 {
-	#pragma HLS DATAFLOW
 	hls::stream<hls::vector<T, token_length>> q_weights;
 	hls::stream<hls::vector<T, token_length>> k_weights;
 	hls::stream<hls::vector<T, token_length>> v_weights;
@@ -28,6 +27,8 @@ void att_head
 	hls::stream<hls::vector<T, head_token_length>> Q;
 	hls::stream<hls::vector<T, head_token_length>> K;
 	hls::stream<hls::vector<T, head_token_length>> V;
+
+	#pragma HLS DATAFLOW
 	split3<T, head_token_length, token_length>(weights, q_weights, k_weights, v_weights);
 	split3<T, 1, head_token_length>(biases, q_biases, k_biases, v_biases);
 	linear<T, sequence_length, token_length, head_token_length>(query, q_weights, q_biases, Q);

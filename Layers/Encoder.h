@@ -31,7 +31,6 @@ void encoder
 	hls::stream<hls::vector<T, token_length>> &result
 )
 {
-	#pragma HLS DATAFLOW
 	hls::stream<hls::vector<T, token_length>> input_copy1;
 	hls::stream<hls::vector<T, token_length>> input_copy2;
 	hls::stream<hls::vector<T, token_length>> input_copy3;
@@ -44,6 +43,7 @@ void encoder
 	hls::stream<hls::vector<T, token_length>> ff_result;
 	hls::stream<hls::vector<T, token_length>> matadd_result2;
 
+	#pragma HLS DATAFLOW
 	replicate4<T, sequence_length, token_length>(input, input_copy1, input_copy2, input_copy3, input_copy4);
 	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>
 	(
