@@ -31,17 +31,17 @@ void encoder
 	hls::stream<hls::vector<T, token_length>> &result
 )
 {
-	hls::stream<hls::vector<T, token_length>> input_copy1;
-	hls::stream<hls::vector<T, token_length>> input_copy2;
-	hls::stream<hls::vector<T, token_length>> input_copy3;
-	hls::stream<hls::vector<T, token_length>> input_copy4;
-	hls::stream<hls::vector<T, token_length>> multi_head_result;
-	hls::stream<hls::vector<T, token_length>> matadd_result1;
-	hls::stream<hls::vector<T, token_length>> norm_result;
-	hls::stream<hls::vector<T, token_length>> norm_result_copy1;
-	hls::stream<hls::vector<T, token_length>> norm_result_copy2;
-	hls::stream<hls::vector<T, token_length>> ff_result;
-	hls::stream<hls::vector<T, token_length>> matadd_result2;
+	hls::stream<hls::vector<T, token_length>> input_copy1("input_copy1");
+	hls::stream<hls::vector<T, token_length>> input_copy2("input_copy2");
+	hls::stream<hls::vector<T, token_length>> input_copy3("input_copy3");
+	hls::stream<hls::vector<T, token_length>> input_copy4("input_copy4");
+	hls::stream<hls::vector<T, token_length>> multi_head_result("multi_head_res");
+	hls::stream<hls::vector<T, token_length>> matadd_result1("matadd_res1");
+	hls::stream<hls::vector<T, token_length>> norm_result("norm_res");
+	hls::stream<hls::vector<T, token_length>> norm_result_copy1("norm_res_copy1");
+	hls::stream<hls::vector<T, token_length>> norm_result_copy2("norm_res_copy2");
+	hls::stream<hls::vector<T, token_length>> ff_result("ff_res");
+	hls::stream<hls::vector<T, token_length>> matadd_result2("matadd_res2");
 
 	#pragma HLS DATAFLOW
 	replicate4<T, sequence_length, token_length>(input, input_copy1, input_copy2, input_copy3, input_copy4);

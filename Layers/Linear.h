@@ -36,9 +36,9 @@ void linear
 	hls::stream<hls::vector<T, cols>>   &result
 )
 {
-	hls::stream<hls::vector<T, cols>> tmp;
+	hls::stream<hls::vector<T, cols>> linear_tmp;
 
 	#pragma HLS DATAFLOW
-	matmul_transpose<T, rows, hidden, cols>(input, weights, tmp);
-	bias_add<T, rows, cols>(tmp, biases, result);
+	matmul_transpose<T, rows, hidden, cols>(input, weights, linear_tmp);
+	bias_add<T, rows, cols>(linear_tmp, biases, result);
 }

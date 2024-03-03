@@ -11,8 +11,8 @@ void dot_product
 	T &result
 )
 {
-	hls::vector<T, size> tmp = A * B;
-	result = tmp.reduce_add();
+	hls::vector<T, size> dotprod_tmp = A * B;
+	result = dotprod_tmp.reduce_add();
 }
 
 template<typename T, int rows, int hidden, int cols>
@@ -26,7 +26,7 @@ void matmul_transpose_scale
 {
 	hls::vector<T, hidden> a;
 	hls::vector<T, hidden> b;
-	hls::vector<T, cols> rst;
+	hls::vector<T, cols> dot_prod_vec_rst;
 	T dot_prod_rst;
 
 matmul_transpose_scale_row_loop:
@@ -39,9 +39,9 @@ matmul_transpose_scale_row_loop:
 		 {
 			B.read(b);
 			dot_product<T,hidden>(a, b, dot_prod_rst);
-			rst[j] = dot_prod_rst / scale_factor;
+			dot_prod_vec_rst[j] = dot_prod_rst / scale_factor;
 		}
-		result.write(rst);
+		result.write(dot_prod_vec_rst);
 	}
 }
 
@@ -63,18 +63,18 @@ void transpose
 	hls::stream<hls::vector<T, rows>> &At
 )
 {
-	hls::vector<T, cols> tmp[rows];
+	hls::vector<T, cols> transpose_tmp[rows];
 	hls::vector<T, rows> at;
 	for (int i = 0; i < rows; i++)
 	{
-		A.read(tmp[i]);
+		A.read(transpose_tmp[i]);
 	}
 
 	for (int i = 0; i < cols; i++)
 	{
 		for (int j = 0; j < rows; j++)
 		{
-			at[j] = tmp[j][i];
+			at[j] = transpose_tmp[j][i];
 		}
 		At.write(at);
 	}

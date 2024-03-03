@@ -10,17 +10,17 @@ void get_max(
 	T &result
 )
 {
-	T tmp = 0;
+	T max = 0;
 
 get_max_loop:
 	for (int i = 1; i < size; i++)
 	{
-		if (tmp < input[i])
+		if (max < input[i])
 		{
-      	tmp = input[i];
+      	max = input[i];
     	}
   	}
-	result = tmp;
+	result = max;
 }
 
 template<typename T, int size>
@@ -31,21 +31,21 @@ void softmax(
 {
 	T max;
 	T sum = 0;
-	hls::vector<T, size> tmp;
+	hls::vector<T, size> softmax_tmp;
 
 	get_max<T, size>(input, max);
 
 softmax_exp_loop:
 	for (int i = 0; i < size; i++)
 	{
-		tmp[i] = hls::exp(input[i] - max);
+		softmax_tmp[i] = hls::exp(input[i] - max);
 	}
-	sum = tmp.reduce_add();
+	sum = softmax_tmp.reduce_add();
 
 softmax_result_loop:
 	for (int i = 0; i < size; i++)
 	{
-		result[i] = tmp[i] / sum;
+		result[i] = softmax_tmp[i] / sum;
 	}
 }
 
@@ -58,23 +58,23 @@ void masked_sofmax(
 {
 	T max = 0;
 	T sum = 0;
-	hls::vector<T, size> tmp;
+	hls::vector<T, size> masksoftmax_tmp;
 
 	get_max<T, size>(input, max);
 
 masked_softmax_exp_loop:
 	for (int i = 0; i < size; i++)
 	{
-		tmp[i] = mask[i] ? (T) hls::exp((double) (input[i] - max)) : (T) 0;
+		masksoftmax_tmp[i] = mask[i] ? (T) hls::exp((double) (input[i] - max)) : (T) 0;
 	}
-	sum = tmp.reduce_add();
+	sum = masksoftmax_tmp.reduce_add();
 
 masked_softmax_result_loop:
 	for (int i = 0; i < size; i++)
 	{
-		if(tmp[i] != 0 && sum != 0)
+		if(masksoftmax_tmp[i] != 0 && sum != 0)
 		{
-			result[i] = tmp[i] / sum;
+			result[i] = masksoftmax_tmp[i] / sum;
 		}
 		else
 		{
@@ -96,10 +96,10 @@ void matmul_scale_masked_softmax
 {
 	hls::vector<T, hidden> a;
 	hls::vector<T, hidden> b;
-	hls::vector<T, cols> tmp;
+	hls::vector<T, cols> matsoftmask_tmp;
 	hls::vector<T, cols> mask;
-	hls::vector<T, cols> rst;
-	T dot_prod_rst;
+	hls::vector<T, cols> scaled_dot_prod_vec_rst;
+	T scaled_dot_prod_rst;
 
 matmul_transpose_scale_row_loop:
 	for (int i = 0; i < rows; i++)
@@ -111,10 +111,10 @@ matmul_transpose_scale_row_loop:
 		for (int j = 0; j < cols; j++)
 		{
 			B.read(b);
-			dot_product<T,hidden>(a, b, dot_prod_rst);
-			tmp[j] = dot_prod_rst / scale_factor;
+			dot_product<T,hidden>(a, b, scaled_dot_prod_rst);
+			matsoftmask_tmp[j] = scaled_dot_prod_rst / scale_factor;
 		}
-		masked_sofmax<T,cols>(tmp, mask, rst);
-		result.write(rst);
+		masked_sofmax<T,cols>(matsoftmask_tmp, mask, scaled_dot_prod_vec_rst);
+		result.write(scaled_dot_prod_vec_rst);
 	}
 }

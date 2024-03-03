@@ -18,15 +18,15 @@ void att_head
 	hls::stream<hls::vector<T, head_token_length>> &result
 )
 {
-	hls::stream<hls::vector<T, token_length>> q_weights;
-	hls::stream<hls::vector<T, token_length>> k_weights;
-	hls::stream<hls::vector<T, token_length>> v_weights;
-	hls::stream<hls::vector<T, head_token_length>> q_biases;
-	hls::stream<hls::vector<T, head_token_length>> k_biases;
-	hls::stream<hls::vector<T, head_token_length>> v_biases;
-	hls::stream<hls::vector<T, head_token_length>> Q;
-	hls::stream<hls::vector<T, head_token_length>> K;
-	hls::stream<hls::vector<T, head_token_length>> V;
+	hls::stream<hls::vector<T, token_length>> q_weights("q_weights");
+	hls::stream<hls::vector<T, token_length>> k_weights("k_weights");
+	hls::stream<hls::vector<T, token_length>> v_weights("v_weights");
+	hls::stream<hls::vector<T, head_token_length>> q_biases("q_biases");
+	hls::stream<hls::vector<T, head_token_length>> k_biases("k_biases");
+	hls::stream<hls::vector<T, head_token_length>> v_biases("v_biases");
+	hls::stream<hls::vector<T, head_token_length>> Q("Q");
+	hls::stream<hls::vector<T, head_token_length>> K("K");
+	hls::stream<hls::vector<T, head_token_length>> V("V");
 
 	#pragma HLS DATAFLOW
 	split3<T, head_token_length, token_length>(weights, q_weights, k_weights, v_weights);

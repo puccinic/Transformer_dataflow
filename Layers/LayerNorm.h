@@ -79,11 +79,11 @@ void layer_norm(
     hls::vector<T, size> b;
     hls::vector<T, size> avg_diff;
     hls::vector<T, size> avg_square;
-    hls::vector<T, size> tmp1;
-    hls::vector<T, size> tmp2;
-    hls::vector<T, size> tmp3;
-    hls::vector<T, size> tmp4;
-    hls::vector<T, size> rst;
+    hls::vector<T, size> layernorm_tmp1;
+    hls::vector<T, size> layernorm_tmp2;
+    hls::vector<T, size> layernorm_tmp3;
+    hls::vector<T, size> layernorm_tmp4;
+    hls::vector<T, size> layernorm_rst;
     T sum;
     T mean;
     T square_sum;
@@ -108,13 +108,13 @@ layer_norm_outer_loop:
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
-        tmp1 = in - mean;
-        tmp2 = tmp1 * g;
-        tmp3 = std_dev + epsilon;
-        tmp4 = tmp2 / tmp3;
-	    rst = tmp4 + b;
+        layernorm_tmp1 = in - mean;
+        layernorm_tmp2 = layernorm_tmp1 * g;
+        layernorm_tmp3 = std_dev + epsilon;
+        layernorm_tmp4 = layernorm_tmp2 / layernorm_tmp3;
+	    layernorm_rst = layernorm_tmp4 + b;
 
-        result.write(rst);
+        result.write(layernorm_rst);
 	}
 }
 
@@ -134,11 +134,11 @@ void batch_norm(
     hls::vector<T, size> b;
     hls::vector<T, size> avg;
     hls::vector<T, size> std_dev;
-    hls::vector<T, size> tmp1;
-    hls::vector<T, size> tmp2;
-    hls::vector<T, size> tmp3;
-    hls::vector<T, size> tmp4;
-    hls::vector<T, size> rst;
+    hls::vector<T, size> batchnorm_tmp1;
+    hls::vector<T, size> batchnorm_tmp2;
+    hls::vector<T, size> batchnorm_tmp3;
+    hls::vector<T, size> batchnorm_tmp4;
+    hls::vector<T, size> batchnorm_rst;
 
     gamma.read(g);
     beta.read(b);
@@ -149,12 +149,12 @@ void batch_norm(
     {
         input.read(in);
 
-        tmp1 = in - avg;
-        tmp2 = tmp1 * g;
-        tmp3 = std_dev + epsilon;
-        tmp4 = tmp2 / tmp3;
-	    rst = tmp4 + b;
+        batchnorm_tmp1 = in - avg;
+        batchnorm_tmp2 = batchnorm_tmp1 * g;
+        batchnorm_tmp3 = std_dev + epsilon;
+        batchnorm_tmp4 = batchnorm_tmp2 / batchnorm_tmp3;
+	    batchnorm_rst = batchnorm_tmp4 + b;
 
-        result.write(rst);
+        result.write(batchnorm_rst);
     }
 }

@@ -15,7 +15,7 @@ void scaledotatt
 	hls::stream<hls::vector<T, token_length>> &result
 )
 {
-	hls::stream<hls::vector<T, sequence_length>> softmax_att;
+	hls::stream<hls::vector<T, sequence_length>> softmax_att("softmax_att");
 
 	#pragma HLS DATAFLOW
 	matmul_scale_masked_softmax<T,sequence_length,token_length,sequence_length>(query, key, SCALE_FACTOR, input_mask, softmax_att);
