@@ -1,8 +1,29 @@
-#include "TestUtils.h"
 #include "Definitions.h"
+#include "TestUtils.h"
 
-int main() {
-    std::string input_filename[] = {
+int main(void)
+{
+
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS];
+	hls::stream<hls::vector<idata_t, HEAD_LEN>> head_biases[NUM_HEADS][NUM_LINEAR_LAYERS];
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_weights;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_bias;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_weights1;
+	hls::stream<hls::vector<idata_t, HIDDEN>> ff_biases1;
+	hls::stream<hls::vector<idata_t, HIDDEN>> ff_weights2;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_biases2;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> gamma[NUM_LAYER_NORM];
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> beta[NUM_LAYER_NORM];
+#if defined(USING_BATCH_NORM)
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> mean[NUM_LAYER_NORM];
+    hls::stream<hls::vector<idata_t, TOKEN_LEN>> stddev[NUM_LAYER_NORM];
+#endif /* using batch norm */
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> input;
+	hls::stream<hls::vector<idata_t, SEQ_LEN>> input_mask;
+	hls::stream<hls::vector<odata_t, TOKEN_LEN>> result;
+
+    std::string input_filename[] =
+	{
 		"/home/carlos/Transformer_dataflow/input1.txt",
 		"/home/carlos/Transformer_dataflow/input2.txt",
 		"/home/carlos/Transformer_dataflow/input3.txt",
@@ -20,51 +41,36 @@ int main() {
 	std::string result_filename = "/home/carlos/Transformer_dataflow/golden_result.txt";
 	std::string log_filename = "/home/carlos/Transformer_dataflow/log.txt";
 
-    idata_t input[SEQ_LEN][TOKEN_LEN]{};
-	load_arr<idata_t, SEQ_LEN*TOKEN_LEN>((idata_t*)input, &input_filename[0]);
+	load_stream_array<idata_t, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[0]);
 
-	idata_t input_mask[SEQ_LEN][SEQ_LEN]{};
-	load_arr<idata_t, SEQ_LEN*SEQ_LEN>((idata_t*)input_mask, &input_filename[1]);
+	load_stream_array<idata_t, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[1]);
 
-	idata_t head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN][HEAD_LEN]{};
-	load_arr<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS*TOKEN_LEN*HEAD_LEN>((idata_t*)head_weights, &input_filename[2]);
 
-	idata_t head_biases[NUM_HEADS][NUM_LINEAR_LAYERS][HEAD_LEN]{};
-	load_arr<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS*HEAD_LEN>((idata_t*)head_biases, &input_filename[3]);
+	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[2]);
 
-	idata_t linear_weights[TOKEN_LEN][TOKEN_LEN]{};
-	load_arr<idata_t, TOKEN_LEN*TOKEN_LEN>((idata_t*)linear_weights, &input_filename[4]);
+	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, 1, HEAD_LEN>(head_biases[0], input_filename[3]);
 
-	idata_t linear_bias[TOKEN_LEN]{};
-	load_arr<idata_t, TOKEN_LEN>((idata_t*)linear_bias, &input_filename[5]);
+	load_stream_array<idata_t, 1, TOKEN_LEN, TOKEN_LEN>(&linear_weights, input_filename[4]);
 
-	idata_t ff_weights1[TOKEN_LEN][HIDDEN]{};
-	load_arr<idata_t, TOKEN_LEN*HIDDEN>((idata_t*)ff_weights1, &input_filename[6]);
+	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&linear_bias, input_filename[5]);
 
-	idata_t ff_biases1[HIDDEN]{};
-	load_arr<idata_t, HIDDEN>(ff_biases1, &input_filename[7]);
+	load_stream_array<idata_t, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[6]);
 
-	idata_t ff_weights2[HIDDEN][TOKEN_LEN]{};
-	load_arr<idata_t, HIDDEN*TOKEN_LEN>((idata_t*)ff_weights2, &input_filename[8]);
+	load_stream_array<idata_t, 1, 1, HIDDEN>(&ff_biases1, input_filename[7]);
 
-	idata_t ff_biases2[TOKEN_LEN]{};
-	load_arr<idata_t, TOKEN_LEN>(ff_biases2, &input_filename[9]);
+	load_stream_array<idata_t, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[8]);
 
-	idata_t gamma[NUM_LAYER_NORM][TOKEN_LEN]{};
-	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)gamma, &input_filename[10]);
+	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&ff_biases2, input_filename[9]);
 
-	idata_t beta[NUM_LAYER_NORM][TOKEN_LEN]{};
-	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)beta, &input_filename[11]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(gamma, input_filename[10]);
+
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(beta, input_filename[11]);
 
 #if defined(USING_BATCH_NORM)
-	idata_t mean[NUM_LAYER_NORM][TOKEN_LEN]{};
-	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)mean, &input_filename[11]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(mean, input_filename[10]);
 
-	idata_t stddev[NUM_LAYER_NORM][TOKEN_LEN]{};
-	load_arr<idata_t, NUM_LAYER_NORM*TOKEN_LEN>((idata_t*)gamma, &input_filename[10]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(stddev, input_filename[11]);
 #endif /* using batch norm */
-
-	odata_t output[SEQ_LEN][TOKEN_LEN]{};
 
 	accel(
 		head_weights,
@@ -83,7 +89,8 @@ int main() {
 	#endif
 		input,
 		input_mask,
-		output
+		result
 	);
-	compare_vec<odata_t, SEQ_LEN*TOKEN_LEN>((odata_t*) output, &result_filename, &log_filename);
+
+	compare_stream<odata_t, SEQ_LEN, TOKEN_LEN>(result, &result_filename, &log_filename);
 }
