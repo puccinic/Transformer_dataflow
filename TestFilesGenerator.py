@@ -250,7 +250,7 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 
 
 #List of valid Arguments
-#Ask why there is a difference regarding floating point operations in python and C
+
 '''Test_Activation,
 	Test_AttHead,
 	Test_Concat,
@@ -269,20 +269,34 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 	Test_VecAdd
 '''
 
-input_filename: list[FileName] = [
-  "input1.txt",
-  "input2.txt",
-  "input3.txt",
-  "input4.txt",
-  "input5.txt",
-  "input6.txt",
-  "input7.txt",
-	"input8.txt",
-	"input9.txt",
-	"input10.txt",
-	"input11.txt",
-  "input12.txt"
-]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+files: dict[str,FileName] = {
+  "matIn"         : "input.txt",
+  "matMask"       : "mask.txt",
+  "matHeadWeight" : "headweights.txt",
+  "matHeadBias"   : "headbias.txt",
+  "matLinearWeight"  : "linearweights.txt",
+  "matLinearBias"    : "linearbias.txt",
+  "matFFWeights1" : "ffweights1.txt",
+	"matFFBias1"    : "ffbias1.txt",
+	"matFFWeights2" : "ffweights2.txt",
+	"matFFBias2"    : "ffbias2.txt",
+	"matGamma"      : "gamma.txt",
+  "matBeta"       : "beta.txt"
+}
 
 result_filename: FileName = "golden_result.txt"
 
@@ -290,45 +304,45 @@ int_or_float = False if len(sys.argv) > 2 and sys.argv[2] == "float" else True
 test = sys.argv[1]
 match test:
   case "Test_Activation":
-    activation(input_filename[0], result_filename)
+    activation(files["matIn"], result_filename)
   case "Test_Concat":
-    concat(input_filename[0], input_filename[1], result_filename)
+    concat(files["matIn"], files["matMask"], result_filename)
   case "Test_LayerNorm":
-    layerNorm(input_filename[0], input_filename[1],
-              input_filename[2], result_filename)
+    layerNorm(files["matIn"], files["matGamma"],
+              files["matBeta"], result_filename)
   case "Test_Linear":
-    linear(input_filename[0], input_filename[1], input_filename[2], result_filename)
+    linear(files["matIn"], files["matLinearWeight"], files["matLinearBias"], result_filename)
   case "Test_Mask":
-    mask(input_filename[0], input_filename[1], result_filename)
+    mask(files["matIn"], files["matMask"], result_filename)
   case "Test_MatAdd":
-    matAdd(input_filename[0], input_filename[1], result_filename)
+    matAdd(files["matIn"], files["matMask"], result_filename)
   case "Test_MatMul":
-    matMul(input_filename[0], input_filename[1], result_filename)
+    matMul(files["matIn"], files["matMask"], result_filename)
   case "Test_ScaleDotAtt":
-    scaleDotAtt(input_filename[0], input_filename[1], result_filename)
+    scaleDotAtt(files["matIn"], files["matMask"], result_filename)
   case "Test_SoftMax":
-    softmax(input_filename[0], result_filename)
+    softmax(files["matIn"], result_filename)
   case "Test_Transpose":
-    transpose(input_filename[0], result_filename)
+    transpose(files["matIn"], result_filename)
   case "Test_VecAdd":
-    vecAdd(input_filename[0], input_filename[1], result_filename)
+    vecAdd(files["matIn"], files["matMask"], result_filename)
   case "Test_Scale":
-    scale(input_filename[0], result_filename)
+    scale(files["matIn"], result_filename)
   case "Test_FeedForward":
-    feedForward(input_filename[0], input_filename[1], input_filename[2],
-			input_filename[3], input_filename[4], result_filename)
+    feedForward(files["matIn"], files["matFFWeights1"], files["matFFBias1"],
+			files["matFFWeights2"], files["matFFBias1"], result_filename)
   case "Test_AttHead":
-    atthead(input_filename[0], input_filename[1], input_filename[2],
-            input_filename[3], result_filename)
+    atthead(files["matIn"], files["matLinearWeight"], files["matLinearBias"],
+            files["matMask"], result_filename)
   case "Test_MultiHeadAtt":
-    multiHeadAtt(input_filename[0], input_filename[1],
-                 input_filename[2], input_filename[3],
-                 input_filename[4], input_filename[5],
+    multiHeadAtt(files["matIn"], files["matMask"],
+                 files["matHeadWeight"], files["matHeadBias"],
+                 files["matLinearWeight"], files["matLinearBias"],
                  result_filename)
   case "Test_Encoder":
     encoder(
-			input_filename[0], input_filename[1], input_filename[2],
-			input_filename[3], input_filename[4], input_filename[5],
-			input_filename[6], input_filename[7], input_filename[8],
-			input_filename[9], input_filename[10],
-			input_filename[11], result_filename)
+			files["matIn"], files["matMask"], files["matHeadWeight"],
+			files["matHeadBias"], files["matLinearWeight"], files["matLinearBias"],
+			files["matFFWeights1"], files["matFFBias1"], files["matFFWeights2"],
+			files["matFFBias2"], files["matGamma"],
+			files["matBeta"], result_filename)
