@@ -94,27 +94,36 @@ void matmul_scale_masked_softmax
 	hls::stream<hls::vector<T, cols>> &result
 )
 {
-	hls::vector<T, hidden> a;
-	hls::vector<T, hidden> b;
+	hls::vector<T, hidden> a[rows];
+	hls::vector<T, hidden> b[cols];
 	hls::vector<T, cols> matsoftmask_tmp;
-	hls::vector<T, cols> mask;
+	hls::vector<T, cols> mask[rows];
 	hls::vector<T, cols> scaled_dot_prod_vec_rst;
 	T scaled_dot_prod_rst;
 
-matmul_transpose_scale_row_loop:
+matmul_transpose_scale_softmask_load_A_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		A.read(a);
-		input_mask.read(mask);
+		A.read(a[i]);
+		input_mask.read(mask[i]);
+	}
 
-	matmul_transpose_scale_col_loop:
+matmul_transpose_scale_softmask_load_B_loop:
+	for (int j = 0; j < cols; j++)
+	{
+		B.read(b[j]);
+	}
+
+matmul_transpose_scale_softmask_compute_row_loop:
+	for (int i = 0; i < rows; i++)
+	{
+	matmul_transpose_scale_softmask_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			B.read(b);
-			dot_product<T,hidden>(a, b, scaled_dot_prod_rst);
+			dot_product<T,hidden>(a[i], b[j], scaled_dot_prod_rst);
 			matsoftmask_tmp[j] = scaled_dot_prod_rst / scale_factor;
 		}
-		masked_sofmax<T,cols>(matsoftmask_tmp, mask, scaled_dot_prod_vec_rst);
+		masked_sofmax<T,cols>(matsoftmask_tmp, mask[i], scaled_dot_prod_vec_rst);
 		result.write(scaled_dot_prod_vec_rst);
 	}
 }

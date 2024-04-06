@@ -208,9 +208,6 @@ def multiHeadAtt(
   printMatrix(biases_att, matAttBias)
   printMatrix(output, matOut)
 
-
-
-
 def scale(matIn: FileName, matOut: FileName) ->None:
   input1 = create_tensor(INT_LOW, INT_HIGH, (ROWS, COLS))
   round_mode = 'trunc' if int_or_float else None
@@ -248,7 +245,6 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
   printMatrix(input2, vecB)
   printMatrix(output, vecOut)
 
-
 #List of valid Arguments
 
 '''Test_Activation,
@@ -268,21 +264,6 @@ def vecAdd(vecA:FileName, vecB: FileName, vecOut: FileName) -> None:
 	Test_Transpose,
 	Test_VecAdd
 '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 files: dict[str,FileName] = {
   "matIn"         : "input.txt",
   "matMask"       : "mask.txt",

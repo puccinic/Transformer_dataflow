@@ -1,6 +1,24 @@
 #include "Definitions.h"
 #include "TestUtils.h"
 
+enum
+{
+	MATIN,
+	MATMASK,
+	MATHEADWEIGHT,
+	MATHEADBIAS,
+	MATLINEARWEIGHT,
+	MATLINEARBIAS,
+	MATFFWEIGHTS1,
+	MATFFBIAS1,
+	MATFFWEIGHTS2,
+	MATFFBIAS2,
+	MATGAMMA,
+	MATBETA,
+	MATNUM
+};
+
+
 int main(void)
 {
 
@@ -22,54 +40,54 @@ int main(void)
 	hls::stream<hls::vector<idata_t, SEQ_LEN>> input_mask;
 	hls::stream<hls::vector<odata_t, TOKEN_LEN>> result;
 
-    std::string input_filename[] =
+    std::string input_filename[MATNUM] =
 	{
-		"/home/carlos/Transformer_dataflow/input1.txt",
-		"/home/carlos/Transformer_dataflow/input2.txt",
-		"/home/carlos/Transformer_dataflow/input3.txt",
-		"/home/carlos/Transformer_dataflow/input4.txt",
-		"/home/carlos/Transformer_dataflow/input5.txt",
-		"/home/carlos/Transformer_dataflow/input6.txt",
-		"/home/carlos/Transformer_dataflow/input7.txt",
-		"/home/carlos/Transformer_dataflow/input8.txt",
-		"/home/carlos/Transformer_dataflow/input9.txt",
-		"/home/carlos/Transformer_dataflow/input10.txt",
-		"/home/carlos/Transformer_dataflow/input11.txt",
-		"/home/carlos/Transformer_dataflow/input12.txt"
+		[MATIN] = "/home/carlos/Transformer_dataflow/input.txt",
+		[MATMASK] = "/home/carlos/Transformer_dataflow/mask.txt",
+		[MATHEADWEIGHT] = "/home/carlos/Transformer_dataflow/headweights.txt",
+		[MATHEADBIAS] = "/home/carlos/Transformer_dataflow/headbias.txt",
+		[MATLINEARWEIGHT] = "/home/carlos/Transformer_dataflow/linearweights.txt",
+		[MATLINEARBIAS] = "/home/carlos/Transformer_dataflow/linearbias.txt",
+		[MATFFWEIGHTS1] = "/home/carlos/Transformer_dataflow/ffweights1.txt",
+		[MATFFBIAS1] = "/home/carlos/Transformer_dataflow/ffbias1.txt",
+		[MATFFWEIGHTS2] = "/home/carlos/Transformer_dataflow/ffweights2.txt",
+		[MATFFBIAS2] = "/home/carlos/Transformer_dataflow/ffbias2.txt",
+		[MATGAMMA] = "/home/carlos/Transformer_dataflow/gamma.txt",
+		[MATBETA] = "/home/carlos/Transformer_dataflow/beta.txt"
 	};
 
 	std::string result_filename = "/home/carlos/Transformer_dataflow/golden_result.txt";
 	std::string log_filename = "/home/carlos/Transformer_dataflow/log.txt";
 
-	load_stream_array<idata_t, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[0]);
+	load_stream_array<idata_t, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
 
-	load_stream_array<idata_t, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[1]);
+	load_stream_array<idata_t, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[MATMASK]);
 
 
-	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[2]);
+	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[MATHEADWEIGHT]);
 
-	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, 1, HEAD_LEN>(head_biases[0], input_filename[3]);
+	load_stream_array<idata_t, NUM_HEADS*NUM_LINEAR_LAYERS, 1, HEAD_LEN>(head_biases[0], input_filename[MATHEADBIAS]);
 
-	load_stream_array<idata_t, 1, TOKEN_LEN, TOKEN_LEN>(&linear_weights, input_filename[4]);
+	load_stream_array<idata_t, 1, TOKEN_LEN, TOKEN_LEN>(&linear_weights, input_filename[MATLINEARWEIGHT]);
 
-	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&linear_bias, input_filename[5]);
+	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&linear_bias, input_filename[MATLINEARBIAS]);
 
-	load_stream_array<idata_t, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[6]);
+	load_stream_array<idata_t, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[MATFFWEIGHTS1]);
 
-	load_stream_array<idata_t, 1, 1, HIDDEN>(&ff_biases1, input_filename[7]);
+	load_stream_array<idata_t, 1, 1, HIDDEN>(&ff_biases1, input_filename[MATFFBIAS1]);
 
-	load_stream_array<idata_t, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[8]);
+	load_stream_array<idata_t, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[MATFFWEIGHTS2]);
 
-	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&ff_biases2, input_filename[9]);
+	load_stream_array<idata_t, 1, 1, TOKEN_LEN>(&ff_biases2, input_filename[MATFFBIAS2]);
 
-	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(gamma, input_filename[10]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(gamma, input_filename[MATGAMMA]);
 
-	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(beta, input_filename[11]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(beta, input_filename[MATBETA]);
 
 #if defined(USING_BATCH_NORM)
-	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(mean, input_filename[10]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(mean, input_filename[MATGAMMA]);
 
-	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(stddev, input_filename[11]);
+	load_stream_array<idata_t, NUM_LAYER_NORM, 1, TOKEN_LEN>(stddev, input_filename[MATBETA]);
 #endif /* using batch norm */
 
 	accel(

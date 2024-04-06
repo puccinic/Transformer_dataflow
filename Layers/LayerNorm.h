@@ -69,9 +69,9 @@ template<typename T, int channels, int size>
 void layer_norm(
 	hls::stream<hls::vector<T, size>> &input,
 	T epsilon,
-	hls::stream<hls::vector<T, size>> gamma,
-	hls::stream<hls::vector<T, size>> beta,
-	hls::stream<hls::vector<T, size>> result
+	hls::stream<hls::vector<T, size>> &gamma,
+	hls::stream<hls::vector<T, size>> &beta,
+	hls::stream<hls::vector<T, size>> &result
 )
 {
     hls::vector<T, size> in;
@@ -88,6 +88,7 @@ void layer_norm(
     T mean;
     T square_sum;
     T variance;
+    T std_dev;
 
     gamma.read(g);
     beta.read(b);
@@ -96,18 +97,23 @@ layer_norm_outer_loop:
 	for (int i = 0; i < channels; i++)
     {
         input.read(in);
+
+        //compute mean
 		sum = in.reduce_add();
 		mean = sum / size;
 
+        //compute variance
 		avg_diff = in - mean;
 		avg_square = avg_diff * avg_diff;
 		variance = avg_square.reduce_add() / size;
-        T std_dev;
+
+        //compute standard variance
         #if defined(USING_APFIXED)
             fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
+
         layernorm_tmp1 = in - mean;
         layernorm_tmp2 = layernorm_tmp1 * g;
         layernorm_tmp3 = std_dev + epsilon;
