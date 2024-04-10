@@ -4,8 +4,7 @@
 #include "hls_vector.h"
 
 template<typename T, int size>
-void dot_product
-(
+void dot_product(
 	hls::vector<T, size> &A,
 	hls::vector<T, size> &B,
 	T &result
@@ -16,8 +15,7 @@ void dot_product
 }
 
 template<typename T, int rows, int hidden, int cols>
-void matmul_transpose_scale
-(
+void matmul_transpose_scale(
 	hls::stream<hls::vector<T, hidden>> &A,
 	hls::stream<hls::vector<T, hidden>> &B,
 	T scale_factor,
@@ -55,8 +53,7 @@ matmul_transpose_scale_compute_row_loop:
 }
 
 template<typename T, int rows, int hidden, int cols>
-void matmul_transpose
-(
+void matmul_transpose(
 	hls::stream<hls::vector<T, hidden>> &A,
 	hls::stream<hls::vector<T, hidden>> &B,
 	hls::stream<hls::vector<T, cols>> &result
@@ -66,8 +63,7 @@ void matmul_transpose
 }
 
 template<typename T, int rows, int cols>
-void transpose
-(
+void transpose(
 	hls::stream<hls::vector<T, cols>> &A,
 	hls::stream<hls::vector<T, rows>> &At
 )
@@ -90,8 +86,7 @@ void transpose
 }
 
 template<typename T, int rows, int hidden, int cols>
-void matmul
-(
+void matmul(
 	hls::stream<hls::vector<T, hidden>> &A,
 	hls::stream<hls::vector<T, cols>> &B,
 	hls::stream<hls::vector<T, cols>> &result

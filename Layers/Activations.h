@@ -47,8 +47,7 @@ T erf(T x) {
 #endif
 
 template<typename T, int rows, int cols>
-void activation
-(
+void activation(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &result
 )

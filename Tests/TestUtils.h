@@ -7,8 +7,7 @@
 #include <assert.h>
 
 template<class T, int size>
-void load_vector
-(
+void load_vector(
 	hls::vector<T, size> &arr,
 	std::ifstream &file
 )
@@ -26,8 +25,7 @@ void load_vector
 }
 
 template<class T, int depth, int size>
-void load_stream
-(
+void load_stream(
 	hls::stream<hls::vector<T, size>> &in_stream,
 	std::ifstream &file
 )
@@ -41,8 +39,7 @@ void load_stream
 }
 
 template<class T, int length, int depth, int size>
-void load_stream_array
-(
+void load_stream_array(
 	hls::stream<hls::vector<T, size>> *in_stream,
 	std::string &filename
 )
@@ -56,8 +53,7 @@ void load_stream_array
 }
 
 template<class T, int depth, int size>
-void compare_stream
-(
+void compare_stream(
 	hls::stream<hls::vector<T, size>> &in_stream,
 	std::string* vec_filename,
 	std::string* log_filename

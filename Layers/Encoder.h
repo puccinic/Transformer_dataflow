@@ -9,8 +9,7 @@
 #include "Synth_utils.h"
 
 template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length, int hidden>
-void encoder
-(
+void encoder(
 	hls::stream<hls::vector<T, token_length>> &input,
 	hls::stream<hls::vector<T, sequence_length>> &input_mask,
 	hls::stream<hls::vector<T, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
@@ -45,8 +44,7 @@ void encoder
 
 	#pragma HLS DATAFLOW
 	replicate4<T, sequence_length, token_length>(input, input_copy1, input_copy2, input_copy3, input_copy4);
-	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>
-	(
+	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>(
 		input_copy1, input_copy2, input_copy3,
 		input_mask,
 		head_weights,

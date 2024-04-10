@@ -85,8 +85,7 @@ masked_softmax_result_loop:
 
 
 template<typename T, int rows, int hidden, int cols>
-void matmul_scale_masked_softmax
-(
+void matmul_scale_masked_softmax(
 	hls::stream<hls::vector<T, hidden>> &A,
 	hls::stream<hls::vector<T, hidden>> &B,
 	T scale_factor,

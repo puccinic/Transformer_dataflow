@@ -7,8 +7,7 @@
 #include "Synth_utils.h"
 
 template<typename T, int sequence_length, int token_length, int head_token_length>
-void att_head
-(
+void att_head(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &value,

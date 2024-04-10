@@ -6,8 +6,7 @@
 #include "Activations.h"
 
 template<typename T, int rows, int hidden, int cols>
-void ff
-(
+void ff(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &weights1,
 	hls::stream<hls::vector<T, hidden>> &biases1,

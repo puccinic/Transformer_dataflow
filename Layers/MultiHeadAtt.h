@@ -7,8 +7,7 @@
 #include "Linear.h"
 
 template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length>
-void attention_loop
-(
+void attention_loop(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &values,
@@ -35,8 +34,7 @@ void attention_loop
 }
 
 template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length>
-void multi_head_att
-(
+void multi_head_att(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &values,

@@ -4,8 +4,7 @@
 #include "hls_vector.h"
 
 template<typename T, int rows, int cols>
-void replicate2
-(
+void replicate2(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &result1,
 	hls::stream<hls::vector<T, cols>> &result2
@@ -21,8 +20,7 @@ void replicate2
 }
 
 template<typename T, int rows, int cols>
-void replicate3
-(
+void replicate3(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &result1,
 	hls::stream<hls::vector<T, cols>> &result2,
@@ -40,8 +38,7 @@ void replicate3
 }
 
 template<typename T, int rows, int cols>
-void replicate4
-(
+void replicate4(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &result1,
 	hls::stream<hls::vector<T, cols>> &result2,
@@ -61,8 +58,7 @@ void replicate4
 }
 
 template<typename T, int rows, int cols>
-void split3
-(
+void split3(
 	hls::stream<hls::vector<T, cols>> input[3],
 	hls::stream<hls::vector<T, cols>> &result1,
 	hls::stream<hls::vector<T, cols>> &result2,

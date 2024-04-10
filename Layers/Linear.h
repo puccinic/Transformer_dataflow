@@ -5,8 +5,7 @@
 #include "MatMul.h"
 
 template<typename T, int rows, int cols>
-void bias_add
-(
+void bias_add(
 	hls::stream<hls::vector<T, cols>> &input,
 	hls::stream<hls::vector<T, cols>> &biases,
 	hls::stream<hls::vector<T, cols>> &result
@@ -28,8 +27,7 @@ loop_bias_add:
 }
 
 template<typename T, int rows, int hidden, int cols>
-void linear
-(
+void linear(
 	hls::stream<hls::vector<T, hidden>> &input,
 	hls::stream<hls::vector<T, hidden>> &weights,
 	hls::stream<hls::vector<T, cols>>   &biases,

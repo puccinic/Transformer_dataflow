@@ -6,8 +6,7 @@
 #include "SoftMax.h"
 
 template<typename T, int sequence_length, int token_length>
-void scaledotatt
-(
+void scaledotatt(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &value,

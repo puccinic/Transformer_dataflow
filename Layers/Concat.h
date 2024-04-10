@@ -4,8 +4,7 @@
 #include "hls_vector.h"
 
 template<typename T, int size, int num>
-void vector_concat
-(
+void vector_concat(
     hls::vector<T, size> &vec_in,
     hls::vector<T, size*num> &vec_res,
     int n
@@ -19,8 +18,7 @@ vector_concat_loop:
 }
 
 template<typename T, int size, int num>
-void vector_concat_list
-(
+void vector_concat_list(
     hls::stream<hls::vector<T, size>> vec_list[num],
     hls::stream<hls::vector<T, size*num>> &result
 )
@@ -37,8 +35,7 @@ concat_list_loop:
 }
 
 template<typename T, int rows, int cols,  int mat_num>
-void concat_cols
-(
+void concat_cols(
     hls::stream<hls::vector<T, cols>> matrices[mat_num],
     hls::stream<hls::vector<T, cols*mat_num>> &result
 )
