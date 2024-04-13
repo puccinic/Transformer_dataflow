@@ -79,11 +79,11 @@ void layer_norm(
     hls::vector<T, size> b;
     hls::vector<T, size> avg_diff;
     hls::vector<T, size> avg_square;
-    hls::vector<T, size> layernorm_tmp1;
-    hls::vector<T, size> layernorm_tmp2;
-    hls::vector<T, size> layernorm_tmp3;
-    hls::vector<T, size> layernorm_tmp4;
     hls::vector<T, size> layernorm_rst;
+    T layernorm_tmp1;
+    T layernorm_tmp2;
+    T layernorm_tmp3;
+    T layernorm_tmp4;
     T sum;
     T mean;
     T square_sum;
@@ -113,12 +113,14 @@ layer_norm_outer_loop:
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
-
-        layernorm_tmp1 = in - mean;
-        layernorm_tmp2 = layernorm_tmp1 * g;
-        layernorm_tmp3 = std_dev + epsilon;
-        layernorm_tmp4 = layernorm_tmp2 / layernorm_tmp3;
-	    layernorm_rst = layernorm_tmp4 + b;
+        for (int j = 0; j < size; j++)
+        {
+            layernorm_tmp1 = in[j] - mean[j];
+            layernorm_tmp2 = layernorm_tmp1 * g[j];
+            layernorm_tmp3 = std_dev + epsilon;
+            layernorm_tmp4 = layernorm_tmp2 / layernorm_tmp3;
+	        layernorm_rst[j] = layernorm_tmp4 + b[j];
+        }
 
         result.write(layernorm_rst);
 	}
