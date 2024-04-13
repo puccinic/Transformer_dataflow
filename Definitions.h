@@ -20,16 +20,14 @@
 #define IN_IWIDTH 4
 #define OUT_WIDTH 8
 #define OUT_IWIDTH 4
-//#define USING_APFIXED
+#define USING_APFIXED
 #define USING_BATCH_NORM
 #if defined(USING_APFIXED)
-
-typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
-typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
-
+	typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
+	typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
 #else
-	typedef float idata_t;
-	typedef float odata_t;
+	typedef double idata_t;
+	typedef double odata_t;
 #endif /*using ap_fixed */
 
 void accel

@@ -24,21 +24,21 @@ int main(void)
 
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS];
 	hls::stream<hls::vector<idata_t, HEAD_LEN>> head_biases[NUM_HEADS][NUM_LINEAR_LAYERS];
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_weights;
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_bias;
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_weights1;
-	hls::stream<hls::vector<idata_t, HIDDEN>> ff_biases1;
-	hls::stream<hls::vector<idata_t, HIDDEN>> ff_weights2;
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_biases2;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_weights("Linear_Weights");
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> linear_bias("Linear_Bias");
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_weights1("FF_Weights1");
+	hls::stream<hls::vector<idata_t, HIDDEN>> ff_biases1("FF_Bias1");
+	hls::stream<hls::vector<idata_t, HIDDEN>> ff_weights2("FF_Weights2");
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> ff_biases2("FF_Bias2");
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> gamma[NUM_LAYER_NORM];
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> beta[NUM_LAYER_NORM];
 #if defined(USING_BATCH_NORM)
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> mean[NUM_LAYER_NORM];
     hls::stream<hls::vector<idata_t, TOKEN_LEN>> stddev[NUM_LAYER_NORM];
 #endif /* using batch norm */
-	hls::stream<hls::vector<idata_t, TOKEN_LEN>> input;
-	hls::stream<hls::vector<idata_t, SEQ_LEN>> input_mask;
-	hls::stream<hls::vector<odata_t, TOKEN_LEN>> result;
+	hls::stream<hls::vector<idata_t, TOKEN_LEN>> input("Input");
+	hls::stream<hls::vector<idata_t, SEQ_LEN>> input_mask("Mask");
+	hls::stream<hls::vector<odata_t, TOKEN_LEN>> result("Result");
 
     std::string input_filename[MATNUM] =
 	{

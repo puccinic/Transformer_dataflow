@@ -72,7 +72,7 @@ void split3(
 	{
 		input[0].read(in1);
 		input[1].read(in2);
-		input[3].read(in3);
+		input[2].read(in3);
 		result1.write(in1);
 		result2.write(in2);
 		result3.write(in3);
