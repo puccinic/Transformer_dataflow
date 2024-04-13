@@ -84,6 +84,10 @@ void layer_norm(
     T layernorm_tmp2;
     T layernorm_tmp3;
     T layernorm_tmp4;
+    T layernorm_tmp1;
+    T layernorm_tmp2;
+    T layernorm_tmp3;
+    T layernorm_tmp4;
     T sum;
     T mean;
     T square_sum;
@@ -113,6 +117,14 @@ layer_norm_outer_loop:
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
+        for (int j = 0; j < size; j++)
+        {
+            layernorm_tmp1 = in[j] - mean[j];
+            layernorm_tmp2 = layernorm_tmp1 * g[j];
+            layernorm_tmp3 = std_dev + epsilon;
+            layernorm_tmp4 = layernorm_tmp2 / layernorm_tmp3;
+	        layernorm_rst[j] = layernorm_tmp4 + b[j];
+        }
         for (int j = 0; j < size; j++)
         {
             layernorm_tmp1 = in[j] - mean;
