@@ -57,6 +57,23 @@ void replicate4(
 	}
 }
 
+template<typename T, int rows, int cols, int num>
+void replicate(
+	hls::stream<hls::vector<T, cols>> &input,
+	hls::stream<hls::vector<T, cols>> result[num]
+)
+{
+	hls::vector<T, cols> in;
+	for (int i = 0; i < rows; i++)
+	{
+		input.read(in);
+		for (int j = 0; j < num; j++)
+		{
+			result[j].write(in);
+		}
+	}
+}
+
 template<typename T, int rows, int cols>
 void split3(
 	hls::stream<hls::vector<T, cols>> input[3],

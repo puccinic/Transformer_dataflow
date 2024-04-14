@@ -113,14 +113,14 @@ layer_norm_outer_loop:
         #else
 		    std_dev = hls::sqrt(variance);
         #endif /*using ap_fixed */
-         layernorm_tmp1 = in - mean;
+        layernorm_tmp1 = in - mean;
         layernorm_tmp2 = layernorm_tmp1 * g;
         layernorm_tmp3 = std_dev + epsilon;
         layernorm_tmp4 = layernorm_tmp2 / layernorm_tmp3;
 	    layernorm_rst = layernorm_tmp4 + b;
 
 
-            result.write(layernorm_rst);
+        result.write(layernorm_rst);
 	}
 }
 

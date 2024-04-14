@@ -17,15 +17,25 @@ void attention_loop(
 	hls::stream<hls::vector<T, head_token_length>> result[num_heads]
 )
 {
+	hls::stream<hls::vector<T, token_length>> query_n[num_heads];
+	hls::stream<hls::vector<T, token_length>> key_n[num_heads];
+	hls::stream<hls::vector<T, token_length>> values_n[num_heads];
+	hls::stream<hls::vector<T, sequence_length>> mask_n[num_heads];
+
+	replicate<T, sequence_length, token_length, num_heads>(key, key_n);
+	replicate<T, sequence_length, token_length, num_heads>(query, query_n);
+	replicate<T, sequence_length, token_length, num_heads>(values, values_n);
+	replicate<T, sequence_length, sequence_length, num_heads>(input_mask, mask_n);
+
 	multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++)
 	{
 		att_head<T, sequence_length, token_length, head_token_length>
 		(
-			query,
-			key,
-			values,
-			input_mask,
+			query_n[i],
+			key_n[i],
+			values_n[i],
+			mask_n[i],
 			head_weights[i],
 			head_biases[i],
 			result[i]
