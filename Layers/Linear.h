@@ -34,7 +34,7 @@ void linear(
 	hls::stream<hls::vector<T, cols>>   &result
 )
 {
-	hls::stream<hls::vector<T, cols>> linear_tmp;
+	hls::stream<hls::vector<T, cols>, rows> linear_tmp;
 
 	#pragma HLS DATAFLOW
 	matmul_transpose<T, rows, hidden, cols>(input, weights, linear_tmp);

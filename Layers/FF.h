@@ -15,8 +15,8 @@ void ff(
 	hls::stream<hls::vector<T, cols>> &result
 )
 {
-	hls::stream<hls::vector<T, hidden>> ff_tmp1("ff_tmp1");
-	hls::stream<hls::vector<T, hidden>> ff_tmp2("ff_tmp2");
+	hls::stream<hls::vector<T, hidden>, rows> ff_tmp1("ff_tmp1");
+	hls::stream<hls::vector<T, hidden>, rows> ff_tmp2("ff_tmp2");
 
 	#pragma HLS DATAFLOW
 	linear<T, rows, cols, hidden>(input, weights1, biases1, ff_tmp1);

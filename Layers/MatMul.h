@@ -92,8 +92,7 @@ void matmul(
 	hls::stream<hls::vector<T, cols>> &result
 )
 {
-	hls::stream<hls::vector<T, hidden>> Bt;
-
+	hls::stream<hls::vector<T, hidden>, cols> Bt;
 	#pragma HLS DATAFLOW
 	transpose<T, hidden, cols>(B, Bt);
 	matmul_transpose<T, rows, hidden, cols>(A, Bt, result);
