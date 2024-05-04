@@ -22,7 +22,7 @@ void accel
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> &result
 )
 {
-	idata_t epsilon[NUM_LAYER_NORM] = {EPSILON, EPSILON};
+	ap_fixed<BITWIDTHR, INTWIDTHR> epsilon[NUM_LAYER_NORM] = {EPSILON, EPSILON};
 	encoder<
 		BITWIDTHI,
 		INTWIDTHI,
