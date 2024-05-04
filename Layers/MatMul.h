@@ -87,8 +87,8 @@ template<
 	int cols
 >
 void matmul_transpose(
-	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
-	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	hls::stream<hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden>> &A,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden>> &B,
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
@@ -135,8 +135,8 @@ template<
 	int cols
 >
 void matmul(
-	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
-	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	hls::stream<hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden>> &A,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, cols>> &B,
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
