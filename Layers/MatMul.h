@@ -140,7 +140,7 @@ void matmul(
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::stream<hls::vector<<ap_fixed<bitWidthB, intWidthB>, hidden>, cols>> Bt;
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden>, cols>> Bt;
 	#pragma HLS DATAFLOW
 	transpose<ap_fixed<bitWidthB, intWidthB>, hidden, cols>(B, Bt);
 	matmul_transpose<bitWidthA, intWidthA, bitWidthB, intWidthB, bitWidthR, intWidthR, rows, hidden, cols>(
