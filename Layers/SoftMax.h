@@ -52,7 +52,7 @@ softmax_result_loop:
 template<typename T, int size>
 void masked_sofmax(
 	hls::vector<T, size> &input,
-	hls::vector<T, size> &mask,
+	hls::vector<int, size> &mask,
 	hls::vector<T, size> &result
 )
 {
@@ -84,21 +84,31 @@ masked_softmax_result_loop:
 }
 
 
-template<typename T, int rows, int hidden, int cols>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int hidden,
+	int cols
+>
 void matmul_scale_masked_softmax(
-	hls::stream<hls::vector<T, hidden>> &A,
-	hls::stream<hls::vector<T, hidden>> &B,
-	T scale_factor,
-	hls::stream<hls::vector<T, cols>> &input_mask,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::stream<hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden>> &A,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden>> &B,
+	ap_fixed<bitWidthR, intWidthR> scale_factor,
+	hls::stream<hls::vector<int, cols>> &input_mask,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::vector<T, hidden> a[rows];
-	hls::vector<T, hidden> b[cols];
-	hls::vector<T, cols> matsoftmask_tmp;
-	hls::vector<T, cols> mask[rows];
-	hls::vector<T, cols> scaled_dot_prod_vec_rst;
-	T scaled_dot_prod_rst;
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden> a[rows];
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden> b[cols];
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> matsoftmask_tmp;
+	hls::vector<int, cols> mask[rows];
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> scaled_dot_prod_vec_rst;
+	ap_fixed<bitWidthR, intWidthR> scaled_dot_prod_rst;
 
 matmul_transpose_scale_softmask_load_A_loop:
 	for (int i = 0; i < rows; i++)
@@ -119,10 +129,18 @@ matmul_transpose_scale_softmask_compute_row_loop:
 	matmul_transpose_scale_softmask_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			dot_product<T,hidden>(a[i], b[j], scaled_dot_prod_rst);
+			dot_product<bitWidthA, intWidthA, bitWidthB, intWidthB, bitWidthR, intWidthR, hidden>(
+				a[i],
+				b[j],
+				scaled_dot_prod_rst
+			);
 			matsoftmask_tmp[j] = scaled_dot_prod_rst / scale_factor;
 		}
-		masked_sofmax<T,cols>(matsoftmask_tmp, mask[i], scaled_dot_prod_vec_rst);
+		masked_sofmax<ap_fixed<bitWidthR, intWidthR>, cols>(
+			matsoftmask_tmp,
+			mask[i],
+			scaled_dot_prod_vec_rst
+		);
 		result.write(scaled_dot_prod_vec_rst);
 	}
 }

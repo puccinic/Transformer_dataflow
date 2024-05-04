@@ -22,14 +22,36 @@
 #define OUT_IWIDTH 4
 #define USING_APFIXED
 #define USING_BATCH_NORM
-#if defined(USING_APFIXED)
-	typedef ap_fixed<IN_WIDTH, IN_IWIDTH> odata_t;
-	typedef ap_fixed<IN_WIDTH, IN_IWIDTH> idata_t;
-#else
-	typedef double idata_t;
-	typedef double odata_t;
-#endif /*using ap_fixed */
-
+#define BITWIDTHI 16
+#define	INTWIDTHI 8
+#define BITWIDTHWH 16
+#define INTWIDTHWH 8
+#define BITWIDTHBH 16
+#define INTWIDTHBH 8
+#define BITWIDTHWL 16
+#define INTWIDTHWL 8
+#define BITWIDTHBL 16
+#define INTWIDTHBL 8
+#define BITWIDTHWFF1 16
+#define INTWIDTHWFF1 8
+#define BITWIDTHBFF1 16
+#define INTWIDTHBFF1 8
+#define BITWIDTHWFF2 16
+#define INTWIDTHWFF2 8
+#define BITWIDTHBFF2 16
+#define INTWIDTHBFF2 8
+#define BITWIDTHG 16
+#define INTWIDTHG 8
+#define BITWIDTHB 16
+#define INTWIDTHB 8
+#if defined(USING_BATCH_NORM)
+#define BITWIDTHM 16
+#define INTWIDTHM 8
+#define BITWIDTHS 16
+#define INTWIDTHS 8
+#endif /* using batch norm */
+#define BITWIDTHR 16
+#define INTWIDTHR 8
 void accel
 (
 	hls::stream<hls::vector<idata_t, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS],

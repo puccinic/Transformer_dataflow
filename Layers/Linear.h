@@ -4,16 +4,25 @@
 #include "hls_vector.h"
 #include "MatMul.h"
 
-template<typename T, int rows, int cols>
+template<
+	int bitWidthI,
+	int intWidthI,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int cols
+>
 void bias_add(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &biases,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, cols>> &input,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, cols>> &biases,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::vector<T, cols> in;
-	hls::vector<T, cols> b;
-	hls::vector<T, cols> res;
+	hls::vector<ap_fixed<bitWidthI, intWidthI>, cols> in;
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, cols> b;
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> res;
 
 	biases.read(b);
 
@@ -26,17 +35,37 @@ loop_bias_add:
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<
+	int bitWidthI,
+	int intWidthI,
+	int bitWidthW,
+	int intWidthW,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int hidden,
+	int cols
+>
 void linear(
-	hls::stream<hls::vector<T, hidden>> &input,
-	hls::stream<hls::vector<T, hidden>> &weights,
-	hls::stream<hls::vector<T, cols>>   &biases,
-	hls::stream<hls::vector<T, cols>>   &result
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, hidden>> &input,
+	hls::stream<hls::vector<ap_fixed<bitWidthW, intWidthW>, hidden>> &weights,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, cols>>   &biases,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>>   &result
 )
 {
-	hls::stream<hls::vector<T, cols>, rows> linear_tmp;
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>, rows> linear_tmp;
 
 	#pragma HLS DATAFLOW
-	matmul_transpose<T, rows, hidden, cols>(input, weights, linear_tmp);
-	bias_add<T, rows, cols>(linear_tmp, biases, result);
+	matmul_transpose<bitWidthI, intWidthI, bitWidthW, intWidthW, bitWidthR, intWidthR, rows, hidden, cols>(
+		input,
+		weights,
+		linear_tmp
+	);
+	bias_add<bitWidthR, intWidthR, bitWidthB, intWidthB, bitWidthR, intWidthR, rows, cols>(
+		linear_tmp,
+		biases,
+		result
+	);
 }

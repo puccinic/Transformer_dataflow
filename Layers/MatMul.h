@@ -2,30 +2,49 @@
 
 #include "hls_stream.h"
 #include "hls_vector.h"
+#include <ap_fixed.h>
 
-template<typename T, int size>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int size
+>
 void dot_product(
-	hls::vector<T, size> &A,
-	hls::vector<T, size> &B,
-	T &result
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	ap_fixed<bitWidthR, intWidthR> &result
 )
 {
-	hls::vector<T, size> dotprod_tmp = A * B;
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, size> dotprod_tmp = A * B;
 	result = dotprod_tmp.reduce_add();
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int hidden,
+	int cols
+>
 void matmul_transpose_scale(
-	hls::stream<hls::vector<T, hidden>> &A,
-	hls::stream<hls::vector<T, hidden>> &B,
-	T scale_factor,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	ap_fixed<bitWidthR, intWidthR> scale_factor,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::vector<T, hidden> a[rows];
-	hls::vector<T, hidden> b[cols];
-	hls::vector<T, cols> dot_prod_vec_rst;
-	T dot_prod_rst;
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden> a[rows];
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden> b[cols];
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> dot_prod_vec_rst;
+	ap_fixed<bitWidthR, intWidthR> dot_prod_rst;
 
 matmul_transpose_scale_load_A_loop:
 	for (int i = 0; i < rows; i++)
@@ -45,21 +64,40 @@ matmul_transpose_scale_compute_row_loop:
 	matmul_transpose_scale_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			dot_product<T,hidden>(a[i], b[j], dot_prod_rst);
+			dot_product<bitWidthA, intWidthA, bitWidthB, intWidthB, bitWidthR, intWidthR, hidden>(
+				a[i],
+				b[j],
+				dot_prod_rst
+			);
 			dot_prod_vec_rst[j] = dot_prod_rst / scale_factor;
 		}
 		result.write(dot_prod_vec_rst);
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int hidden,
+	int cols
+>
 void matmul_transpose(
-	hls::stream<hls::vector<T, hidden>> &A,
-	hls::stream<hls::vector<T, hidden>> &B,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	matmul_transpose_scale<T, rows, hidden, cols>(A, B, 1, result);
+	matmul_transpose_scale<bitWidthA, intWidthA, bitWidthB, intWidthB, bitWidthR, intWidthR, rows, hidden, cols>(
+		A,
+		B,
+		1,
+		result
+	);
 }
 
 template<typename T, int rows, int cols>
@@ -85,15 +123,29 @@ void transpose(
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int hidden,
+	int cols
+>
 void matmul(
-	hls::stream<hls::vector<T, hidden>> &A,
-	hls::stream<hls::vector<T, cols>> &B,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, size> &A,
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, size> &B,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::stream<hls::vector<T, hidden>, cols> Bt;
+	hls::stream<hls::vector<<ap_fixed<bitWidthB, intWidthB>, hidden>, cols> Bt;
 	#pragma HLS DATAFLOW
-	transpose<T, hidden, cols>(B, Bt);
-	matmul_transpose<T, rows, hidden, cols>(A, Bt, result);
+	transpose<<ap_fixed<bitWidthB, intWidthB>, hidden, cols>(B, Bt);
+	matmul_transpose<bitWidthA, intWidthA, bitWidthB, intWidthB, bitWidthR, intWidthR, rows, hidden, cols>(
+		A,
+		Bt,
+		result
+	);
 }

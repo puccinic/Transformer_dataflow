@@ -2,17 +2,27 @@
 
 #include "hls_stream.h"
 #include "hls_vector.h"
+#include <ap_fixed.h>
 
-template<typename T, int rows, int cols>
+template<
+	int bitWidthA,
+	int intWidthA,
+	int bitWidthB,
+	int intWidthB,
+	int bitWidthR,
+	int intWidthR,
+	int rows,
+	int cols
+>
 void matadd(
-	hls::stream<hls::vector<T, cols>>& A,
-	hls::stream<hls::vector<T, cols>>& B,
-	hls::stream<hls::vector<T, cols>>& result
+	hls::stream<hls::vector<ap_fixed<bitWidthA, intWidthA>, cols>>& A,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, cols>>& B,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>>& result
 )
 {
 matadd_loop:
-	hls::vector<T, cols> a;
-	hls::vector<T, cols> b;
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, cols> a;
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, cols> b;
 	for (int i = 0; i < rows; i++)
 	{
 		A.read(a);

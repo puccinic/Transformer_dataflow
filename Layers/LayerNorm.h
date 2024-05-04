@@ -65,30 +65,41 @@ fxp_sqrt_loop:
 }
 
 
-template<typename T, int channels, int size>
+template<
+    int bitWidthI,
+    int intWidthI,
+    int bitWidthG,
+    int intWidthG,
+    int bitWidthB,
+    int intWidthB,
+    int bitWidthR,
+    int intWidthR,
+    int channels,
+    int size
+>
 void layer_norm(
-	hls::stream<hls::vector<T, size>> &input,
-	T epsilon,
-	hls::stream<hls::vector<T, size>> &gamma,
-	hls::stream<hls::vector<T, size>> &beta,
-	hls::stream<hls::vector<T, size>> &result
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, size>> &input,
+	ap_fixed<bitWidthI, intWidthI> epsilon,
+	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, size>> &gamma,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, size>> &beta,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, size>> &result
 )
 {
-    hls::vector<T, size> in;
-    hls::vector<T, size> g;
-    hls::vector<T, size> b;
-    hls::vector<T, size> avg_diff;
-    hls::vector<T, size> avg_square;
-    hls::vector<T, size> layernorm_rst;
-    hls::vector<T, size> layernorm_tmp1;
-    hls::vector<T, size> layernorm_tmp2;
-    hls::vector<T, size> layernorm_tmp3;
-    hls::vector<T, size> layernorm_tmp4;
-    T sum;
-    T mean;
-    T square_sum;
-    T variance;
-    T std_dev;
+    hls::vector<ap_fixed<bitWidthI, intWidthI>, size> in;
+    hls::vector<ap_fixed<bitWidthG, intWidthG>, size> g;
+    hls::vector<ap_fixed<bitWidthB, intWidthB>, size> b;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> avg_diff;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> avg_square;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_rst;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp1;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp2;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp3;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp4;
+    ap_fixed<bitWidthR, intWidthR> sum;
+    ap_fixed<bitWidthR, intWidthR> mean;
+    ap_fixed<bitWidthR, intWidthR> square_sum;
+    ap_fixed<bitWidthR, intWidthR> variance;
+    ap_fixed<bitWidthR, intWidthR> std_dev;
 
     gamma.read(g);
     beta.read(b);
@@ -106,13 +117,7 @@ layer_norm_outer_loop:
 		avg_diff = in - mean;
 		avg_square = avg_diff * avg_diff;
 		variance = avg_square.reduce_add() / size;
-
-        //compute standard variance
-        #if defined(USING_APFIXED)
-            fxp_sqrt<IN_WIDTH, IN_IWIDTH, IN_WIDTH, IN_IWIDTH>(std_dev, variance);
-        #else
-		    std_dev = hls::sqrt(variance);
-        #endif /*using ap_fixed */
+        fxp_sqrt<bitWidthR, intWidthR, bitWidthR, intWidthR>(std_dev, variance);
         layernorm_tmp1 = in - mean;
         layernorm_tmp2 = layernorm_tmp1 * g;
         layernorm_tmp3 = std_dev + epsilon;
@@ -124,27 +129,42 @@ layer_norm_outer_loop:
 	}
 }
 
-template<typename T, int channels, int size>
+template<
+    int bitWidthI,
+    int intWidthI,
+    int bitWidthG,
+    int intWidthG,
+    int bitWidthB,
+    int intWidthB,
+    int bitWidthM,
+    int intWidthM,
+    int bitWidthS,
+    int intWidthS,
+    int bitWidthR,
+    int intWidthR,
+    int channels,
+    int size
+>
 void batch_norm(
-	hls::stream<hls::vector<T, size>> &input,
-	T epsilon,
-	hls::stream<hls::vector<T, size>> &gamma,
-	hls::stream<hls::vector<T, size>> &beta,
-    hls::stream<hls::vector<T, size>> &mean,
-    hls::stream<hls::vector<T, size>> &stddev,
-	hls::stream<hls::vector<T, size>> &result
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, size>> &input,
+	ap_fixed<bitWidthI, intWidthI> epsilon,
+	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, size>> &gamma,
+	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, size>> &beta,
+    hls::stream<hls::vector<ap_fixed<bitWidthM, intWidthM>, size>> &mean,
+    hls::stream<hls::vector<ap_fixed<bitWidthS, intWidthS>, size>> &stddev,
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, size>> &result
 )
 {
-    hls::vector<T, size> in;
-    hls::vector<T, size> g;
-    hls::vector<T, size> b;
-    hls::vector<T, size> avg;
-    hls::vector<T, size> std_dev;
-    hls::vector<T, size> batchnorm_tmp1;
-    hls::vector<T, size> batchnorm_tmp2;
-    hls::vector<T, size> batchnorm_tmp3;
-    hls::vector<T, size> batchnorm_tmp4;
-    hls::vector<T, size> batchnorm_rst;
+    hls::vector<ap_fixed<bitWidthI, intWidthI>, size> in;
+    hls::vector<ap_fixed<bitWidthG, intWidthG>, size> g;
+    hls::vector<ap_fixed<bitWidthB, intWidthB>, size> b;
+    hls::vector<ap_fixed<bitWidthM, intWidthM>, size> avg;
+    hls::vector<ap_fixed<bitWidthS, intWidthS>, size> std_dev;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp1;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp2;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp3;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp4;
+    hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_rst;
 
     gamma.read(g);
     beta.read(b);
