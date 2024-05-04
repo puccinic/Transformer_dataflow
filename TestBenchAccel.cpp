@@ -37,7 +37,7 @@ int main(void)
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM];
 #endif /* using batch norm */
 	hls::stream<hls::vector<ap_fixed<BITWIDTHI, INTWIDTHI>, TOKEN_LEN>> input("Input");
-	hls::stream<hls::vector<idata_t, SEQ_LEN>> input_mask("Mask");
+	hls::stream<hls::vector<int, SEQ_LEN>> input_mask("Mask");
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> result("Result");
 
     std::string input_filename[MATNUM] =
