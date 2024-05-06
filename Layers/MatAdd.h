@@ -20,9 +20,9 @@ void matadd(
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>>& result
 )
 {
-matadd_loop:
 	hls::vector<ap_fixed<bitWidthA, intWidthA>, cols> a;
 	hls::vector<ap_fixed<bitWidthB, intWidthB>, cols> b;
+matadd_loop:
 	for (int i = 0; i < rows; i++)
 	{
 		A.read(a);

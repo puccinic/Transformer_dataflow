@@ -30,10 +30,10 @@ void attention_loop(
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, head_token_length>> result[num_heads]
 )
 {
-	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> query_n[num_heads];
-	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> key_n[num_heads];
-	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> values_n[num_heads];
-	hls::stream<hls::vector<int, sequence_length>, sequence_length> mask_n[num_heads];
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> query_n[num_heads]{};
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> key_n[num_heads]{};
+	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> values_n[num_heads]{};
+	hls::stream<hls::vector<int, sequence_length>, sequence_length> mask_n[num_heads]{};
 
 	replicate<ap_fixed<bitWidthI, intWidthI>, sequence_length, token_length, num_heads>(key, key_n);
 	replicate<ap_fixed<bitWidthI, intWidthI>, sequence_length, token_length, num_heads>(query, query_n);
@@ -86,7 +86,7 @@ void multi_head_att(
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, token_length>> &result
 )
 {
-	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, head_token_length>, sequence_length> multihead_tmp1[num_heads];
+	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, head_token_length>, sequence_length> multihead_tmp1[num_heads]{};
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, token_length>, sequence_length> multihead_tmp2("multihead_tmp2");
 
 	#pragma HLS DATAFLOW

@@ -38,8 +38,8 @@ void fxp_sqrt(
         s = ((in_val.range(W1 - 1, 0) >> (0 - (SCALE + 1))) + 1) >> 1;
     }
 
-fxp_sqrt_loop:
     // Non-restoring square-root algorithm
+fxp_sqrt_loop:
     for (int i = 0; i <= ROOT_PREC; i++)
     {
         if (s >= 0)
@@ -170,7 +170,7 @@ void batch_norm(
     beta.read(b);
     mean.read(avg);
     stddev.read(std_dev);
-
+batch_norm_loop:
     for (int i = 0; i < channels; i++)
     {
         input.read(in);

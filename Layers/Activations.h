@@ -54,10 +54,11 @@ void activation(
 {
 	hls::vector<T, cols> in;
 	hls::vector<T, cols> activation_rst;
-
+activation_loop1:
 	for (int i = 0; i < rows; i++)
 	{
 		input.read(in);
+activation_loop2:
 		for (int j = 0; j < cols; j++)
 		{
 			activation_rst[j] = relu<T>(in[j]);

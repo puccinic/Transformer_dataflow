@@ -103,10 +103,10 @@ void matmul_scale_masked_softmax(
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, cols>> &result
 )
 {
-	hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden> a[rows];
-	hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden> b[cols];
+	hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden> a[rows]{};
+	hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden> b[cols]{};
 	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> matsoftmask_tmp;
-	hls::vector<int, cols> mask[rows];
+	hls::vector<int, cols> mask[rows]{};
 	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> scaled_dot_prod_vec_rst;
 	ap_fixed<bitWidthR, intWidthR> scaled_dot_prod_rst;
 
