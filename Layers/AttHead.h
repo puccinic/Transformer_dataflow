@@ -23,7 +23,9 @@ void att_head(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &query,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &key,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &value,
-	hls::stream<hls::vector<int, sequence_length>> &input_mask,
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, sequence_length>> &input_mask,
+#endif
 	hls::stream<hls::vector<ap_fixed<bitWidthW, intWidthW>, token_length>> weights[NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, head_token_length>> biases[NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, head_token_length>> &result
@@ -45,5 +47,13 @@ void att_head(
 	linear<bitWidthI, intWidthI, bitWidthW, intWidthW, bitWidthB, intWidthB, bitWidthR, intWidthR, sequence_length, token_length, head_token_length>(query, q_weights, q_biases, Q);
 	linear<bitWidthI, intWidthI, bitWidthW, intWidthW, bitWidthB, intWidthB, bitWidthR, intWidthR, sequence_length, token_length, head_token_length>(key, k_weights, k_biases, K);
 	linear<bitWidthI, intWidthI, bitWidthW, intWidthW, bitWidthB, intWidthB, bitWidthR, intWidthR, sequence_length, token_length, head_token_length>(value, v_weights, v_biases, V);
-	scaledotatt<bitWidthR, intWidthR, sequence_length, head_token_length>(Q, K, V, input_mask, result);
+	scaledotatt<bitWidthR, intWidthR, sequence_length, head_token_length>(
+		Q,
+		K,
+		V,
+	#ifdef USING_MASKED_SOFTMAX
+		input_mask,
+	#endif
+		result
+	);
 }

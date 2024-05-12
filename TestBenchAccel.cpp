@@ -37,7 +37,7 @@ int main(void)
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM];
 #endif /* using batch norm */
 	hls::stream<hls::vector<ap_fixed<BITWIDTHI, INTWIDTHI>, TOKEN_LEN>> input("Input");
-	hls::stream<hls::vector<int, SEQ_LEN>> input_mask("Mask");
+	hls::stream<hls::vector<bool, SEQ_LEN>> input_mask("Mask");
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> result("Result");
 
     std::string input_filename[MATNUM] =
@@ -63,7 +63,7 @@ int main(void)
 	{
 		load_stream_array<ap_fixed<BITWIDTHI, INTWIDTHI>, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
 
-		load_stream_array<int, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[MATMASK]);
+		load_stream_array<bool, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[MATMASK]);
 
 
 		load_stream_array<ap_fixed<BITWIDTHWH, INTWIDTHWH>, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[MATHEADWEIGHT]);
@@ -103,12 +103,14 @@ int main(void)
 			ff_biases2,
 			gamma,
 			beta,
-		#if defined(USING_BATCH_NORM)
+		#ifdef USING_BATCH_NORM
 			mean,
 			stddev,
 		#endif
 			input,
+		#ifdef USING_MASKED_SOFTMAX
 			input_mask,
+		#endif
 			result
 		);
 

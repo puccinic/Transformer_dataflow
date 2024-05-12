@@ -24,7 +24,9 @@ void attention_loop(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &query,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &key,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &values,
-	hls::stream<hls::vector<int, sequence_length>> &input_mask,
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, sequence_length>> &input_mask,
+#endif
 	hls::stream<hls::vector<ap_fixed<bitWidthW, intWidthW>, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, head_token_length>> head_biases[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, head_token_length>> result[num_heads]
@@ -33,12 +35,16 @@ void attention_loop(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> query_n[num_heads]{};
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> key_n[num_heads]{};
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>, sequence_length> values_n[num_heads]{};
-	hls::stream<hls::vector<int, sequence_length>, sequence_length> mask_n[num_heads]{};
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, sequence_length>, sequence_length> mask_n[num_heads]{};
+#endif
 
 	replicate<ap_fixed<bitWidthI, intWidthI>, sequence_length, token_length, num_heads>(key, key_n);
 	replicate<ap_fixed<bitWidthI, intWidthI>, sequence_length, token_length, num_heads>(query, query_n);
 	replicate<ap_fixed<bitWidthI, intWidthI>, sequence_length, token_length, num_heads>(values, values_n);
-	replicate<int, sequence_length, sequence_length, num_heads>(input_mask, mask_n);
+#ifdef USING_MASKED_SOFTMAX
+	replicate<bool, sequence_length, sequence_length, num_heads>(input_mask, mask_n);
+#endif
 
 	multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++)
@@ -48,7 +54,9 @@ void attention_loop(
 			query_n[i],
 			key_n[i],
 			values_n[i],
+		#ifdef USING_MASKED_SOFTMAX
 			mask_n[i],
+		#endif
 			head_weights[i],
 			head_biases[i],
 			result[i]
@@ -78,7 +86,9 @@ void multi_head_att(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &query,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &key,
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &values,
-	hls::stream<hls::vector<int, sequence_length>> &input_mask,
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, sequence_length>> &input_mask,
+#endif
 	hls::stream<hls::vector<ap_fixed<bitWidthW1, intWidthW1>, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthB1, intWidthB1>, head_token_length>> head_biases[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthW2, intWidthW2>, token_length>> &linear_weights,
@@ -94,7 +104,9 @@ void multi_head_att(
 		query,
 		key,
 		values,
+	#ifdef USING_MASKED_SOFTMAX
 		input_mask,
+	#endif
 		head_weights,
 		head_biases,
 		multihead_tmp1

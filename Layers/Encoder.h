@@ -48,7 +48,9 @@ template
 >
 void encoder(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, token_length>> &input,
-	hls::stream<hls::vector<int, sequence_length>> &input_mask,
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, sequence_length>> &input_mask,
+#endif
 	hls::stream<hls::vector<ap_fixed<bitWidthWH, intWidthWH>, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthBH, intWidthBH>, head_token_length>> head_biases[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<ap_fixed<bitWidthWL, intWidthWL>, token_length>> &linear_weights,
@@ -85,7 +87,9 @@ void encoder(
 		input_copy1,
 		input_copy2,
 		input_copy3,
+	#ifdef USING_MASKED_SOFTMAX
 		input_mask,
+	#endif
 		head_weights,
 		head_biases,
 		linear_weights,

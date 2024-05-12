@@ -18,7 +18,9 @@ void accel
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM],
 #endif /* using batch norm */
 	hls::stream<hls::vector<ap_fixed<BITWIDTHI, INTWIDTHI>, TOKEN_LEN>> &input,
-	hls::stream<hls::vector<int, SEQ_LEN>> &input_mask,
+#ifdef USING_MASKED_SOFTMAX
+	hls::stream<hls::vector<bool, SEQ_LEN>> &input_mask,
+#endif
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> &result
 )
 {
@@ -61,7 +63,9 @@ void accel
 		HIDDEN
 	>(
 		input,
+	#ifdef USING_MASKED_SOFTMAX
 		input_mask,
+	#endif
 		head_weights,
 		head_biases,
 		linear_weights,
