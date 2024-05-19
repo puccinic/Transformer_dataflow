@@ -59,7 +59,6 @@ void encoder(
 	hls::stream<hls::vector<ap_fixed<bitWidthBFF1, intWidthBFF1>, hidden>> &ff_biases1,
 	hls::stream<hls::vector<ap_fixed<bitWidthWFF2, intWidthWFF2>, hidden>> &ff_weights2,
 	hls::stream<hls::vector<ap_fixed<bitWidthBFF2, intWidthBFF2>, token_length>> &ff_biases2,
-	ap_fixed<bitWidthR, intWidthR> epsilon[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, token_length>> gamma[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, token_length>> beta[NUM_LAYER_NORM],
 #ifdef USING_BATCH_NORM
@@ -106,7 +105,6 @@ void encoder(
 #ifdef USING_BATCH_NORM
 	batch_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthM, intWidthM, bitWidthS, intWidthS, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result1,
-		epsilon[0],
 		gamma[0],
 		beta[0],
 		mean[0],
@@ -116,7 +114,6 @@ void encoder(
 #else
 	layer_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result1,
-		epsilon[0],
 		gamma[0],
 		beta[0],
 		norm_result
@@ -147,7 +144,6 @@ void encoder(
 #ifdef USING_BATCH_NORM
 	batch_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthM, intWidthM, bitWidthS, intWidthS, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result2,
-		epsilon[1],
 		gamma[1],
 		beta[1],
 		mean[1],
@@ -157,7 +153,6 @@ void encoder(
 #else
 	layer_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result2,
-		epsilon[1],
 		gamma[1],
 		beta[1],
 		result

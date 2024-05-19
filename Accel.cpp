@@ -24,7 +24,6 @@ void accel
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> &result
 )
 {
-	ap_fixed<BITWIDTHR, INTWIDTHR> epsilon[NUM_LAYER_NORM] = {EPSILON, EPSILON};
 	encoder<
 		BITWIDTHI,
 		INTWIDTHI,
@@ -74,7 +73,6 @@ void accel
 		ff_biases1,
 		ff_weights2,
 		ff_biases2,
-		epsilon,
 		gamma,
 		beta,
 	#ifdef USING_BATCH_NORM

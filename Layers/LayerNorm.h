@@ -79,7 +79,6 @@ template<
 >
 void layer_norm(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, size>> &input,
-	ap_fixed<bitWidthI, intWidthI> epsilon,
 	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, size>> &gamma,
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, size>> &beta,
 	hls::stream<hls::vector<ap_fixed<bitWidthR, intWidthR>, size>> &result
@@ -96,11 +95,11 @@ void layer_norm(
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp3;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp4;
     ap_fixed<bitWidthR, intWidthR> sum = 0;
-    ap_fixed<bitWidthR, intWidthR> mean = 0;
+    static ap_fixed<bitWidthR, intWidthR> mean = 0;
     ap_fixed<bitWidthR, intWidthR> square_sum = 0;
-    ap_fixed<bitWidthR, intWidthR> variance = 0;
-    ap_fixed<bitWidthR, intWidthR> std_dev = 0;
-
+    static ap_fixed<bitWidthR, intWidthR> variance = 0;
+    static ap_fixed<bitWidthR, intWidthR> std_dev = 0;
+    static ap_fixed<bitWidthR, intWidthR> epsilon = 1 >> (bitWidthR - intWidthR);
     gamma.read(g);
     beta.read(b);
 
@@ -147,7 +146,6 @@ template<
 >
 void batch_norm(
 	hls::stream<hls::vector<ap_fixed<bitWidthI, intWidthI>, size>> &input,
-	ap_fixed<bitWidthI, intWidthI> epsilon,
 	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, size>> &gamma,
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, size>> &beta,
     hls::stream<hls::vector<ap_fixed<bitWidthM, intWidthM>, size>> &mean,
@@ -165,6 +163,7 @@ void batch_norm(
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp3;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp4;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_rst;
+    static ap_fixed<bitWidthR, intWidthR> epsilon = 1 >> (bitWidthR - intWidthR);
 
     gamma.read(g);
     beta.read(b);

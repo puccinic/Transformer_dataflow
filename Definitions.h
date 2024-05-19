@@ -7,7 +7,6 @@
 
 /*Constants are set according to BERT-Tiny dimentions */
 
-#define EPSILON 0.0625
 #define NUM_HEADS 2
 #define SEQ_LEN 10
 #define TOKEN_LEN 10
