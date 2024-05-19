@@ -16,7 +16,6 @@
 #define NUM_LINEAR_LAYERS 3
 #define NUM_LAYER_NORM 2
 #define SCALE_FACTOR 8
-#define USING_APFIXED
 #define USING_BATCH_NORM
 #define BITWIDTHI 16
 #define	INTWIDTHI 4
@@ -40,15 +39,15 @@
 #define INTWIDTHG 4
 #define BITWIDTHB 16
 #define INTWIDTHB 4
-#if defined(USING_BATCH_NORM)
-#define BITWIDTHM 16
-#define INTWIDTHM 4
-#define BITWIDTHS 16
-#define INTWIDTHS 4
+#ifdef USING_BATCH_NORM
+	#define BITWIDTHM 16
+	#define INTWIDTHM 4
+	#define BITWIDTHS 16
+	#define INTWIDTHS 4
 #endif /* using batch norm */
 #define BITWIDTHR 16
 #define INTWIDTHR 4
-#define USING_MASKED_SOFTMAX
+//#define USING_MASKED_SOFTMAX
 void accel
 (
 	hls::stream<hls::vector<ap_fixed<BITWIDTHWH, INTWIDTHWH>, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS],
@@ -61,7 +60,7 @@ void accel
 	hls::stream<hls::vector<ap_fixed<BITWIDTHBFF2, INTWIDTHBFF2>, TOKEN_LEN>> &ff_biases2,
 	hls::stream<hls::vector<ap_fixed<BITWIDTHG, INTWIDTHG>, TOKEN_LEN>> gamma[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<BITWIDTHB, INTWIDTHB>, TOKEN_LEN>> beta[NUM_LAYER_NORM],
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	hls::stream<hls::vector<ap_fixed<BITWIDTHM, INTWIDTHM>, TOKEN_LEN>> mean[NUM_LAYER_NORM],
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM],
 #endif /* using batch norm */

@@ -32,12 +32,14 @@ int main(void)
 	hls::stream<hls::vector<ap_fixed<BITWIDTHBFF2, INTWIDTHBFF2>, TOKEN_LEN>> ff_biases2("FF_Bias2");
 	hls::stream<hls::vector<ap_fixed<BITWIDTHG, INTWIDTHG>, TOKEN_LEN>> gamma[NUM_LAYER_NORM];
 	hls::stream<hls::vector<ap_fixed<BITWIDTHB, INTWIDTHB>, TOKEN_LEN>> beta[NUM_LAYER_NORM];
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	hls::stream<hls::vector<ap_fixed<BITWIDTHM, INTWIDTHM>, TOKEN_LEN>> mean[NUM_LAYER_NORM];
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM];
 #endif /* using batch norm */
 	hls::stream<hls::vector<ap_fixed<BITWIDTHI, INTWIDTHI>, TOKEN_LEN>> input("Input");
+#ifdef USING_MASKED_SOFTMAX
 	hls::stream<hls::vector<bool, SEQ_LEN>> input_mask("Mask");
+#endif
 	hls::stream<hls::vector<ap_fixed<BITWIDTHR, INTWIDTHR>, TOKEN_LEN>> result("Result");
 
     std::string input_filename[MATNUM] =
@@ -59,12 +61,10 @@ int main(void)
 	std::string result_filename = "../../../../golden_result.txt";
 	std::string log_filename = "../../../../log.txt";
 
-	for (int i = 0; i < 2; i++)
-	{
 		load_stream_array<ap_fixed<BITWIDTHI, INTWIDTHI>, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
-
+#ifdef USING_MASKED_SOFTMAX
 		load_stream_array<bool, 1, SEQ_LEN, SEQ_LEN>(&input_mask, input_filename[MATMASK]);
-
+#endif
 
 		load_stream_array<ap_fixed<BITWIDTHWH, INTWIDTHWH>, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[MATHEADWEIGHT]);
 
@@ -86,7 +86,7 @@ int main(void)
 
 		load_stream_array<ap_fixed<BITWIDTHB, INTWIDTHB>, NUM_LAYER_NORM, 1, TOKEN_LEN>(beta, input_filename[MATBETA]);
 
-	#if defined(USING_BATCH_NORM)
+	#ifdef USING_BATCH_NORM
 		load_stream_array<ap_fixed<BITWIDTHM, INTWIDTHM>, NUM_LAYER_NORM, 1, TOKEN_LEN>(mean, input_filename[MATGAMMA]);
 
 		load_stream_array<ap_fixed<BITWIDTHS, INTWIDTHS>, NUM_LAYER_NORM, 1, TOKEN_LEN>(stddev, input_filename[MATBETA]);
@@ -115,5 +115,4 @@ int main(void)
 		);
 
 		compare_stream<ap_fixed<BITWIDTHR, INTWIDTHR>, SEQ_LEN, TOKEN_LEN>(result, &result_filename, &log_filename);
-	}
 }

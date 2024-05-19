@@ -10,7 +10,7 @@ void replicate2(
 	hls::stream<hls::vector<T, cols>> &result2
 )
 {
-	 hls::vector<T, cols> in;
+	hls::vector<T, cols> in;
 replicate2_loop:
 	for (int i = 0; i < rows; i++)
 	{
@@ -48,7 +48,7 @@ void replicate4(
 	hls::stream<hls::vector<T, cols>> &result4
 )
 {
-	 hls::vector<T, cols> in;
+	hls::vector<T, cols> in;
 replicate4_loop:
 	for (int i = 0; i < rows; i++)
 	{
@@ -66,7 +66,7 @@ void replicate(
 	hls::stream<hls::vector<T, cols>> result[num]
 )
 {
-	 hls::vector<T, cols> in;
+	hls::vector<T, cols> in;
 replicate_loop:
 	for (int i = 0; i < rows; i++)
 	{
@@ -86,9 +86,9 @@ void split3(
 	hls::stream<hls::vector<T, cols>> &result3
 )
 {
-	 hls::vector<T, cols> in1;
-	 hls::vector<T, cols> in2;
-	 hls::vector<T, cols> in3;
+	hls::vector<T, cols> in1;
+	hls::vector<T, cols> in2;
+	hls::vector<T, cols> in3;
 split3_loop:
 	for (int i = 0; i < rows; i++)
 	{

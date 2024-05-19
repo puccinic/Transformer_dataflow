@@ -13,7 +13,7 @@ void accel
 	hls::stream<hls::vector<ap_fixed<BITWIDTHBFF2, INTWIDTHBFF2>, TOKEN_LEN>> &ff_biases2,
 	hls::stream<hls::vector<ap_fixed<BITWIDTHG, INTWIDTHG>, TOKEN_LEN>> gamma[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<BITWIDTHB, INTWIDTHB>, TOKEN_LEN>> beta[NUM_LAYER_NORM],
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	hls::stream<hls::vector<ap_fixed<BITWIDTHM, INTWIDTHM>, TOKEN_LEN>> mean[NUM_LAYER_NORM],
     hls::stream<hls::vector<ap_fixed<BITWIDTHS, INTWIDTHS>, TOKEN_LEN>> stddev[NUM_LAYER_NORM],
 #endif /* using batch norm */
@@ -48,7 +48,7 @@ void accel
 		INTWIDTHG,
 		BITWIDTHB,
 		INTWIDTHB,
-	#if defined(USING_BATCH_NORM)
+	#ifdef USING_BATCH_NORM
 		BITWIDTHM,
 		INTWIDTHM,
 		BITWIDTHS,
@@ -77,7 +77,7 @@ void accel
 		epsilon,
 		gamma,
 		beta,
-	#if defined(USING_BATCH_NORM)
+	#ifdef USING_BATCH_NORM
 	    mean,
     	stddev,
 	#endif /* using batch norm */

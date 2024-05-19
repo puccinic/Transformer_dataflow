@@ -60,10 +60,8 @@ void compare_stream(
 )
 {
 	hls::vector<T, size> vec;
-	std::string line;
 	std::ifstream file(*vec_filename);
 	std::ofstream log(*log_filename);
-	std::stringstream stream;
 	T num = 0;
 	double error = 0;
 	int mismatch_count = 0;
@@ -75,6 +73,8 @@ void compare_stream(
 
 		for (int i = 0; i < size; i++)
 		{
+			std::string line;
+			std::stringstream stream;
 			std::getline(file, line);
 			stream << line;
 			stream >> num;

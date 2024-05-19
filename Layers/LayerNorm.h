@@ -95,11 +95,11 @@ void layer_norm(
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp2;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp3;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> layernorm_tmp4;
-    ap_fixed<bitWidthR, intWidthR> sum;
-    ap_fixed<bitWidthR, intWidthR> mean;
-    ap_fixed<bitWidthR, intWidthR> square_sum;
-    ap_fixed<bitWidthR, intWidthR> variance;
-    ap_fixed<bitWidthR, intWidthR> std_dev;
+    ap_fixed<bitWidthR, intWidthR> sum = 0;
+    ap_fixed<bitWidthR, intWidthR> mean = 0;
+    ap_fixed<bitWidthR, intWidthR> square_sum = 0;
+    ap_fixed<bitWidthR, intWidthR> variance = 0;
+    ap_fixed<bitWidthR, intWidthR> std_dev = 0;
 
     gamma.read(g);
     beta.read(b);

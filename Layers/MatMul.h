@@ -44,7 +44,7 @@ void matmul_transpose_scale(
 	hls::vector<ap_fixed<bitWidthA, intWidthA>, hidden> a[rows]{};
 	hls::vector<ap_fixed<bitWidthB, intWidthB>, hidden> b[cols]{};
 	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> dot_prod_vec_rst;
-	ap_fixed<bitWidthR, intWidthR> dot_prod_rst;
+	ap_fixed<bitWidthR, intWidthR> dot_prod_rst = 0;
 
 matmul_transpose_scale_load_A_loop:
 	for (int i = 0; i < rows; i++)
@@ -106,7 +106,7 @@ void transpose(
 	hls::stream<hls::vector<T, rows>> &At
 )
 {
-	hls::vector<T, cols> transpose_tmp[rows];
+	hls::vector<T, cols> transpose_tmp[rows]{};
 	hls::vector<T, rows> at;
 transpose_loopA:
 	for (int i = 0; i < rows; i++)

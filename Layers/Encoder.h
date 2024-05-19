@@ -32,7 +32,7 @@ template
 	int intWidthG,
 	int bitWidthB,
 	int intWidthB,
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	int bitWidthM,
 	int intWidthM,
 	int bitWidthS,
@@ -62,7 +62,7 @@ void encoder(
 	ap_fixed<bitWidthR, intWidthR> epsilon[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<bitWidthG, intWidthG>, token_length>> gamma[NUM_LAYER_NORM],
 	hls::stream<hls::vector<ap_fixed<bitWidthB, intWidthB>, token_length>> beta[NUM_LAYER_NORM],
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	hls::stream<hls::vector<ap_fixed<bitWidthM, intWidthM>, token_length>> mean[NUM_LAYER_NORM],
     hls::stream<hls::vector<ap_fixed<bitWidthS, intWidthS>, token_length>> stddev[NUM_LAYER_NORM],
 #endif /* using batch norm */
@@ -103,7 +103,7 @@ void encoder(
 		matadd_result1
 	);
 
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	batch_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthM, intWidthM, bitWidthS, intWidthS, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result1,
 		epsilon[0],
@@ -144,7 +144,7 @@ void encoder(
 		matadd_result2
 	);
 
-#if defined(USING_BATCH_NORM)
+#ifdef USING_BATCH_NORM
 	batch_norm<bitWidthR, intWidthR, bitWidthG, intWidthG, bitWidthB, intWidthB, bitWidthM, intWidthM, bitWidthS, intWidthS, bitWidthR, intWidthR, sequence_length, token_length>(
 		matadd_result2,
 		epsilon[1],

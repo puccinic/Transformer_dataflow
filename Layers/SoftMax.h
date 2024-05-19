@@ -79,7 +79,7 @@ masked_softmax_exp_loop:
 masked_softmax_result_loop:
 	for (int i = 0; i < size; i++)
 	{
-		if(masksoftmax_tmp[i] != 0 && sum != 0)
+		if(sum != 0)
 		{
 			result[i] = masksoftmax_tmp[i] / sum;
 		}
