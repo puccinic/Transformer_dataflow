@@ -29,7 +29,7 @@ void softmax(
 	hls::vector<T, size> &result
 )
 {
-	T max;
+	static T max = 0;
 	T sum = 0;
 	hls::vector<T, size> softmax_tmp;
 
@@ -56,7 +56,7 @@ void masked_sofmax(
 	hls::vector<T, size> &result
 )
 {
-	T max = 0;
+	static T max = 0;
 	T sum = 0;
 	hls::vector<T, size> masksoftmax_tmp;
 

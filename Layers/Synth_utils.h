@@ -28,7 +28,7 @@ void replicate3(
 	hls::stream<hls::vector<T, cols>> &result3
 )
 {
-	 hls::vector<T, cols> in;
+	hls::vector<T, cols> in;
 replicate3_loop:
 	for (int i = 0; i < rows; i++)
 	{
