@@ -19,7 +19,12 @@ void dot_product(
 	ap_fixed<bitWidthR, intWidthR> &result
 )
 {
-	hls::vector<ap_fixed<bitWidthR, intWidthR>, size> dotprod_tmp = A * B;
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, size> dotprod_tmp;
+dot_prod_loop:
+	for (int i = 0; i < size; i++)
+	{
+		dotprod_tmp[i] = A[i] * B[i];
+	}
 	result = dotprod_tmp.reduce_add();
 }
 

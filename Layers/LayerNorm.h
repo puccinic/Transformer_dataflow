@@ -111,7 +111,7 @@ layer_norm_outer_loop:
         //compute mean
 		sum = in.reduce_add();
 		mean = sum / size;
-
+//FIXME:
         //compute variance
 		avg_diff = in - mean;
 		avg_square = avg_diff * avg_diff;
@@ -163,7 +163,7 @@ void batch_norm(
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp3;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_tmp4;
     hls::vector<ap_fixed<bitWidthR, intWidthR>, size> batchnorm_rst;
-    static ap_fixed<bitWidthR, intWidthR> epsilon = 1 >> (bitWidthR - intWidthR);
+    static const ap_fixed<bitWidthR, intWidthR> epsilon = 1 >> (bitWidthR - intWidthR);
 
     gamma.read(g);
     beta.read(b);
@@ -173,13 +173,27 @@ batch_norm_loop:
     for (int i = 0; i < channels; i++)
     {
         input.read(in);
-
-        batchnorm_tmp1 = in - avg;
-        batchnorm_tmp2 = batchnorm_tmp1 * g;
-        batchnorm_tmp3 = std_dev + epsilon;
-        batchnorm_tmp4 = batchnorm_tmp2 / batchnorm_tmp3;
-	    batchnorm_rst = batchnorm_tmp4 + b;
-
+    batch_norm_element_loop:
+        for(int j = 0; j < size; j++)
+        {
+            batchnorm_tmp1[j] = in[j] - avg[j];
+        }
+        for(int j = 0; j < size; j++)
+        {
+            batchnorm_tmp2[j] = batchnorm_tmp1[j] * g[j];
+        }
+        for(int j = 0; j < size; j++)
+        {
+            batchnorm_tmp3[j] = std_dev[j] + epsilon;
+        }
+        for(int j = 0; j < size; j++)
+        {
+            batchnorm_tmp4[j] = batchnorm_tmp2[j] / batchnorm_tmp3[j];
+        }
+        for(int j = 0; j < size; j++)
+        {
+	        batchnorm_rst[j] = batchnorm_tmp4[j] + b[j];
+        }
         result.write(batchnorm_rst);
     }
 }

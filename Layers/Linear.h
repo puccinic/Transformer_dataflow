@@ -30,7 +30,10 @@ loop_bias_add:
 	for (int i = 0; i < rows; i++)
 	{
 		input.read(in);
-		res = in + b;
+		for (int j = 0; j < cols; j++)
+		{
+			res[j] = in[j] + b[j];
+		}
 		result.write(res);
 	}
 }

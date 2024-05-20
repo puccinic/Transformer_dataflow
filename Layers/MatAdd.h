@@ -22,11 +22,17 @@ void matadd(
 {
 	hls::vector<ap_fixed<bitWidthA, intWidthA>, cols> a;
 	hls::vector<ap_fixed<bitWidthB, intWidthB>, cols> b;
+	hls::vector<ap_fixed<bitWidthR, intWidthR>, cols> rst;
 matadd_loop:
 	for (int i = 0; i < rows; i++)
 	{
 		A.read(a);
 	 	B.read(b);
-	 	result.write(a + b);
+	vec_add_loop:
+		for (int j = 0; j < cols; j++)
+		{
+			rst[j] = a[j] + b[j];
+		}
+	 	result.write(rst);
 	}
 }
