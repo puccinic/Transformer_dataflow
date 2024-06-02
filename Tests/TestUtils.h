@@ -60,14 +60,12 @@ void compare_stream(
 )
 {
 	hls::vector<T, size> vec;
-	std::string line;
 	std::ifstream file(*vec_filename);
 	std::ofstream log(*log_filename);
-	std::stringstream stream;
 	T num = 0;
-	double error = 0;
+	float error = 0;
 	int mismatch_count = 0;
-	double avg_error = 0;
+	float avg_error = 0;
 	bool good_result = true;
 	for (int j = 0; j < depth; j++)
 	{
@@ -75,6 +73,8 @@ void compare_stream(
 
 		for (int i = 0; i < size; i++)
 		{
+			std::string line;
+			std::stringstream stream;
 			std::getline(file, line);
 			stream << line;
 			stream >> num;
@@ -86,11 +86,11 @@ void compare_stream(
 
 				if (num != 0)
 				{
-					error = ((double) (((num - vec[i])) / num)) * 100;
+					error = ((float) (((num - vec[i])) / num)) * 100;
 				}
 				else if (vec[i] != 0)
 				{
-					error = ((double) (((vec[i]- num)) / vec[i])) * 100;
+					error = ((float) (((vec[i]- num)) / vec[i])) * 100;
 				}
 
 				log << " -miss relative error: " << error << "%";

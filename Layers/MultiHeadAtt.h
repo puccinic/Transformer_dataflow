@@ -11,21 +11,17 @@ void attention_loop(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &values,
-	hls::stream<hls::vector<T, sequence_length>> &input_mask,
 	hls::stream<hls::vector<T, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<T, head_token_length>> head_biases[num_heads][NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<T, head_token_length>> result[num_heads]
 )
 {
-	hls::stream<hls::vector<T, token_length>, sequence_length> query_n[num_heads];
-	hls::stream<hls::vector<T, token_length>, sequence_length> key_n[num_heads];
-	hls::stream<hls::vector<T, token_length>, sequence_length> values_n[num_heads];
-	hls::stream<hls::vector<T, sequence_length>, sequence_length> mask_n[num_heads];
+	hls::stream<hls::vector<T, token_length>, sequence_length> query_n[num_heads]{};
+	hls::stream<hls::vector<T, token_length>, sequence_length> key_n[num_heads]{};
+	hls::stream<hls::vector<T, token_length>, sequence_length> values_n[num_heads]{};
 
 	replicate<T, sequence_length, token_length, num_heads>(key, key_n);
 	replicate<T, sequence_length, token_length, num_heads>(query, query_n);
 	replicate<T, sequence_length, token_length, num_heads>(values, values_n);
-	replicate<T, sequence_length, sequence_length, num_heads>(input_mask, mask_n);
 
 	multi_head_att_loop:
 	for (int i = 0; i < num_heads; i++)
@@ -35,9 +31,7 @@ void attention_loop(
 			query_n[i],
 			key_n[i],
 			values_n[i],
-			mask_n[i],
 			head_weights[i],
-			head_biases[i],
 			result[i]
 		);
 	}
@@ -48,19 +42,31 @@ void multi_head_att(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &values,
-	hls::stream<hls::vector<T, sequence_length>> &input_mask,
 	hls::stream<hls::vector<T, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<T, head_token_length>> head_biases[num_heads][NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<T, token_length>> &linear_weights,
+	hls::stream<hls::vector<T, head_token_length*num_heads>> &linear_weights,
 	hls::stream<hls::vector<T, token_length>> &linear_bias,
 	hls::stream<hls::vector<T, token_length>> &result
 )
 {
-	hls::stream<hls::vector<T, head_token_length>, sequence_length> multihead_tmp1[num_heads];
-	hls::stream<hls::vector<T, token_length>, sequence_length> multihead_tmp2("multihead_tmp2");
+	hls::stream<hls::vector<T, head_token_length>, sequence_length> multihead_tmp1[num_heads]{};
+	hls::stream<hls::vector<T, head_token_length*num_heads>, sequence_length> multihead_tmp2("multihead_tmp2");
 
 	#pragma HLS DATAFLOW
-	attention_loop<T, num_heads, sequence_length, token_length, head_token_length>(query, key, values, input_mask, head_weights, head_biases, multihead_tmp1);
-	concat_cols<T, sequence_length, head_token_length, num_heads>(multihead_tmp1, multihead_tmp2);
-	linear<T, sequence_length, token_length, token_length>(multihead_tmp2, linear_weights, linear_bias, result);
+	attention_loop<T, num_heads, sequence_length, token_length, head_token_length>(
+		query,
+		key,
+		values,
+		head_weights,
+		multihead_tmp1
+	);
+	concat_cols<T, sequence_length, head_token_length, num_heads>(
+		multihead_tmp1,
+		multihead_tmp2
+	);
+	linear<T, sequence_length, head_token_length*num_heads, token_length>(
+		multihead_tmp2,
+		linear_weights,
+		linear_bias,
+		result
+	);
 }

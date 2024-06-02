@@ -16,7 +16,6 @@ if {$hls_exec == 1} {
 
 if {$hls_exec == 2} {
     csynth_design
-    cosim_design    
+    cosim_design
 }
 
-exit

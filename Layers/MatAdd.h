@@ -13,10 +13,12 @@ void matadd(
 matadd_loop:
 	hls::vector<T, cols> a;
 	hls::vector<T, cols> b;
+	hls::vector<T, cols> rst;
 	for (int i = 0; i < rows; i++)
 	{
 		A.read(a);
 	 	B.read(b);
+		rst = a + b;
 	 	result.write(a + b);
 	}
 }

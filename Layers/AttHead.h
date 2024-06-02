@@ -11,27 +11,21 @@ void att_head(
 	hls::stream<hls::vector<T, token_length>> &query,
 	hls::stream<hls::vector<T, token_length>> &key,
 	hls::stream<hls::vector<T, token_length>> &value,
-	hls::stream<hls::vector<T, sequence_length>> &input_mask,
 	hls::stream<hls::vector<T, token_length>> weights[NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<T, head_token_length>> biases[NUM_LINEAR_LAYERS],
 	hls::stream<hls::vector<T, head_token_length>> &result
 )
 {
 	hls::stream<hls::vector<T, token_length>, head_token_length> q_weights("q_weights");
 	hls::stream<hls::vector<T, token_length>, head_token_length> k_weights("k_weights");
 	hls::stream<hls::vector<T, token_length>, head_token_length> v_weights("v_weights");
-	hls::stream<hls::vector<T, head_token_length>, head_token_length> q_biases("q_biases");
-	hls::stream<hls::vector<T, head_token_length>, head_token_length> k_biases("k_biases");
-	hls::stream<hls::vector<T, head_token_length>, head_token_length> v_biases("v_biases");
 	hls::stream<hls::vector<T, head_token_length>, sequence_length> Q("Q");
 	hls::stream<hls::vector<T, head_token_length>, sequence_length> K("K");
 	hls::stream<hls::vector<T, head_token_length>, sequence_length> V("V");
 
 	#pragma HLS DATAFLOW
 	split3<T, head_token_length, token_length>(weights, q_weights, k_weights, v_weights);
-	split3<T, 1, head_token_length>(biases, q_biases, k_biases, v_biases);
-	linear<T, sequence_length, token_length, head_token_length>(query, q_weights, q_biases, Q);
-	linear<T, sequence_length, token_length, head_token_length>(key, k_weights, k_biases, K);
-	linear<T, sequence_length, token_length, head_token_length>(value, v_weights, v_biases, V);
-	scaledotatt<T, sequence_length, head_token_length>(Q, K, V, input_mask, result);
+	matmul_transpose<T, sequence_length, token_length, head_token_length>(query, q_weights, Q);
+	matmul_transpose<T, sequence_length, token_length, head_token_length>(key, k_weights, K);
+	matmul_transpose<T, sequence_length, token_length, head_token_length>(value, v_weights, V);
+	scaledotatt<T, sequence_length, head_token_length>(Q, K, V, result);
 }
