@@ -1,24 +1,27 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "hls_vector.h"
 
 template<typename T, int rows, int cols>
 void matadd(
-	hls::stream<hls::vector<T, cols>>& A,
-	hls::stream<hls::vector<T, cols>>& B,
-	hls::stream<hls::vector<T, cols>>& result
+	hls::stream<T> A[cols],
+	hls::stream<T> B[cols],
+	hls::stream<T> result[cols]
 )
 {
-matadd_loop:
-	hls::vector<T, cols> a;
-	hls::vector<T, cols> b;
-	hls::vector<T, cols> rst;
+	T a;
+	T b;
+	T rst;
+matadd_loop1:
 	for (int i = 0; i < rows; i++)
 	{
-		A.read(a);
-	 	B.read(b);
-		rst = a + b;
-	 	result.write(a + b);
+	matadd_loop2:
+		for (int j = 0; j < cols; j++)
+		{
+			A[j].read(a);
+	 		B[j].read(b);
+			rst = a + b;
+	 		result[j].write(rst);
+		}
 	}
 }

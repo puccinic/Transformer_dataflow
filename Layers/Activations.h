@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include "hls_stream.h"
-#include "hls_vector.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -48,21 +47,21 @@ T erf(T x) {
 
 template<typename T, int rows, int cols>
 void activation(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::stream<T> input[cols],
+	hls::stream<T> result[cols]
 )
 {
-	hls::vector<T, cols> in;
-	hls::vector<T, cols> activation_rst;
+	T in;
+	T activation_rst;
 activation_loop1:
 	for (int i = 0; i < rows; i++)
 	{
-		input.read(in);
 activation_loop2:
 		for (int j = 0; j < cols; j++)
 		{
-			activation_rst[j] = relu<T>(in[j]);
+			input[j].read(in);
+			activation_rst = relu<T>(in);
+		    result[j].write(activation_rst);
 		}
-		result.write(activation_rst);
 	}
 }

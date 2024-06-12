@@ -1,102 +1,125 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "hls_vector.h"
 
 template<typename T, int rows, int cols>
 void replicate2(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &result1,
-	hls::stream<hls::vector<T, cols>> &result2
+	hls::stream<T> input[cols],
+	hls::stream<T> result1[cols],
+	hls::stream<T> result2[cols]
 )
 {
-	hls::vector<T, cols> in;
-replicate2_loop:
+	T in;
+replicate2_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		input.read(in);
-		result1.write(in);
-		result2.write(in);
+	replicate2_cols_loop:
+		for (int j = 0; j < cols; j++)
+		{
+			input[j].read(in);
+			result1[j].write(in);
+			result2[j].write(in);
+		}
+
 	}
 }
 
 template<typename T, int rows, int cols>
 void replicate3(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &result1,
-	hls::stream<hls::vector<T, cols>> &result2,
-	hls::stream<hls::vector<T, cols>> &result3
+	hls::stream<T> input[cols],
+	hls::stream<T> result1[cols],
+	hls::stream<T> result2[cols],
+	hls::stream<T> result3[cols]
 )
 {
-	hls::vector<T, cols> in;
-replicate3_loop:
+	T in;
+replicate3_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		input.read(in);
-		result1.write(in);
-		result2.write(in);
-		result3.write(in);
+	replicate3_cols_loop:
+		for (int j = 0; j < cols; j++)
+		{
+			input[j].read(in);
+			result1[j].write(in);
+			result2[j].write(in);
+			result3[j].write(in);
+		}
 	}
 }
 
 template<typename T, int rows, int cols>
 void replicate4(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &result1,
-	hls::stream<hls::vector<T, cols>> &result2,
-	hls::stream<hls::vector<T, cols>> &result3,
-	hls::stream<hls::vector<T, cols>> &result4
+	hls::stream<T> input[cols],
+	hls::stream<T> result1[cols],
+	hls::stream<T> result2[cols],
+	hls::stream<T> result3[cols],
+	hls::stream<T> result4[cols]
 )
 {
-	hls::vector<T, cols> in;
-replicate4_loop:
+	T in;
+replicate4_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		input.read(in);
-		result1.write(in);
-		result2.write(in);
-		result3.write(in);
-		result4.write(in);
+	replicate4_cols_loop:
+		for (int j = 0; j < cols; j++)
+		{
+			input[j].read(in);
+			result1[j].write(in);
+			result2[j].write(in);
+			result3[j].write(in);
+			result4[j].write(in);
+		}
 	}
 }
 
 template<typename T, int rows, int cols, int num>
 void replicate(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> result[num]
+	hls::stream<T> input[cols],
+	hls::stream<T> result[num][cols]
 )
 {
-	hls::vector<T, cols> in;
-replicate_loop:
+	T in;
+replicate_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		input.read(in);
-		for (int j = 0; j < num; j++)
+	replicate_cols_loop:
+		for (int j = 0; j < cols; j++)
 		{
-			result[j].write(in);
+			input[j].read(in);
+
+			for (int k = 0; k < num; k++)
+			{
+				result[k][j].write(in);
+			}
 		}
 	}
 }
 
 template<typename T, int rows, int cols>
 void split3(
-	hls::stream<hls::vector<T, cols>> input[3],
-	hls::stream<hls::vector<T, cols>> &result1,
-	hls::stream<hls::vector<T, cols>> &result2,
-	hls::stream<hls::vector<T, cols>> &result3
+	hls::stream<T> input[3][cols],
+	hls::stream<T> result1[cols],
+	hls::stream<T> result2[cols],
+	hls::stream<T> result3[cols]
 )
 {
-	hls::vector<T, cols> in1;
-	hls::vector<T, cols> in2;
-	hls::vector<T, cols> in3;
-split3_loop:
+	T in1;
+	T in2;
+	T in3;
+
+split3_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		input[0].read(in1);
-		input[1].read(in2);
-		input[2].read(in3);
-		result1.write(in1);
-		result2.write(in2);
-		result3.write(in3);
+	split3_col_loop:
+		for (int j = 0; j < cols; j++)
+		{
+
+			input[0][j].read(in1);
+			input[1][j].read(in2);
+			input[2][j].read(in3);
+			result1[j].write(in1);
+			result2[j].write(in2);
+			result3[j].write(in3);
+		}
 	}
 }

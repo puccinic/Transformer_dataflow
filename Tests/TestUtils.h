@@ -8,7 +8,7 @@
 
 template<class T, int size>
 void load_vector(
-	hls::vector<T, size> &arr,
+	T arr[size],
 	std::ifstream &file
 )
 {
@@ -26,25 +26,27 @@ void load_vector(
 
 template<class T, int depth, int size>
 void load_stream(
-	hls::stream<hls::vector<T, size>> &in_stream,
+	hls::stream<T> in_stream[size],
 	std::ifstream &file
 )
 {
-	hls::vector<T, size> vec;
+	T vec[size];
 	for (int i = 0; i < depth; i++)
 	{
 		load_vector<T,size>(vec, file);
-		in_stream.write(vec);
+		for (int j = 0; j < size; j++)
+		{
+			in_stream[j].write(vec[j]);
+		}
 	}
 }
 
 template<class T, int length, int depth, int size>
 void load_stream_array(
-	hls::stream<hls::vector<T, size>> *in_stream,
+	hls::stream<T> in_stream[length][size],
 	std::string &filename
 )
 {
-	hls::vector<T, size> vec;
 	std::ifstream file(filename);
 	for (int i = 0; i < length; i++)
 	{
@@ -54,12 +56,12 @@ void load_stream_array(
 
 template<class T, int depth, int size>
 void compare_stream(
-	hls::stream<hls::vector<T, size>> &in_stream,
+	hls::stream<T> in_stream[size],
 	std::string* vec_filename,
 	std::string* log_filename
 )
 {
-	hls::vector<T, size> vec;
+	T item;
 	std::ifstream file(*vec_filename);
 	std::ofstream log(*log_filename);
 	T num = 0;
@@ -69,28 +71,28 @@ void compare_stream(
 	bool good_result = true;
 	for (int j = 0; j < depth; j++)
 	{
-		in_stream.read(vec);
 
 		for (int i = 0; i < size; i++)
 		{
+			in_stream[i].read(item);
 			std::string line;
 			std::stringstream stream;
 			std::getline(file, line);
 			stream << line;
 			stream >> num;
-			log << vec[i] << " " << num;
+			log << item << " " << num;
 
-			if (vec[i] != num)
+			if (item != num)
 			{
 				error = 0;
 
 				if (num != 0)
 				{
-					error = ((float) (((num - vec[i])) / num)) * 100;
+					error = ((float) (((num - item)) / num)) * 100;
 				}
-				else if (vec[i] != 0)
+				else if (item != 0)
 				{
-					error = ((float) (((vec[i]- num)) / vec[i])) * 100;
+					error = ((float) (((item- num)) / item)) * 100;
 				}
 
 				log << " -miss relative error: " << error << "%";

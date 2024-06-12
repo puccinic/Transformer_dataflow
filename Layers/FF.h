@@ -1,22 +1,21 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "hls_vector.h"
 #include "Linear.h"
 #include "Activations.h"
 
 template<typename T, int rows, int hidden, int cols>
 void ff(
-	hls::stream<hls::vector<T, cols>> &input,
-	hls::stream<hls::vector<T, cols>> &weights1,
-	hls::stream<hls::vector<T, hidden>> &biases1,
-	hls::stream<hls::vector<T, hidden>> &weights2,
-	hls::stream<hls::vector<T, cols>> &biases2,
-	hls::stream<hls::vector<T, cols>> &result
+	hls::stream<T> input[cols],
+	hls::stream<T> weights1[cols],
+	hls::stream<T> biases1[hidden],
+	hls::stream<T> weights2[hidden],
+	hls::stream<T> biases2[cols],
+	hls::stream<T> result[cols]
 )
 {
-	hls::stream<hls::vector<T, hidden>, rows> ff_tmp1("ff_tmp1");
-	hls::stream<hls::vector<T, hidden>, rows> ff_tmp2("ff_tmp2");
+	hls::stream<T, rows> ff_tmp1[hidden]{};
+	hls::stream<T, rows> ff_tmp2[hidden]{};
 
 	#pragma HLS DATAFLOW
 	linear<T, rows, cols, hidden>(input, weights1, biases1, ff_tmp1);

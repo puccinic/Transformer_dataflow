@@ -24,19 +24,19 @@ enum
 int main(void)
 {
 
-	hls::stream<hls::vector<float, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS];
-	hls::stream<hls::vector<float, INNER_ATT_LINEAR_DIM>> linear_weights("Linear_Weights");
-	hls::stream<hls::vector<float, TOKEN_LEN>> linear_bias("Linear_Bias");
-	hls::stream<hls::vector<float, TOKEN_LEN>> ff_weights1("FF_Weights1");
-	hls::stream<hls::vector<float, HIDDEN>> ff_biases1("FF_Bias1");
-	hls::stream<hls::vector<float, HIDDEN>> ff_weights2("FF_Weights2");
-	hls::stream<hls::vector<float, TOKEN_LEN>> ff_biases2("FF_Bias2");
-	hls::stream<hls::vector<float, SEQ_LEN>> gamma[NUM_LAYER_NORM];
-	hls::stream<hls::vector<float, SEQ_LEN>> beta[NUM_LAYER_NORM];
-	hls::stream<hls::vector<float, SEQ_LEN>> mean[NUM_LAYER_NORM];
-    hls::stream<hls::vector<float, SEQ_LEN>> variance[NUM_LAYER_NORM];
-	hls::stream<hls::vector<float, TOKEN_LEN>> input("Input");
-	hls::stream<hls::vector<float, TOKEN_LEN>> result("Result");
+	hls::stream<float> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN];
+	hls::stream<float> linear_weights[INNER_ATT_LINEAR_DIM];
+	hls::stream<float> linear_bias[TOKEN_LEN];
+	hls::stream<float> ff_weights1[TOKEN_LEN];
+	hls::stream<float> ff_biases1[HIDDEN];
+	hls::stream<float> ff_weights2[HIDDEN];
+	hls::stream<float> ff_biases2[TOKEN_LEN];
+	hls::stream<float> gamma[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<float> beta[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<float> mean[NUM_LAYER_NORM][SEQ_LEN];
+    hls::stream<float> variance[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<float> input[TOKEN_LEN];
+	hls::stream<float> result[TOKEN_LEN];
 
     std::string input_filename[MATNUM] =
 	{

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "hls_vector.h"
 #include "MultiHeadAtt.h"
 #include "MatAdd.h"
 #include "LayerNorm.h"
@@ -10,35 +9,35 @@
 
 template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length, int hidden>
 void encoder(
-	hls::stream<hls::vector<T, token_length>> &input,
-	hls::stream<hls::vector<T, token_length>> head_weights[num_heads][NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<T, head_token_length*num_heads>> &linear_weights,
-	hls::stream<hls::vector<T, token_length>> &linear_bias,
-	hls::stream<hls::vector<T, token_length>> &ff_weights1,
-	hls::stream<hls::vector<T, hidden>> &ff_biases1,
-	hls::stream<hls::vector<T, hidden>> &ff_weights2,
-	hls::stream<hls::vector<T, token_length>> &ff_biases2,
-	hls::stream<hls::vector<T, sequence_length>> gamma[NUM_LAYER_NORM],
-	hls::stream<hls::vector<T, sequence_length>> beta[NUM_LAYER_NORM],
-	hls::stream<hls::vector<T, sequence_length>> mean[NUM_LAYER_NORM],
-    hls::stream<hls::vector<T, sequence_length>> variance[NUM_LAYER_NORM],
-	hls::stream<hls::vector<T, token_length>> &result
+	hls::stream<T> input[token_length],
+	hls::stream<T> head_weights[num_heads][NUM_LINEAR_LAYERS][token_length],
+	hls::stream<T> linear_weights[head_token_length*num_heads],
+	hls::stream<T> linear_bias[token_length],
+	hls::stream<T> ff_weights1[token_length],
+	hls::stream<T> ff_biases1[hidden],
+	hls::stream<T> ff_weights2[hidden],
+	hls::stream<T> ff_biases2[token_length],
+	hls::stream<T> gamma[NUM_LAYER_NORM][sequence_length],
+	hls::stream<T> beta[NUM_LAYER_NORM][sequence_length],
+	hls::stream<T> mean[NUM_LAYER_NORM][sequence_length],
+    hls::stream<T> variance[NUM_LAYER_NORM][sequence_length],
+	hls::stream<T> result[token_length]
 )
 {
-	hls::stream<hls::vector<T, token_length>, sequence_length> input_copy1("input_copy1");
-	hls::stream<hls::vector<T, token_length>, sequence_length> input_copy2("input_copy2");
-	hls::stream<hls::vector<T, token_length>, sequence_length> multi_head_result("multi_head_res");
-	hls::stream<hls::vector<T, token_length>, sequence_length> matadd_result1("matadd_res1");
-	hls::stream<hls::vector<T, token_length>, sequence_length> matadd_result1_copy1("matadd_res1_copy1");
-	hls::stream<hls::vector<T, token_length>, sequence_length> matadd_result1_copy2("matadd_res1_copy2");
-	hls::stream<hls::vector<T, token_length>, sequence_length> norm_result1("norm_res1");
-	hls::stream<hls::vector<T, token_length>, sequence_length> norm_result1_copy1("norm_res_copy1");
-	hls::stream<hls::vector<T, token_length>, sequence_length> norm_result1_copy2("norm_res_copy2");
-	hls::stream<hls::vector<T, token_length>, sequence_length> norm_result1_copy3("norm_res_copy3");
-	hls::stream<hls::vector<T, token_length>, sequence_length> norm_result2("norm_res2");
+	hls::stream<T, sequence_length> input_copy1[token_length]{};
+	hls::stream<T, sequence_length> input_copy2[token_length]{};
+	hls::stream<T, sequence_length> multi_head_result[token_length]{};
+	hls::stream<T, sequence_length> matadd_result1[token_length]{};
+	hls::stream<T, sequence_length> matadd_result1_copy1[token_length]{};
+	hls::stream<T, sequence_length> matadd_result1_copy2[token_length]{};
+	hls::stream<T, sequence_length> norm_result1[token_length]{};
+	hls::stream<T, sequence_length> norm_result1_copy1[token_length]{};
+	hls::stream<T, sequence_length> norm_result1_copy2[token_length]{};
+	hls::stream<T, sequence_length> norm_result1_copy3[token_length]{};
+	hls::stream<T, sequence_length> norm_result2[token_length]{};
 
-	hls::stream<hls::vector<T, token_length>, sequence_length> ff_result("ff_res");
-	hls::stream<hls::vector<T, token_length>, sequence_length> matadd_result2("matadd_res2");
+	hls::stream<T, sequence_length> ff_result[token_length]{};
+	hls::stream<T, sequence_length> matadd_result2[token_length]{};
 
 	#pragma HLS DATAFLOW
 	replicate2<T, sequence_length, token_length>(input, input_copy1, input_copy2);

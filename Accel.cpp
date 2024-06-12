@@ -3,19 +3,19 @@
 
 void accel
 (
-	hls::stream<hls::vector<float, TOKEN_LEN>> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS],
-	hls::stream<hls::vector<float, INNER_ATT_LINEAR_DIM>> &linear_weights,
-	hls::stream<hls::vector<float, TOKEN_LEN>> &linear_bias,
-	hls::stream<hls::vector<float, TOKEN_LEN>> &ff_weights1,
-	hls::stream<hls::vector<float, HIDDEN>> &ff_biases1,
-	hls::stream<hls::vector<float, HIDDEN>> &ff_weights2,
-	hls::stream<hls::vector<float, TOKEN_LEN>> &ff_biases2,
-	hls::stream<hls::vector<float, SEQ_LEN>> gamma[NUM_LAYER_NORM],
-	hls::stream<hls::vector<float, SEQ_LEN>> beta[NUM_LAYER_NORM],
-	hls::stream<hls::vector<float, SEQ_LEN>> mean[NUM_LAYER_NORM],
-    hls::stream<hls::vector<float, SEQ_LEN>> variance[NUM_LAYER_NORM],
-	hls::stream<hls::vector<float, TOKEN_LEN>> &input,
-	hls::stream<hls::vector<float, TOKEN_LEN>> &result
+	hls::stream<float> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN],
+	hls::stream<float> linear_weights[INNER_ATT_LINEAR_DIM],
+	hls::stream<float> linear_bias[TOKEN_LEN],
+	hls::stream<float> ff_weights1[TOKEN_LEN],
+	hls::stream<float> ff_biases1[HIDDEN],
+	hls::stream<float> ff_weights2[HIDDEN],
+	hls::stream<float> ff_biases2[TOKEN_LEN],
+	hls::stream<float> gamma[NUM_LAYER_NORM][SEQ_LEN],
+	hls::stream<float> beta[NUM_LAYER_NORM][SEQ_LEN],
+	hls::stream<float> mean[NUM_LAYER_NORM][SEQ_LEN],
+    hls::stream<float> variance[NUM_LAYER_NORM][SEQ_LEN],
+	hls::stream<float> input[TOKEN_LEN],
+	hls::stream<float> result[TOKEN_LEN]
 )
 {
 	encoder<float, NUM_HEADS, SEQ_LEN, TOKEN_LEN, HEAD_LEN, HIDDEN>(

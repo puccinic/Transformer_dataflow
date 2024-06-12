@@ -1,19 +1,18 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "hls_vector.h"
 #include "MatMul.h"
 #include "SoftMax.h"
 
 template<typename T, int sequence_length, int token_length>
 void scaledotatt(
-	hls::stream<hls::vector<T, token_length>> &query,
-	hls::stream<hls::vector<T, token_length>> &key,
-	hls::stream<hls::vector<T, token_length>> &value,
-	hls::stream<hls::vector<T, token_length>> &result
+	hls::stream<T> query[token_length],
+	hls::stream<T> key[token_length],
+	hls::stream<T> value[token_length],
+	hls::stream<T> result[token_length]
 )
 {
-	hls::stream<hls::vector<T, sequence_length>, sequence_length> softmax_att("softmax_att");
+	hls::stream<T, sequence_length> softmax_att[sequence_length]{};
 
 	#pragma HLS DATAFLOW
 	matmul_scale_masked_softmax<T,sequence_length,token_length,sequence_length>(query, key, SCALE_FACTOR, softmax_att);
