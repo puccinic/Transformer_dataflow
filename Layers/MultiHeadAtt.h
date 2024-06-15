@@ -15,8 +15,11 @@ void attention_loop(
 )
 {
 	hls::stream<T> query_n[num_heads][token_length]{};
+	#pragma HLS STREAM variable=query_n depth=sequence_length
 	hls::stream<T> key_n[num_heads][token_length]{};
+	#pragma HLS STREAM variable=key_n depth=sequence_length
 	hls::stream<T> values_n[num_heads][token_length]{};
+	#pragma HLS STREAM variable=values_n depth=sequence_length
 
 	replicate<T, sequence_length, token_length, num_heads>(key, key_n);
 	replicate<T, sequence_length, token_length, num_heads>(query, query_n);
@@ -48,7 +51,9 @@ void multi_head_att(
 )
 {
 	hls::stream<T> multihead_tmp1[num_heads][head_token_length]{};
+	#pragma HLS STREAM variable=multihead_tmp1 depth=sequence_length
 	hls::stream<T> multihead_tmp2[head_token_length*num_heads]{};
+	#pragma HLS STREAM variable=multihead_tmp2 depth=sequence_length
 
 	#pragma HLS DATAFLOW
 	attention_loop<T, num_heads, sequence_length, token_length, head_token_length>(
