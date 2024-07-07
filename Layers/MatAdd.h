@@ -2,16 +2,16 @@
 
 #include "hls_stream.h"
 
-template<typename T, int rows, int cols>
+template<typename aT, typename bT, typename rT, int rows, int cols>
 void matadd(
-	hls::stream<T> A[cols],
-	hls::stream<T> B[cols],
-	hls::stream<T> result[cols]
+	hls::stream<aT> A[cols],
+	hls::stream<bT> B[cols],
+	hls::stream<rT> result[cols]
 )
 {
-	T a;
-	T b;
-	T rst;
+	aT a;
+	bT b;
+	rT rst;
 matadd_loop1:
 	for (int i = 0; i < rows; i++)
 	{

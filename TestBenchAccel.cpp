@@ -24,19 +24,19 @@ enum
 int main(void)
 {
 
-	hls::stream<float> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN];
-	hls::stream<float> linear_weights[INNER_ATT_LINEAR_DIM];
-	hls::stream<float> linear_bias[TOKEN_LEN];
-	hls::stream<float> ff_weights1[TOKEN_LEN];
-	hls::stream<float> ff_biases1[HIDDEN];
-	hls::stream<float> ff_weights2[HIDDEN];
-	hls::stream<float> ff_biases2[TOKEN_LEN];
-	hls::stream<float> gamma[NUM_LAYER_NORM][SEQ_LEN];
-	hls::stream<float> beta[NUM_LAYER_NORM][SEQ_LEN];
-	hls::stream<float> mean[NUM_LAYER_NORM][SEQ_LEN];
-    hls::stream<float> variance[NUM_LAYER_NORM][SEQ_LEN];
-	hls::stream<float> input[TOKEN_LEN];
-	hls::stream<float> result[TOKEN_LEN];
+	hls::stream<attention_weight_T> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN];
+	hls::stream<linear_weight_T> linear_weights[INNER_ATT_LINEAR_DIM];
+	hls::stream<linear_bias_T> linear_bias[TOKEN_LEN];
+	hls::stream<feedforward_weight1_T> ff_weights1[TOKEN_LEN];
+	hls::stream<feedforward_bias1_T> ff_biases1[HIDDEN];
+	hls::stream<feedforward_weight2_T> ff_weights2[HIDDEN];
+	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN];
+	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<beta_T> beta[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<mean_T> mean[NUM_LAYER_NORM][SEQ_LEN];
+    hls::stream<variance_T> variance[NUM_LAYER_NORM][SEQ_LEN];
+	hls::stream<input_T> input[TOKEN_LEN];
+	hls::stream<result_T> result[TOKEN_LEN];
 
     std::string input_filename[MATNUM] =
 	{
@@ -59,30 +59,30 @@ int main(void)
 	std::string result_filename = "../../../../golden_result.txt";
 	std::string log_filename = "../../../../log.txt";
 
-	load_stream_array<float, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
+	load_stream_array<input_T, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
 
-	load_stream_array<float, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[MATHEADWEIGHT]);
+	load_stream_array<attention_weight_T, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights[0], input_filename[MATHEADWEIGHT]);
 
 
-	load_stream_array<float, 1, TOKEN_LEN, INNER_ATT_LINEAR_DIM>(&linear_weights, input_filename[MATLINEARWEIGHT]);
+	load_stream_array<linear_weight_T, 1, TOKEN_LEN, INNER_ATT_LINEAR_DIM>(&linear_weights, input_filename[MATLINEARWEIGHT]);
 
-	load_stream_array<float, 1, 1, TOKEN_LEN>(&linear_bias, input_filename[MATLINEARBIAS]);
+	load_stream_array<linear_bias_T, 1, 1, TOKEN_LEN>(&linear_bias, input_filename[MATLINEARBIAS]);
 
-	load_stream_array<float, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[MATFFWEIGHTS1]);
+	load_stream_array<feedforward_weight1_T, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[MATFFWEIGHTS1]);
 
-	load_stream_array<float, 1, 1, HIDDEN>(&ff_biases1, input_filename[MATFFBIAS1]);
+	load_stream_array<feedforward_bias1_T, 1, 1, HIDDEN>(&ff_biases1, input_filename[MATFFBIAS1]);
 
-	load_stream_array<float, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[MATFFWEIGHTS2]);
+	load_stream_array<feedforward_weight2_T, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[MATFFWEIGHTS2]);
 
-	load_stream_array<float, 1, 1, TOKEN_LEN>(&ff_biases2, input_filename[MATFFBIAS2]);
+	load_stream_array<feedforward_bias2_T, 1, 1, TOKEN_LEN>(&ff_biases2, input_filename[MATFFBIAS2]);
 
-	load_stream_array<float, NUM_LAYER_NORM, 1, SEQ_LEN>(gamma, input_filename[MATGAMMA]);
+	load_stream_array<gamma_T, NUM_LAYER_NORM, 1, SEQ_LEN>(gamma, input_filename[MATGAMMA]);
 
-	load_stream_array<float, NUM_LAYER_NORM, 1, SEQ_LEN>(beta, input_filename[MATBETA]);
+	load_stream_array<beta_T, NUM_LAYER_NORM, 1, SEQ_LEN>(beta, input_filename[MATBETA]);
 
-	load_stream_array<float, NUM_LAYER_NORM, 1, SEQ_LEN>(mean, input_filename[MATMEAN]);
+	load_stream_array<mean_T, NUM_LAYER_NORM, 1, SEQ_LEN>(mean, input_filename[MATMEAN]);
 
-	load_stream_array<float, NUM_LAYER_NORM, 1, SEQ_LEN>(variance, input_filename[MATVAR]);
+	load_stream_array<variance_T, NUM_LAYER_NORM, 1, SEQ_LEN>(variance, input_filename[MATVAR]);
 
 	accel(
 		head_weights,
@@ -100,5 +100,5 @@ int main(void)
 		result
 	);
 
-	compare_stream<float, SEQ_LEN, TOKEN_LEN>(result, &result_filename, &log_filename);
+	compare_stream<result_T, SEQ_LEN, TOKEN_LEN>(result, &result_filename, &log_filename);
 }

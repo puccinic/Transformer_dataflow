@@ -7,42 +7,80 @@
 #include "FF.h"
 #include "Synth_utils.h"
 
-template<typename T, int num_heads, int sequence_length, int token_length, int head_token_length, int hidden>
+template<
+	typename input_T,
+	typename attention_weight_T,
+	typename linear_weight_T,
+	typename linear_bias_T,
+	typename feedforward_weight1_T,
+	typename feedforward_bias1_T,
+	typename feedforward_weight2_T,
+	typename feedforward_bias2_T,
+	typename gamma_T,
+	typename beta_T,
+	typename mean_T,
+	typename variance_T,
+	typename norm_result1_T,
+	typename attention_intermediate1_T,
+	typename attention_intermediate2_T,
+	typename attention_output_T,
+	typename multi_head_attention_linear_intermediate_T,
+	typename multi_head_attention_result_T,
+	typename res_bock_T,
+	typename norm_result2_T,
+	typename feedforward_linear1_intermediate_T,
+	typename feedforward_intermediate_T,
+	typename feedforward_linear2_intermediate_T,
+	typename feedforward_resutlt_T,
+	typename result_T,
+	int num_heads,
+	int sequence_length,
+	int token_length,
+	int head_token_length,
+	int hidden
+>
 void encoder(
-	hls::stream<T> input[token_length],
-	hls::stream<T> head_weights[num_heads][NUM_LINEAR_LAYERS][token_length],
-	hls::stream<T> linear_weights[head_token_length*num_heads],
-	hls::stream<T> linear_bias[token_length],
-	hls::stream<T> ff_weights1[token_length],
-	hls::stream<T> ff_biases1[hidden],
-	hls::stream<T> ff_weights2[hidden],
-	hls::stream<T> ff_biases2[token_length],
-	hls::stream<T> gamma[NUM_LAYER_NORM][sequence_length],
-	hls::stream<T> beta[NUM_LAYER_NORM][sequence_length],
-	hls::stream<T> mean[NUM_LAYER_NORM][sequence_length],
-    hls::stream<T> variance[NUM_LAYER_NORM][sequence_length],
-	hls::stream<T> result[token_length]
+	hls::stream<input_T> input[token_length],
+	hls::stream<attention_weight_T> head_weights[num_heads][NUM_LINEAR_LAYERS][token_length],
+	hls::stream<linear_weight_T> linear_weights[head_token_length*num_heads],
+	hls::stream<linear_bias_T> linear_bias[token_length],
+	hls::stream<feedforward_weight1_T> ff_weights1[token_length],
+	hls::stream<feedforward_bias1_T> ff_biases1[hidden],
+	hls::stream<feedforward_weight2_T> ff_weights2[hidden],
+	hls::stream<feedforward_bias2_T> ff_biases2[token_length],
+	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][sequence_length],
+	hls::stream<beta_T> beta[NUM_LAYER_NORM][sequence_length],
+	hls::stream<mean_T> mean[NUM_LAYER_NORM][sequence_length],
+    hls::stream<variance_T> variance[NUM_LAYER_NORM][sequence_length],
+	hls::stream<result_T> result[token_length]
 )
 {
-	hls::stream<T, sequence_length> input_copy1[token_length]{};
-	hls::stream<T, sequence_length> input_copy2[token_length]{};
-	hls::stream<T, sequence_length> multi_head_result[token_length]{};
-	hls::stream<T, sequence_length> matadd_result1[token_length]{};
-	hls::stream<T, sequence_length> matadd_result1_copy1[token_length]{};
-	hls::stream<T, sequence_length> matadd_result1_copy2[token_length]{};
-	hls::stream<T, sequence_length> norm_result1[token_length]{};
-	hls::stream<T, sequence_length> norm_result1_copy1[token_length]{};
-	hls::stream<T, sequence_length> norm_result1_copy2[token_length]{};
-	hls::stream<T, sequence_length> norm_result1_copy3[token_length]{};
-	hls::stream<T, sequence_length> norm_result2[token_length]{};
-
-	hls::stream<T, sequence_length> ff_result[token_length]{};
-	hls::stream<T, sequence_length> matadd_result2[token_length]{};
+	hls::stream<input_T, sequence_length> input_copy1[token_length]{};
+	hls::stream<input_T, sequence_length> input_copy2[token_length]{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1[token_length]{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy1[token_length]{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy2[token_length]{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy3[token_length]{};
+	hls::stream<multi_head_attention_result_T, sequence_length> multi_head_result[token_length]{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1[token_length]{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1_copy1[token_length]{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1_copy2[token_length]{};
+	hls::stream<norm_result2_T, sequence_length> norm_result2[token_length]{};
+	hls::stream<feedforward_resutlt_T, sequence_length> ff_result[token_length]{};
 
 	#pragma HLS DATAFLOW
-	replicate2<T, sequence_length, token_length>(input, input_copy1, input_copy2);
+	replicate2<input_T, sequence_length, token_length>(input, input_copy1, input_copy2);
 
-	batch_norm<T, sequence_length, token_length>(
+	batch_norm<
+		input_T,
+		gamma_T,
+		beta_T,
+		mean_T,
+		variance_T,
+		norm_result1_T,
+		sequence_length,
+		token_length
+	>(
 		input_copy1,
 		gamma[0],
 		beta[0],
@@ -51,14 +89,28 @@ void encoder(
 		norm_result1
 	);
 
-	replicate3<T, sequence_length, token_length>(
+	replicate3<norm_result1_T, sequence_length, token_length>(
 		norm_result1,
 		norm_result1_copy1,
 		norm_result1_copy2,
 		norm_result1_copy3
 	);
 
-	multi_head_att<T, num_heads, sequence_length, token_length, head_token_length>(
+	multi_head_att<
+		norm_result1_T,
+		attention_weight_T,
+		linear_weight_T,
+		linear_bias_T,
+		attention_intermediate1_T,
+		attention_intermediate2_T,
+		attention_output_T,
+		multi_head_attention_linear_intermediate_T,
+		multi_head_attention_result_T,
+		num_heads,
+		sequence_length,
+		token_length,
+		head_token_length
+	>(
 		norm_result1_copy1,
 		norm_result1_copy2,
 		norm_result1_copy3,
@@ -68,19 +120,28 @@ void encoder(
 		multi_head_result
 	);
 
-	matadd<T, sequence_length, token_length>(
+	matadd<input_T, multi_head_attention_result_T, res_bock_T, sequence_length, token_length>(
 		input_copy2,
 		multi_head_result,
 		matadd_result1
 	);
 
-	replicate2<T, sequence_length, token_length>(
+	replicate2<res_bock_T, sequence_length, token_length>(
 		matadd_result1,
 		matadd_result1_copy1,
 		matadd_result1_copy2
 	);
 
-	batch_norm<T, sequence_length, token_length>(
+	batch_norm<
+		res_bock_T,
+		gamma_T,
+		beta_T,
+		mean_T,
+		variance_T,
+		norm_result2_T,
+		sequence_length,
+		token_length
+	>(
 		matadd_result1_copy1,
 		gamma[1],
 		beta[1],
@@ -89,7 +150,20 @@ void encoder(
 		norm_result2
 	);
 
-	ff<T, sequence_length, hidden, token_length>(
+	ff<
+		norm_result2_T,
+		feedforward_weight1_T,
+		feedforward_bias1_T,
+		feedforward_weight2_T,
+		feedforward_bias2_T,
+		feedforward_linear1_intermediate_T,
+		feedforward_intermediate_T,
+		feedforward_linear2_intermediate_T,
+		feedforward_resutlt_T,
+		sequence_length,
+		hidden,
+		token_length
+	>(
 		norm_result2,
 		ff_weights1,
 		ff_biases1,
@@ -98,7 +172,7 @@ void encoder(
 		ff_result
 	);
 
-	matadd<T, sequence_length, token_length>(
+	matadd<res_bock_T, feedforward_resutlt_T, result_T, sequence_length, token_length>(
 		matadd_result1_copy2,
 		ff_result,
 		result

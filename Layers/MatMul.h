@@ -2,14 +2,14 @@
 
 #include "hls_stream.h"
 
-template<typename T, int size>
+template<typename aT, typename bT, typename rT, int size>
 void dot_product(
-	T A[size],
-	T B[size],
-	T &result
+	aT A[size],
+	bT B[size],
+	rT &result
 )
 {
-	T dotprod_tmp = 0;
+	rT dotprod_tmp = 0;
 	for (int i = 0; i < size; i++)
 	{
 		dotprod_tmp += A[i] * B[i];
@@ -17,18 +17,18 @@ void dot_product(
 	result = dotprod_tmp;
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<typename aT, typename bT,typename rT, int rows, int hidden, int cols>
 void matmul_transpose_scale(
-	hls::stream<T> A[hidden],
-	hls::stream<T> B[hidden],
-	T scale_factor,
-	hls::stream<T> result[cols]
+	hls::stream<aT> A[hidden],
+	hls::stream<bT> B[hidden],
+	rT scale_factor,
+	hls::stream<rT> result[cols]
 )
 {
-	T a[rows][hidden]{};
-	T b[cols][hidden]{};
-	T dot_prod_vec_rst;
-	T dot_prod_rst;
+	aT a[rows][hidden]{};
+	bT b[cols][hidden]{};
+	rT dot_prod_vec_rst;
+	rT dot_prod_rst;
 
 matmul_transpose_scale_load_A_rows_loop:
 	for (int i = 0; i < rows; i++)
@@ -56,21 +56,21 @@ matmul_transpose_scale_compute_row_loop:
 	matmul_transpose_scale_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			dot_product<T, hidden>(a[i], b[j], dot_prod_rst);
+			dot_product<aT, bT, rT, hidden>(a[i], b[j], dot_prod_rst);
 			dot_prod_vec_rst = dot_prod_rst / scale_factor;
 			result[j].write(dot_prod_vec_rst);
 		}
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<typename aT, typename bT, typename rT, int rows, int hidden, int cols>
 void matmul_transpose(
-	hls::stream<T> A[hidden],
-	hls::stream<T> B[hidden],
-	hls::stream<T> result[cols]
+	hls::stream<aT> A[hidden],
+	hls::stream<bT> B[hidden],
+	hls::stream<rT> result[cols]
 )
 {
-	matmul_transpose_scale<T, rows, hidden, cols>(A, B, 1, result);
+	matmul_transpose_scale<aT, bT, rT, rows, hidden, cols>(A, B, 1, result);
 }
 
 template<typename T, int rows, int cols>
@@ -100,15 +100,15 @@ transpose_loop1:
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<typename aT, typename bT, typename rT, int rows, int hidden, int cols>
 void matmul(
-	hls::stream<T> A[hidden],
-	hls::stream<T> B[cols],
-	hls::stream<T> result[cols]
+	hls::stream<aT> A[hidden],
+	hls::stream<bT> B[cols],
+	hls::stream<rT> result[cols]
 )
 {
-	hls::stream<T, cols> Bt[hidden]{};
+	hls::stream<bT, cols> Bt[hidden]{};
 	#pragma HLS DATAFLOW
-	transpose<T, hidden, cols>(B, Bt);
-	matmul_transpose<T, rows, hidden, cols>(A, Bt, result);
+	transpose<bT, hidden, cols>(B, Bt);
+	matmul_transpose<aT, bT, rT, rows, hidden, cols>(A, Bt, result);
 }

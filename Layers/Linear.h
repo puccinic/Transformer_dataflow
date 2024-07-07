@@ -3,17 +3,16 @@
 #include "hls_stream.h"
 #include "MatMul.h"
 
-//TODO: BIAS ADD
-template<typename T, int rows, int cols>
+template<typename iT, typename bT, typename rT, int rows, int cols>
 void bias_add(
-	hls::stream<T> input[cols],
-	hls::stream<T> biases[cols],
-	hls::stream<T> result[cols]
+	hls::stream<iT> input[cols],
+	hls::stream<bT> biases[cols],
+	hls::stream<rT> result[cols]
 )
 {
-	T in;
-	T b[cols]{};
-	T res;
+	iT in;
+	bT b[cols]{};
+	rT res;
 
 bias_add_bias_load_loop:
 	for (int i = 0; i < cols; i++)
@@ -34,17 +33,17 @@ bias_add_bias_compute_loop1:
 	}
 }
 
-template<typename T, int rows, int hidden, int cols>
+template<typename iT, typename wT, typename bT, typename tmpT, typename rT, int rows, int hidden, int cols>
 void linear(
-	hls::stream<T> input[hidden],
-	hls::stream<T> weights[hidden],
-	hls::stream<T> biases[cols],
-	hls::stream<T> result[cols]
+	hls::stream<iT> input[hidden],
+	hls::stream<wT> weights[hidden],
+	hls::stream<bT> biases[cols],
+	hls::stream<rT> result[cols]
 )
 {
-	hls::stream<T, rows> linear_tmp[cols]{};
+	hls::stream<tmpT, rows> linear_tmp[cols]{};
 
 	#pragma HLS DATAFLOW
-	matmul_transpose<T, rows, hidden, cols>(input, weights, linear_tmp);
-	bias_add<T, rows, cols>(linear_tmp, biases, result);
+	matmul_transpose<iT, wT, tmpT, rows, hidden, cols>(input, weights, linear_tmp);
+	bias_add<tmpT, bT, rT, rows, cols>(linear_tmp, biases, result);
 }
