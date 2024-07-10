@@ -48,7 +48,6 @@ void accel(
 	hls::stream<linear_weight_T> linear_weights[INNER_ATT_LINEAR_DIM],
 	hls::stream<linear_bias_T> linear_bias[TOKEN_LEN],
 	hls::stream<feedforward_weight1_T> ff_weights1[TOKEN_LEN],
-	hls::stream<feedforward_bias1_T> ff_biases1[HIDDEN],
 	hls::stream<feedforward_weight2_T> ff_weights2[HIDDEN],
 	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN],
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN],

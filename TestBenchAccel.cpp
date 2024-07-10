@@ -28,7 +28,6 @@ int main(void)
 	hls::stream<linear_weight_T> linear_weights[INNER_ATT_LINEAR_DIM];
 	hls::stream<linear_bias_T> linear_bias[TOKEN_LEN];
 	hls::stream<feedforward_weight1_T> ff_weights1[TOKEN_LEN];
-	hls::stream<feedforward_bias1_T> ff_biases1[HIDDEN];
 	hls::stream<feedforward_weight2_T> ff_weights2[HIDDEN];
 	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN];
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN];
@@ -70,7 +69,6 @@ int main(void)
 
 	load_stream_array<feedforward_weight1_T, 1, HIDDEN, TOKEN_LEN>(&ff_weights1, input_filename[MATFFWEIGHTS1]);
 
-	load_stream_array<feedforward_bias1_T, 1, 1, HIDDEN>(&ff_biases1, input_filename[MATFFBIAS1]);
 
 	load_stream_array<feedforward_weight2_T, 1, TOKEN_LEN, HIDDEN>(&ff_weights2, input_filename[MATFFWEIGHTS2]);
 
@@ -89,7 +87,6 @@ int main(void)
 		linear_weights,
 		linear_bias,
 		ff_weights1,
-		ff_biases1,
 		ff_weights2,
 		ff_biases2,
 		gamma,

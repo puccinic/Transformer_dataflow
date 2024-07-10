@@ -13,7 +13,6 @@ template<
 	typename linear_weight_T,
 	typename linear_bias_T,
 	typename feedforward_weight1_T,
-	typename feedforward_bias1_T,
 	typename feedforward_weight2_T,
 	typename feedforward_bias2_T,
 	typename gamma_T,
@@ -28,7 +27,6 @@ template<
 	typename multi_head_attention_result_T,
 	typename res_bock_T,
 	typename norm_result2_T,
-	typename feedforward_linear1_intermediate_T,
 	typename feedforward_intermediate_T,
 	typename feedforward_linear2_intermediate_T,
 	typename feedforward_resutlt_T,
@@ -45,7 +43,6 @@ void encoder(
 	hls::stream<linear_weight_T> linear_weights[head_token_length*num_heads],
 	hls::stream<linear_bias_T> linear_bias[token_length],
 	hls::stream<feedforward_weight1_T> ff_weights1[token_length],
-	hls::stream<feedforward_bias1_T> ff_biases1[hidden],
 	hls::stream<feedforward_weight2_T> ff_weights2[hidden],
 	hls::stream<feedforward_bias2_T> ff_biases2[token_length],
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][sequence_length],
@@ -153,10 +150,8 @@ void encoder(
 	ff<
 		norm_result2_T,
 		feedforward_weight1_T,
-		feedforward_bias1_T,
 		feedforward_weight2_T,
 		feedforward_bias2_T,
-		feedforward_linear1_intermediate_T,
 		feedforward_intermediate_T,
 		feedforward_linear2_intermediate_T,
 		feedforward_resutlt_T,
@@ -166,7 +161,6 @@ void encoder(
 	>(
 		norm_result2,
 		ff_weights1,
-		ff_biases1,
 		ff_weights2,
 		ff_biases2,
 		ff_result
