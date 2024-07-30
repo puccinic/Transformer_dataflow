@@ -18,30 +18,28 @@
 #define SCALE_FACTOR (19.595918267231077)
 
 typedef ap_fixed<8,6> input_T;
-typedef ap_fixed<8,5> attention_weight_T;
-typedef ap_fixed<8,4> linear_weight_T;
-typedef ap_fixed<8,3> linear_bias_T;
-typedef ap_fixed<8,2> feedforward_weight1_T;
-typedef ap_fixed<8,1> feedforward_bias1_T;
-typedef ap_fixed<8,4> feedforward_weight2_T;
-typedef ap_fixed<8,5> feedforward_bias2_T;
+typedef ap_fixed<8,8> attention_weight_T;
+typedef ap_fixed<8,8> linear_weight_T;
+typedef ap_fixed<32,0> linear_bias_T;
+typedef ap_fixed<8,8> feedforward_weight1_T;
+typedef ap_fixed<8,8> feedforward_weight2_T;
+typedef ap_fixed<32,0> feedforward_bias2_T;
 typedef float gamma_T;
 typedef float beta_T;
 typedef float mean_T;
 typedef float variance_T;
-typedef ap_fixed<8,6> norm_result1_T;
-typedef ap_fixed<8,7> attention_intermediate1_T;
-typedef ap_fixed<8,4> attention_intermediate2_T;
-typedef ap_fixed<8,3> attention_output_T;
-typedef ap_fixed<8,5> multi_head_attention_linear_intermediate_T;
-typedef ap_fixed<8,4> multi_head_attention_result_T;
-typedef ap_fixed<8,6> res_bock_T;
-typedef ap_fixed<8,7> norm_result2_T;
-typedef ap_fixed<8,4> feedforward_linear1_intermediate_T;
-typedef ap_fixed<8,3> feedforward_intermediate_T;
-typedef ap_fixed<8,5> feedforward_linear2_intermediate_T;
+typedef ap_fixed<8,4> norm_result1_T;
+typedef ap_fixed<8,5> attention_intermediate1_T;
+typedef ap_fixed<8,5> attention_intermediate2_T;
+typedef ap_fixed<8,5> attention_output_T;
+typedef ap_fixed<16,13> multi_head_attention_linear_intermediate_T;
+typedef ap_fixed<8,6> multi_head_attention_result_T;
+typedef ap_fixed<16,11> res_bock_T;
+typedef ap_fixed<8,4> norm_result2_T;
+typedef ap_fixed<8,5> feedforward_intermediate_T;
+typedef ap_fixed<16,13> feedforward_linear2_intermediate_T;
 typedef ap_fixed<8,6> feedforward_resutlt_T;
-typedef ap_fixed<8,4> result_T;
+typedef float result_T;
 
 void accel(
 	hls::stream<attention_weight_T> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN],
