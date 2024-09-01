@@ -17,8 +17,6 @@ template<
 	typename feedforward_bias2_T,
 	typename gamma_T,
 	typename beta_T,
-	typename mean_T,
-	typename variance_T,
 	typename norm_result1_T,
 	typename attention_intermediate1_T,
 	typename attention_intermediate2_T,
@@ -47,8 +45,6 @@ void encoder(
 	hls::stream<feedforward_bias2_T> ff_biases2[token_length],
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][sequence_length],
 	hls::stream<beta_T> beta[NUM_LAYER_NORM][sequence_length],
-	hls::stream<mean_T> mean[NUM_LAYER_NORM][sequence_length],
-    hls::stream<variance_T> variance[NUM_LAYER_NORM][sequence_length],
 	hls::stream<result_T> result[token_length]
 )
 {
@@ -68,12 +64,10 @@ void encoder(
 	#pragma HLS DATAFLOW
 	replicate2<input_T, sequence_length, token_length>(input, input_copy1, input_copy2);
 
-	batch_norm<
+	opt_batch_norm<
 		input_T,
 		gamma_T,
 		beta_T,
-		mean_T,
-		variance_T,
 		norm_result1_T,
 		sequence_length,
 		token_length
@@ -81,8 +75,6 @@ void encoder(
 		input_copy1,
 		gamma[0],
 		beta[0],
-		mean[0],
-		variance[0],
 		norm_result1
 	);
 
@@ -129,12 +121,10 @@ void encoder(
 		matadd_result1_copy2
 	);
 
-	batch_norm<
+	opt_batch_norm<
 		res_bock_T,
 		gamma_T,
 		beta_T,
-		mean_T,
-		variance_T,
 		norm_result2_T,
 		sequence_length,
 		token_length
@@ -142,8 +132,6 @@ void encoder(
 		matadd_result1_copy1,
 		gamma[1],
 		beta[1],
-		mean[1],
-		variance[1],
 		norm_result2
 	);
 

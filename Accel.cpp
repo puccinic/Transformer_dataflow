@@ -10,8 +10,6 @@ void accel(
 	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN],
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN],
 	hls::stream<beta_T> beta[NUM_LAYER_NORM][SEQ_LEN],
-	hls::stream<mean_T> mean[NUM_LAYER_NORM][SEQ_LEN],
-    hls::stream<variance_T> variance[NUM_LAYER_NORM][SEQ_LEN],
 	hls::stream<input_T> input[TOKEN_LEN],
 	hls::stream<result_T> result[TOKEN_LEN]
 
@@ -27,8 +25,6 @@ void accel(
 		feedforward_bias2_T,
 		gamma_T,
 		beta_T,
-		mean_T,
-		variance_T,
 		norm_result1_T,
 		attention_intermediate1_T,
 		attention_intermediate2_T,
@@ -57,8 +53,6 @@ void accel(
 		ff_biases2,
 		gamma,
 		beta,
-	    mean,
-    	variance,
 		result
 	);
 }

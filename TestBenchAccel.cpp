@@ -15,8 +15,6 @@ enum
 	MATFFBIAS2,
 	MATGAMMA,
 	MATBETA,
-	MATMEAN,
-	MATVAR,
 	MATNUM
 };
 
@@ -32,8 +30,6 @@ int main(void)
 	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN];
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN];
 	hls::stream<beta_T> beta[NUM_LAYER_NORM][SEQ_LEN];
-	hls::stream<mean_T> mean[NUM_LAYER_NORM][SEQ_LEN];
-    hls::stream<variance_T> variance[NUM_LAYER_NORM][SEQ_LEN];
 	hls::stream<input_T> input[TOKEN_LEN];
 	hls::stream<result_T> result[TOKEN_LEN];
 
@@ -51,8 +47,6 @@ int main(void)
 		[MATFFBIAS2] = "../../../../ffbias2.txt",
 		[MATGAMMA] = "../../../../gamma.txt",
 		[MATBETA] = "../../../../beta.txt",
-		[MATMEAN] = "../../../../mean.txt",
-		[MATVAR] = "../../../../variance.txt"
 	};
 
 	std::string result_filename = "../../../../golden_result.txt";
@@ -78,10 +72,6 @@ int main(void)
 
 	load_stream_array<beta_T, NUM_LAYER_NORM, 1, SEQ_LEN>(beta, input_filename[MATBETA]);
 
-	load_stream_array<mean_T, NUM_LAYER_NORM, 1, SEQ_LEN>(mean, input_filename[MATMEAN]);
-
-	load_stream_array<variance_T, NUM_LAYER_NORM, 1, SEQ_LEN>(variance, input_filename[MATVAR]);
-
 	accel(
 		head_weights,
 		linear_weights,
@@ -91,8 +81,6 @@ int main(void)
 		ff_biases2,
 		gamma,
 		beta,
-		mean,
-		variance,
 		input,
 		result
 	);

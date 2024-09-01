@@ -25,16 +25,17 @@ class PreNorm(nn.Module):
 class FeedForward(nn.Module):
     def __init__(self, dim, hidden_dim, dropout = 0.):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(dim, hidden_dim),
-            #nn.GELU(),
-            nn.ReLU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_dim, dim),
-            nn.Dropout(dropout)
-        )
+        self.linear1 = nn.Linear(dim, hidden_dim, bias = False)
+        self.activation = nn.ReLU()
+        self.dropout1 = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(hidden_dim, dim)
+        self.dropout2 = nn.Dropout(dropout)
     def forward(self, x):
-        return self.net(x)
+        a = self.linear1(x)
+        b = self.activation(a)
+        c = self.dropout1(b)
+        d = self.linear2(c)
+        return self.dropout2(d)
 
 
 class LSA(nn.Module):
@@ -147,11 +148,10 @@ class ViT(nn.Module):
         return self.mlp_head(x)
 
 def get_FeedForward_parameters(ff: FeedForward) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    ff_weights1 = ff.net[0].weight
-    ff_bias1 = ff.net[0].bias
-    ff_weights2 = ff.net[3].weight
-    ff_bias2 = ff.net[3].bias
-    return (ff_weights1, ff_bias1, ff_weights2, ff_bias2)
+    ff_weights1 = ff.linear1.weight
+    ff_weights2 = ff.linear2.weight
+    ff_bias2 = ff.linear2.bias
+    return (ff_weights1, ff_weights2, ff_bias2)
 
 
 def get_LSA_parameters(lsa: LSA) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -173,10 +173,7 @@ def get_Transforemer_parameter(transformer: Transformer) -> list[torch.Tensor]:
 
     gamma_list = []
     beta_list = []
-    mean_list = []
-    variance_list = []
     ff_weights1_list = []
-    ff_bias1_list = []
     ff_weights2_list = []
     ff_bias2_list = []
     att_weights_list = []
@@ -187,15 +184,12 @@ def get_Transforemer_parameter(transformer: Transformer) -> list[torch.Tensor]:
     for module in transformer.modules():
         if isinstance(module,nn.BatchNorm1d):
             gamma, beta, mean, variance = get_BatchNorm1d_parameters(module)
-            gamma_list.append(gamma)
-            beta_list.append(beta)
-            mean_list.append(mean)
-            variance_list.append(variance)
+            gamma_list.append(gamma/(variance**0.5))
+            beta_list.append(beta - gamma*mean/(variance**0.5))
 
         elif isinstance(module, FeedForward):
-            ff_weights1, ff_bias1, ff_weights2, ff_bias2 = get_FeedForward_parameters(module)
+            ff_weights1, ff_weights2, ff_bias2 = get_FeedForward_parameters(module)
             ff_weights1_list.append(ff_weights1)
-            ff_bias1_list.append(ff_bias1)
             ff_weights2_list.append(ff_weights2)
             ff_bias2_list.append(ff_bias2)
 
@@ -212,13 +206,10 @@ def get_Transforemer_parameter(transformer: Transformer) -> list[torch.Tensor]:
         linear_weights_list,
         linear_bias_list,
         ff_weights1_list,
-        ff_bias1_list,
         ff_weights2_list,
         ff_bias2_list,
         gamma_list,
-        beta_list,
-        mean_list,
-        variance_list
+        beta_list
     ]
 
 
@@ -245,13 +236,10 @@ Parameter_files = [
     "linearweights.txt",
     "linearbias.txt",
     "ffweights1.txt",
-    "ffbias1.txt",
     "ffweights2.txt",
     "ffbias2.txt",
     "gamma.txt",
-    "beta.txt",
-    "mean.txt",
-    "variance.txt"
+    "beta.txt"
 ]
 
 input_filename = "input.txt"

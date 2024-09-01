@@ -26,8 +26,6 @@ typedef ap_fixed<8,8> feedforward_weight2_T;
 typedef ap_fixed<32,0> feedforward_bias2_T;
 typedef float gamma_T;
 typedef float beta_T;
-typedef float mean_T;
-typedef float variance_T;
 typedef ap_fixed<8,4> norm_result1_T;
 typedef ap_fixed<8,5> attention_intermediate1_T;
 typedef ap_fixed<8,5> attention_intermediate2_T;
@@ -50,8 +48,6 @@ void accel(
 	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN],
 	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN],
 	hls::stream<beta_T> beta[NUM_LAYER_NORM][SEQ_LEN],
-	hls::stream<mean_T> mean[NUM_LAYER_NORM][SEQ_LEN],
-    hls::stream<variance_T> variance[NUM_LAYER_NORM][SEQ_LEN],
 	hls::stream<input_T> input[TOKEN_LEN],
 	hls::stream<result_T> result[TOKEN_LEN]
 );
