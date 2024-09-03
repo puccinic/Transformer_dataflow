@@ -138,8 +138,10 @@ matmul_transpose_scale_softmask_compute_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
 	matmul_transpose_scale_softmask_compute_col_loop:
+		#pragma HLS PIPELINE
 		for (int j = 0; j < cols; j++)
 		{
+			#pragma HLS PIPELINE
 			dot_product<aT,bT,rT,hidden>(a[i], b[j], scaled_dot_prod_rst);
 			matsoftmask_tmp[j] = scaled_dot_prod_rst / scale_factor;
 		}

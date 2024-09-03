@@ -56,6 +56,7 @@ matmul_transpose_scale_compute_row_loop:
 	matmul_transpose_scale_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
+			#pragma HLS PIPELINE
 			dot_product<aT, bT, rT, hidden>(a[i], b[j], dot_prod_rst);
 			dot_prod_vec_rst = dot_prod_rst / scale_factor;
 			result[j].write(dot_prod_vec_rst);

@@ -18,6 +18,7 @@ matadd_loop1:
 	matadd_loop2:
 		for (int j = 0; j < cols; j++)
 		{
+			#pragma HLS PIPELINE
 			A[j].read(a);
 	 		B[j].read(b);
 			rst = a + b;
