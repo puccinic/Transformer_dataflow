@@ -56,9 +56,11 @@ void activation(
 activation_loop1:
 	for (int i = 0; i < rows; i++)
 	{
+		#pragma HLS UNROLL factor=1
 activation_loop2:
 		for (int j = 0; j < cols; j++)
 		{
+			#pragma HLS UNROLL factor=1
 			input[j].read(in);
 			activation_rst = relu<T>(in);
 		    result[j].write(activation_rst);

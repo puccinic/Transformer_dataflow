@@ -15,10 +15,11 @@ void matadd(
 matadd_loop1:
 	for (int i = 0; i < rows; i++)
 	{
+		#pragma HLS UNROLL factor=rows/64
 	matadd_loop2:
 		for (int j = 0; j < cols; j++)
 		{
-			#pragma HLS PIPELINE
+			#pragma HLS UNROLL factor=cols/64
 			A[j].read(a);
 	 		B[j].read(b);
 			rst = a + b;

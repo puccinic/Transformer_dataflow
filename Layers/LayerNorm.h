@@ -89,6 +89,7 @@ void batch_norm(
 batch_norm_loop1:
     for (int i = 0; i < channels; i++)
     {
+        #pragma HLS UNROLL factor=1
         gamma[i].read(g);
         beta[i].read(b);
         mean[i].read(avg);
@@ -97,7 +98,7 @@ batch_norm_loop1:
     batch_norm_loop2:
         for (int j = 0; j < size; j++)
         {
-            /* code */
+            #pragma HLS UNROLL factor=1
             input[j].read(in);
             #ifndef USING_FIXED_POINT
                 tmpIn = in;
@@ -131,12 +132,14 @@ void opt_batch_norm(
 batch_norm_loop1:
     for (int i = 0; i < channels; i++)
     {
+        #pragma HLS UNROLL factor=1
         gamma[i].read(g);
         beta[i].read(b);
 
     batch_norm_loop2:
         for (int j = 0; j < size; j++)
         {
+		    #pragma HLS UNROLL factor=1
             /* code */
             input[j].read(in);
             #ifndef USING_FIXED_POINT

@@ -33,9 +33,11 @@ void matmul_transpose_scale(
 matmul_transpose_scale_load_A_rows_loop:
 	for (int i = 0; i < rows; i++)
 	{
+		#pragma HLS UNROLL factor=rows/64
 	matmul_transpose_scale_load_A_cols_loop:
 		for (int j = 0; j < hidden; j++)
 		{
+			#pragma HLS UNROLL factor=hidden/64
 			A[j].read(a[i][j]);
 		}
 	}
@@ -43,9 +45,11 @@ matmul_transpose_scale_load_A_rows_loop:
 matmul_transpose_scale_load_B_rows_loop:
 	for (int i = 0; i < cols; i++)
 	{
+		#pragma HLS UNROLL factor=cols/64
 	matmul_transpose_scale_load_B_cols_loop:
 		for (int j = 0; j < hidden; j++)
 		{
+			#pragma HLS UNROLL factor=hidden/64
 			B[j].read(b[i][j]);
 		}
 	}
@@ -53,10 +57,11 @@ matmul_transpose_scale_load_B_rows_loop:
 matmul_transpose_scale_compute_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
+		#pragma HLS UNROLL factor=rows/64
 	matmul_transpose_scale_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			#pragma HLS PIPELINE
+			#pragma HLS UNROLL factor=cols/64
 			dot_product<aT, bT, rT, hidden>(a[i], b[j], dot_prod_rst);
 			dot_prod_vec_rst = dot_prod_rst / scale_factor;
 			result[j].write(dot_prod_vec_rst);
@@ -85,14 +90,17 @@ void transpose(
 transpose_load_A_rows_loop:
 	for (int i = 0; i < rows; i++)
 	{
+		#pragma HLS UNROLL factor=rows/64
 		for (int j = 0; j < cols; j++)
 		{
+			#pragma HLS UNROLL factor=cols/64
 			A[j].read(transpose_tmp[i][j]);
 		}
 	}
 transpose_loop1:
 	for (int i = 0; i < cols; i++)
 	{
+		#pragma HLS UNROLL factor=cols/64
 	transpose_loop2:
 		for (int j = 0; j < rows; j++)
 		{
