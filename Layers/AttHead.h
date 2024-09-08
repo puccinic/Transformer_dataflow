@@ -7,19 +7,19 @@
 
 template<typename iT, typename wT, typename tmp1T, typename tmp2T, typename rT, int sequence_length, int token_length, int head_token_length>
 void att_head(
-	hls::stream<iT> query[token_length],
-	hls::stream<iT> key[token_length],
-	hls::stream<iT> value[token_length],
-	hls::stream<wT> weights[NUM_LINEAR_LAYERS][token_length],
-	hls::stream<rT> result[head_token_length]
+	hls::stream<iT>& query,
+	hls::stream<iT>& key,
+	hls::stream<iT>& value,
+	hls::stream<wT> weights[NUM_LINEAR_LAYERS],
+	hls::stream<rT>& result
 )
 {
-	hls::stream<wT, head_token_length> q_weights[token_length]{};
-	hls::stream<wT, head_token_length> k_weights[token_length]{};
-	hls::stream<wT, head_token_length> v_weights[token_length]{};
-	hls::stream<tmp1T, sequence_length> Q[head_token_length]{};
-	hls::stream<tmp1T, sequence_length> K[head_token_length]{};
-	hls::stream<tmp1T, sequence_length> V[head_token_length]{};
+	hls::stream<wT, head_token_length> q_weights{};
+	hls::stream<wT, head_token_length> k_weights{};
+	hls::stream<wT, head_token_length> v_weights{};
+	hls::stream<tmp1T, sequence_length> Q{};
+	hls::stream<tmp1T, sequence_length> K{};
+	hls::stream<tmp1T, sequence_length> V{};
 
 	#pragma HLS DATAFLOW
 	split3<wT, head_token_length, token_length>(weights, q_weights, k_weights, v_weights);

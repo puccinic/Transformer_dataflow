@@ -26,7 +26,7 @@ void load_vector(
 
 template<class T, int depth, int size>
 void load_stream(
-	hls::stream<T> in_stream[size],
+	hls::stream<T>& in_stream,
 	std::ifstream &file
 )
 {
@@ -36,14 +36,14 @@ void load_stream(
 		load_vector<T,size>(vec, file);
 		for (int j = 0; j < size; j++)
 		{
-			in_stream[j].write(vec[j]);
+			in_stream.write(vec[j]);
 		}
 	}
 }
 
 template<class T, int length, int depth, int size>
 void load_stream_array(
-	hls::stream<T> in_stream[length][size],
+	hls::stream<T> in_stream[length],
 	std::string &filename
 )
 {
@@ -56,7 +56,7 @@ void load_stream_array(
 
 template<class T, int depth, int size>
 void compare_stream(
-	hls::stream<T> in_stream[size],
+	hls::stream<T>& in_stream,
 	std::string* vec_filename,
 	std::string* log_filename
 )
@@ -74,7 +74,7 @@ void compare_stream(
 
 		for (int i = 0; i < size; i++)
 		{
-			in_stream[i].read(item);
+			in_stream.read(item);
 			std::string line;
 			std::stringstream stream;
 			std::getline(file, line);

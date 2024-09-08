@@ -4,9 +4,9 @@
 
 template<typename aT, typename bT, typename rT, int rows, int cols>
 void matadd(
-	hls::stream<aT> A[cols],
-	hls::stream<bT> B[cols],
-	hls::stream<rT> result[cols]
+	hls::stream<aT>& A,
+	hls::stream<bT>& B,
+	hls::stream<rT>& result
 )
 {
 	aT a;
@@ -20,10 +20,10 @@ matadd_loop1:
 		for (int j = 0; j < cols; j++)
 		{
 			#pragma HLS UNROLL factor=cols/64
-			A[j].read(a);
-	 		B[j].read(b);
+			A.read(a);
+	 		B.read(b);
 			rst = a + b;
-	 		result[j].write(rst);
+	 		result.write(rst);
 		}
 	}
 }

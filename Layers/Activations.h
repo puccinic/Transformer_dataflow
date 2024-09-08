@@ -47,23 +47,18 @@ T erf(T x) {
 
 template<typename T, int rows, int cols>
 void activation(
-	hls::stream<T> input[cols],
-	hls::stream<T> result[cols]
+	hls::stream<T>& input,
+	hls::stream<T>& result
 )
 {
 	T in;
 	T activation_rst;
-activation_loop1:
-	for (int i = 0; i < rows; i++)
+activation_loop:
+	for (int i = 0; i < rows*cols; i++)
 	{
-		#pragma HLS UNROLL factor=1
-activation_loop2:
-		for (int j = 0; j < cols; j++)
-		{
-			#pragma HLS UNROLL factor=1
-			input[j].read(in);
-			activation_rst = relu<T>(in);
-		    result[j].write(activation_rst);
-		}
+		input.read(in);
+		activation_rst = relu<T>(in);
+		result.write(activation_rst);
+
 	}
 }

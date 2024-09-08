@@ -2,16 +2,16 @@
 #include "Encoder.h"
 
 void accel(
-	hls::stream<attention_weight_T> head_weights[NUM_HEADS][NUM_LINEAR_LAYERS][TOKEN_LEN],
-	hls::stream<linear_weight_T> linear_weights[INNER_ATT_LINEAR_DIM],
-	hls::stream<linear_bias_T> linear_bias[TOKEN_LEN],
-	hls::stream<feedforward_weight1_T> ff_weights1[TOKEN_LEN],
-	hls::stream<feedforward_weight2_T> ff_weights2[HIDDEN],
-	hls::stream<feedforward_bias2_T> ff_biases2[TOKEN_LEN],
-	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][SEQ_LEN],
-	hls::stream<beta_T> beta[NUM_LAYER_NORM][SEQ_LEN],
-	hls::stream<input_T> input[TOKEN_LEN],
-	hls::stream<result_T> result[TOKEN_LEN]
+	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS],
+	hls::stream<linear_weight_T>& linear_weights,
+	hls::stream<linear_bias_T>& linear_bias,
+	hls::stream<feedforward_weight1_T>& ff_weights1,
+	hls::stream<feedforward_weight2_T>& ff_weights2,
+	hls::stream<feedforward_bias2_T>& ff_biases2,
+	hls::stream<gamma_T> gamma[NUM_LAYER_NORM],
+	hls::stream<beta_T> beta[NUM_LAYER_NORM],
+	hls::stream<input_T>& input,
+	hls::stream<result_T>& result
 
 )
 {
@@ -37,7 +37,6 @@ void accel(
 		feedforward_linear2_intermediate_T,
 		feedforward_resutlt_T,
 		result_T,
-		NUM_HEADS,
 		SEQ_LEN,
 		TOKEN_LEN,
 		HEAD_LEN,

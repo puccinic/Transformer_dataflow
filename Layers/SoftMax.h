@@ -102,10 +102,10 @@ masked_softmax_result_loop:
 
 template<typename aT, typename bT, typename rT, int rows, int hidden, int cols>
 void matmul_scale_masked_softmax(
-	hls::stream<aT> A[hidden],
-	hls::stream<bT> B[hidden],
+	hls::stream<aT>& A,
+	hls::stream<bT>& B,
 	rT scale_factor,
-	hls::stream<rT> result[cols]
+	hls::stream<rT>& result
 )
 {
 	aT a[rows][hidden]{};
@@ -122,7 +122,7 @@ matmul_transpose_scale_softmask_load_A_rows_loop:
 		for (int j = 0; j < hidden; j++)
 		{
 			#pragma HLS UNROLL factor=hidden/64
-			A[j].read(a[i][j]);
+			A.read(a[i][j]);
 		}
 
 	}
@@ -135,7 +135,7 @@ matmul_transpose_scale_softmask_load_B_rows_loop:
 		for (int j = 0; j < hidden; j++)
 		{
 			#pragma HLS UNROLL factor=hidden/64
-			B[j].read(b[i][j]);
+			B.read(b[i][j]);
 		}
 	}
 
@@ -157,7 +157,7 @@ matmul_transpose_scale_softmask_compute_row_loop:
 		for (int j = 0; j < cols; j++)
 		{
 			#pragma HLS UNROLL factor=cols/64
-			result[j].write(scaled_dot_prod_vec_rst[j]);
+			result.write(scaled_dot_prod_vec_rst[j]);
 		}
 	}
 }

@@ -115,10 +115,10 @@ batch_norm_loop1:
 
 template<typename iT, typename gT, typename bT, typename rT, int channels, int size>
 void opt_batch_norm(
-	hls::stream<iT> input[size],
-	hls::stream<gT> gamma[channels],
-	hls::stream<bT> beta[channels],
-	hls::stream<rT> result[size]
+	hls::stream<iT>& input,
+	hls::stream<gT>& gamma,
+	hls::stream<bT>& beta,
+	hls::stream<rT>& result
 )
 {
     iT in;
@@ -132,23 +132,20 @@ void opt_batch_norm(
 batch_norm_loop1:
     for (int i = 0; i < channels; i++)
     {
-        #pragma HLS UNROLL factor=1
-        gamma[i].read(g);
-        beta[i].read(b);
+        gamma.read(g);
+        beta.read(b);
 
     batch_norm_loop2:
         for (int j = 0; j < size; j++)
         {
-		    #pragma HLS UNROLL factor=1
-            /* code */
-            input[j].read(in);
+            input.read(in);
             #ifndef USING_FIXED_POINT
                 tmpIn = in;
                 batchnorm_rst = tmpIn*g + b;
             #else
                 batchnorm_rst = in*g + b;
             #endif
-            result[j].write(batchnorm_rst);
+            result.write(batchnorm_rst);
         }
     }
 }

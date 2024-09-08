@@ -1,7 +1,7 @@
 #pragma once
 
 #include "hls_stream.h"
-#include "MultiHeadAtt.h"
+#include "AttHead.h"
 #include "MatAdd.h"
 #include "LayerNorm.h"
 #include "FF.h"
@@ -29,37 +29,37 @@ template<
 	typename feedforward_linear2_intermediate_T,
 	typename feedforward_resutlt_T,
 	typename result_T,
-	int num_heads,
 	int sequence_length,
 	int token_length,
 	int head_token_length,
 	int hidden
 >
 void encoder(
-	hls::stream<input_T> input[token_length],
-	hls::stream<attention_weight_T> head_weights[num_heads][NUM_LINEAR_LAYERS][token_length],
-	hls::stream<linear_weight_T> linear_weights[head_token_length*num_heads],
-	hls::stream<linear_bias_T> linear_bias[token_length],
-	hls::stream<feedforward_weight1_T> ff_weights1[token_length],
-	hls::stream<feedforward_weight2_T> ff_weights2[hidden],
-	hls::stream<feedforward_bias2_T> ff_biases2[token_length],
-	hls::stream<gamma_T> gamma[NUM_LAYER_NORM][sequence_length],
-	hls::stream<beta_T> beta[NUM_LAYER_NORM][sequence_length],
-	hls::stream<result_T> result[token_length]
+	hls::stream<input_T>& input,
+	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS],
+	hls::stream<linear_weight_T>& linear_weights,
+	hls::stream<linear_bias_T>& linear_bias,
+	hls::stream<feedforward_weight1_T>& ff_weights1,
+	hls::stream<feedforward_weight2_T>& ff_weights2,
+	hls::stream<feedforward_bias2_T>& ff_biases2,
+	hls::stream<gamma_T> gamma[NUM_LAYER_NORM],
+	hls::stream<beta_T> beta[NUM_LAYER_NORM],
+	hls::stream<result_T>& result
 )
 {
-	hls::stream<input_T, sequence_length> input_copy1[token_length]{};
-	hls::stream<input_T, sequence_length> input_copy2[token_length]{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1[token_length]{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy1[token_length]{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy2[token_length]{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy3[token_length]{};
-	hls::stream<multi_head_attention_result_T, sequence_length> multi_head_result[token_length]{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1[token_length]{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1_copy1[token_length]{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1_copy2[token_length]{};
-	hls::stream<norm_result2_T, sequence_length> norm_result2[token_length]{};
-	hls::stream<feedforward_resutlt_T, sequence_length> ff_result[token_length]{};
+	hls::stream<input_T, sequence_length> input_copy1{};
+	hls::stream<input_T, sequence_length> input_copy2{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy1{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy2{};
+	hls::stream<norm_result1_T, sequence_length> norm_result1_copy3{};
+	hls::stream<attention_output_T, sequence_length> att_result{};
+	hls::stream<multi_head_attention_result_T, sequence_length> multi_head_result{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1_copy1{};
+	hls::stream<res_bock_T, sequence_length> matadd_result1_copy2{};
+	hls::stream<norm_result2_T, sequence_length> norm_result2{};
+	hls::stream<feedforward_resutlt_T, sequence_length> ff_result{};
 
 	#pragma HLS DATAFLOW
 	replicate2<input_T, sequence_length, token_length>(input, input_copy1, input_copy2);
@@ -85,17 +85,12 @@ void encoder(
 		norm_result1_copy3
 	);
 
-	multi_head_att<
+	att_head<
 		norm_result1_T,
 		attention_weight_T,
-		linear_weight_T,
-		linear_bias_T,
 		attention_intermediate1_T,
 		attention_intermediate2_T,
 		attention_output_T,
-		multi_head_attention_linear_intermediate_T,
-		multi_head_attention_result_T,
-		num_heads,
 		sequence_length,
 		token_length,
 		head_token_length
@@ -104,6 +99,20 @@ void encoder(
 		norm_result1_copy2,
 		norm_result1_copy3,
 		head_weights,
+		att_result
+	);
+
+	linear<
+	attention_output_T,
+	linear_weight_T,
+	linear_bias_T,
+	multi_head_attention_linear_intermediate_T,
+	multi_head_attention_result_T,
+	sequence_length,
+	head_token_length,
+	token_length
+	>(
+		att_result,
 		linear_weights,
 		linear_bias,
 		multi_head_result
