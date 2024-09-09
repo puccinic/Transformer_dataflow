@@ -47,19 +47,19 @@ void encoder(
 	hls::stream<result_T>& result
 )
 {
-	hls::stream<input_T, sequence_length> input_copy1{};
-	hls::stream<input_T, sequence_length> input_copy2{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy1{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy2{};
-	hls::stream<norm_result1_T, sequence_length> norm_result1_copy3{};
-	hls::stream<attention_output_T, sequence_length> att_result{};
-	hls::stream<multi_head_attention_result_T, sequence_length> multi_head_result{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1_copy1{};
-	hls::stream<res_bock_T, sequence_length> matadd_result1_copy2{};
-	hls::stream<norm_result2_T, sequence_length> norm_result2{};
-	hls::stream<feedforward_resutlt_T, sequence_length> ff_result{};
+	hls::stream<input_T, sequence_length*token_length> input_copy1{};
+	hls::stream<input_T, sequence_length*token_length> input_copy2{};
+	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1{};
+	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy1{};
+	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy2{};
+	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy3{};
+	hls::stream<attention_output_T, sequence_length*token_length> att_result{};
+	hls::stream<multi_head_attention_result_T, sequence_length*token_length> multi_head_result{};
+	hls::stream<res_bock_T, sequence_length*token_length> matadd_result1{};
+	hls::stream<res_bock_T, sequence_length*token_length> matadd_result1_copy1{};
+	hls::stream<res_bock_T, sequence_length*token_length> matadd_result1_copy2{};
+	hls::stream<norm_result2_T, sequence_length*token_length> norm_result2{};
+	hls::stream<feedforward_resutlt_T, sequence_length*token_length> ff_result{};
 
 	#pragma HLS DATAFLOW
 	replicate2<input_T, sequence_length, token_length>(input, input_copy1, input_copy2);
