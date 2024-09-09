@@ -14,12 +14,12 @@ void att_head(
 	hls::stream<rT>& result
 )
 {
-	hls::stream<wT, head_token_length> q_weights{};
-	hls::stream<wT, head_token_length> k_weights{};
-	hls::stream<wT, head_token_length> v_weights{};
-	hls::stream<tmp1T, sequence_length> Q{};
-	hls::stream<tmp1T, sequence_length> K{};
-	hls::stream<tmp1T, sequence_length> V{};
+	hls::stream<wT, token_length*head_token_length> q_weights{};
+	hls::stream<wT, token_length*head_token_length> k_weights{};
+	hls::stream<wT, token_length*head_token_length> v_weights{};
+	hls::stream<tmp1T, sequence_length*token_length> Q{};
+	hls::stream<tmp1T, sequence_length*token_length> K{};
+	hls::stream<tmp1T, sequence_length*token_length> V{};
 
 	#pragma HLS DATAFLOW
 	split3<wT, head_token_length, token_length>(weights, q_weights, k_weights, v_weights);
