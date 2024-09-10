@@ -40,7 +40,7 @@ typedef ap_fixed<8,6> feedforward_resutlt_T;
 typedef float result_T;
 
 void accel(
-	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS],
+	hls::stream<attention_weight_T>& head_weight,
 	hls::stream<linear_weight_T>& linear_weights,
 	hls::stream<linear_bias_T>& linear_bias,
 	hls::stream<feedforward_weight1_T>& ff_weights1,

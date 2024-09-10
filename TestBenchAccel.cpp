@@ -22,7 +22,7 @@ enum
 int main(void)
 {
 
-	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS];
+	hls::stream<attention_weight_T> head_weights;
 	hls::stream<linear_weight_T> linear_weights;
 	hls::stream<linear_bias_T> linear_bias;
 	hls::stream<feedforward_weight1_T> ff_weights1;
@@ -54,8 +54,7 @@ int main(void)
 
 	load_stream_array<input_T, 1, SEQ_LEN, TOKEN_LEN>(&input, input_filename[MATIN]);
 
-	load_stream_array<attention_weight_T, NUM_HEADS*NUM_LINEAR_LAYERS, HEAD_LEN, TOKEN_LEN>(head_weights, input_filename[MATHEADWEIGHT]);
-
+	load_stream_array<attention_weight_T, 1, HEAD_LEN*NUM_LINEAR_LAYERS, TOKEN_LEN>(&head_weights, input_filename[MATHEADWEIGHT]);
 
 	load_stream_array<linear_weight_T, 1, TOKEN_LEN, INNER_ATT_LINEAR_DIM>(&linear_weights, input_filename[MATLINEARWEIGHT]);
 

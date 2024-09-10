@@ -36,7 +36,7 @@ template<
 >
 void encoder(
 	hls::stream<input_T>& input,
-	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS],
+	hls::stream<attention_weight_T>& head_weights,
 	hls::stream<linear_weight_T>& linear_weights,
 	hls::stream<linear_bias_T>& linear_bias,
 	hls::stream<feedforward_weight1_T>& ff_weights1,
@@ -50,9 +50,6 @@ void encoder(
 	hls::stream<input_T, sequence_length*token_length> input_copy1{};
 	hls::stream<input_T, sequence_length*token_length> input_copy2{};
 	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1{};
-	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy1{};
-	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy2{};
-	hls::stream<norm_result1_T, sequence_length*token_length> norm_result1_copy3{};
 	hls::stream<attention_output_T, sequence_length*token_length> att_result{};
 	hls::stream<multi_head_attention_result_T, sequence_length*token_length> multi_head_result{};
 	hls::stream<res_bock_T, sequence_length*token_length> matadd_result1{};
@@ -78,13 +75,6 @@ void encoder(
 		norm_result1
 	);
 
-	replicate3<norm_result1_T, sequence_length, token_length>(
-		norm_result1,
-		norm_result1_copy1,
-		norm_result1_copy2,
-		norm_result1_copy3
-	);
-
 	att_head<
 		norm_result1_T,
 		attention_weight_T,
@@ -95,9 +85,7 @@ void encoder(
 		token_length,
 		head_token_length
 	>(
-		norm_result1_copy1,
-		norm_result1_copy2,
-		norm_result1_copy3,
+		norm_result1,
 		head_weights,
 		att_result
 	);

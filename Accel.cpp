@@ -2,7 +2,7 @@
 #include "Encoder.h"
 
 void accel(
-	hls::stream<attention_weight_T> head_weights[NUM_LINEAR_LAYERS],
+	hls::stream<attention_weight_T>& head_weights,
 	hls::stream<linear_weight_T>& linear_weights,
 	hls::stream<linear_bias_T>& linear_bias,
 	hls::stream<feedforward_weight1_T>& ff_weights1,

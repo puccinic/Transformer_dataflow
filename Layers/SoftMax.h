@@ -65,7 +65,7 @@ void masked_sofmax(
 masked_softmax_exp_loop:
 	for (int i = 0; i < size; i++)
 	{
-		#pragma HLS UNROLL factor=size/64
+		#pragma HLS UNROLL
 		if (mask != i)
 		{
 			masksoftmax_tmp[i] = hls::exp((float) (input[i] - max));
@@ -117,11 +117,11 @@ void matmul_scale_masked_softmax(
 matmul_transpose_scale_softmask_load_A_rows_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		#pragma HLS UNROLL factor=rows/64
+		#pragma HLS UNROLL
 	matmul_transpose_scale_softmask_load_A_cols_loop:
 		for (int j = 0; j < hidden; j++)
 		{
-			#pragma HLS UNROLL factor=hidden/64
+			#pragma HLS UNROLL
 			A.read(a[i][j]);
 		}
 
@@ -130,11 +130,11 @@ matmul_transpose_scale_softmask_load_A_rows_loop:
 matmul_transpose_scale_softmask_load_B_rows_loop:
 	for (int i = 0; i < cols; i++)
 	{
-		#pragma HLS UNROLL factor=cols/64
+		#pragma HLS UNROLL
 	matmul_transpose_scale_softmask_load_B_cols_loop:
 		for (int j = 0; j < hidden; j++)
 		{
-			#pragma HLS UNROLL factor=hidden/64
+			#pragma HLS UNROLL
 			B.read(b[i][j]);
 		}
 	}
@@ -142,11 +142,11 @@ matmul_transpose_scale_softmask_load_B_rows_loop:
 matmul_transpose_scale_softmask_compute_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-		#pragma HLS UNROLL factor=rows/64
+		#pragma HLS UNROLL
 	matmul_transpose_scale_softmask_compute_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			#pragma HLS UNROLL factor=cols/64
+			#pragma HLS UNROLL
 			dot_product<aT,bT,rT,hidden>(a[i], b[j], scaled_dot_prod_rst);
 			matsoftmask_tmp[j] = scaled_dot_prod_rst / scale_factor;
 		}
@@ -156,7 +156,7 @@ matmul_transpose_scale_softmask_compute_row_loop:
 	matmul_transpose_scale_softmask_store_col_loop:
 		for (int j = 0; j < cols; j++)
 		{
-			#pragma HLS UNROLL factor=cols/64
+			#pragma HLS UNROLL
 			result.write(scaled_dot_prod_vec_rst[j]);
 		}
 	}

@@ -17,18 +17,18 @@ void bias_add(
 bias_add_bias_load_loop:
 	for (int i = 0; i < cols; i++)
 	{
-		#pragma HLS UNROLL factor=cols/64
+		#pragma HLS UNROLL
 		biases.read(b[i]);
 	}
 
 bias_add_bias_compute_loop1:
 	for (int i = 0; i < rows; i++)
 	{
-		#pragma HLS UNROLL factor=rows/64
+		#pragma HLS UNROLL
 	bias_add_bias_compute_loop2:
 		for (int j = 0; j < cols; j++)
 		{
-			#pragma HLS UNROLL factor=cols/64
+			#pragma HLS UNROLL
 			input.read(in);
 			res = in + b[j];
 			result.write(res);
