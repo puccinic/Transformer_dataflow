@@ -10,9 +10,19 @@ void bias_add(
 	hls::stream<rT>& result
 )
 {
-	iT in;
+	iT in[rows][cols]{};
 	bT b[cols]{};
-	rT res;
+	rT res[rows][cols];
+
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			#pragma HLS UNROLL
+			input.read(in[i][j]);
+		}
+	}
 
 bias_add_bias_load_loop:
 	for (int i = 0; i < cols; i++)
@@ -29,9 +39,16 @@ bias_add_bias_compute_loop1:
 		for (int j = 0; j < cols; j++)
 		{
 			#pragma HLS UNROLL
-			input.read(in);
-			res = in + b[j];
-			result.write(res);
+			res[i][j] = in[i][j] + b[j];
+		}
+	}
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			#pragma HLS UNROLL
+			result.write(res[i][j]);
 		}
 	}
 }

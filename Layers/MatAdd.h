@@ -9,9 +9,19 @@ void matadd(
 	hls::stream<rT>& result
 )
 {
-	aT a;
-	bT b;
-	rT rst;
+	static aT a[rows][cols]{};
+	static bT b[rows][cols]{};
+	static rT rst[rows][cols]{};
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			A.read(a[i][j]);
+			B.read(b[i][j]);
+		}
+	}
+
 matadd_loop1:
 	for (int i = 0; i < rows; i++)
 	{
@@ -20,10 +30,15 @@ matadd_loop1:
 		for (int j = 0; j < cols; j++)
 		{
 			#pragma HLS UNROLL
-			A.read(a);
-	 		B.read(b);
-			rst = a + b;
-	 		result.write(rst);
+			rst[i][j] = a[i][j] + b[i][j];
+		}
+	}
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+	 		result.write(rst[i][j]);
 		}
 	}
 }

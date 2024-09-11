@@ -97,7 +97,7 @@ replicate_row_loop:
 
 template<typename T, int rows, int cols>
 void split3(
-	hls::stream<T> input[3],
+	hls::stream<T>& input,
 	hls::stream<T>& result1,
 	hls::stream<T>& result2,
 	hls::stream<T>& result3
@@ -107,18 +107,23 @@ void split3(
 	T in2;
 	T in3;
 
-split3_row_loop:
 	for (int i = 0; i < rows; i++)
 	{
-	split3_col_loop:
-		for (int j = 0; j < cols; j++)
+		for (int i = 0; i < cols; i++)
 		{
-
-			input[0].read(in1);
-			input[1].read(in2);
-			input[2].read(in3);
+			input.read(in1);
 			result1.write(in1);
+		}
+
+		for (int i = 0; i < cols; i++)
+		{
+			input.read(in2);
 			result2.write(in2);
+		}
+
+		for (int i = 0; i < cols; i++)
+		{
+			input.read(in3);
 			result3.write(in3);
 		}
 	}

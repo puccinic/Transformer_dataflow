@@ -25,8 +25,8 @@ void matmul_transpose_scale(
 	hls::stream<rT>& result
 )
 {
-	aT a[rows][hidden]{};
-	bT b[cols][hidden]{};
+	static aT a[rows][hidden]{};
+	static bT b[cols][hidden]{};
 	rT dot_prod_vec_rst;
 	rT dot_prod_rst;
 
@@ -41,7 +41,6 @@ matmul_transpose_scale_load_A_rows_loop:
 			A.read(a[i][j]);
 		}
 	}
-
 matmul_transpose_scale_load_B_rows_loop:
 	for (int i = 0; i < cols; i++)
 	{
@@ -53,7 +52,6 @@ matmul_transpose_scale_load_B_rows_loop:
 			B.read(b[i][j]);
 		}
 	}
-
 matmul_transpose_scale_compute_row_loop:
 	for (int i = 0; i < rows; i++)
 	{

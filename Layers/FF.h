@@ -14,7 +14,7 @@ void ff(
 )
 {
 	hls::stream<tmpT, rows*hidden> ff_tmp1{};
-	hls::stream<tmpT, rows*cols> ff_tmp2{};
+	hls::stream<tmpT, rows*hidden> ff_tmp2{};
 
 	#pragma HLS DATAFLOW
 	matmul_transpose<iT, w1T, tmpT, rows, cols, hidden>(input, weights1, ff_tmp1);
